@@ -2,7 +2,7 @@ package array
 
 import (
 	_"fmt"
-	"math"
+	_"math"
 )
 
 func Slice[T comparable](s []T, begin, end int) []T{

@@ -7,7 +7,7 @@ import (
 
 func Pop[T comparable](s []T, defaultValue T) ([]T, T, error) {
 	length := len(s)
-
+ 
 	if length == 0 {
 		return s, defaultValue, errors.New(fmt.Sprintf("%v is empty", s))
 	}

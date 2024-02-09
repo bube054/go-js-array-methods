@@ -6,17 +6,21 @@ import (
 )
 
 func main() {
-	// a := []int{1,2,3}
+	a := []int{1,2,3}
 	// b := []int{4,5,6}
 	// c := []int{7,8,9}
-	d := []string{"ant", "bison", "camel", "duck", "elephant"}
+	// d := []string{"ant", "bison", "camel", "duck", "elephant"}
 
-	r := array.Slice[string](d, 7, 2)
+	r := array.Reverse[int](a)
 
 	fmt.Println(r)
 
+	// r := array.Includes[string](d, "ante")
+	// r := array.IndexOf[string](d, "bisons")
+	// r := array.UnShift[string](d, "pig")
+	// array.UnShiftMut[string](&d, "pig")
 	// r := array.Concat[int](a, b, c)
-
+	// r := array.Slice[string](d, 7, 2)
 	// fmt.Println(a)
 	// array.ConcatMut[int](&a, b, c)
 	// x, err := array.ShiftMut[int](&a, 0)
