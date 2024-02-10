@@ -10,8 +10,3 @@ func Every[T comparable](s []T, f Predicate[T]) bool {
 
 	return true
 }
-
-// a := []int{1,2,3}
-// r := array.Every[int](a, func(e int, i int, s []int) bool {
-// 	return e < 2
-// })

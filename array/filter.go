@@ -12,13 +12,3 @@ func Filter[T comparable](s []T, f Predicate[T]) []T {
 
 	return newList
 }
-
-	// r := array.Filter[string](d, func(e string, i int, s []string) bool {
-	// 	if len(e) > 4 {
-	// 		return true
-	// 	} else {
-	// 		return false
-	// 	}
-	// })
-
-	// fmt.Println(r)
