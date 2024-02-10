@@ -9,6 +9,7 @@ func Fill[T comparable](s []T, el T, startPos, endPos uint) ([]T, error) {
 
 	if length == 0 {
 		return nil, nil
+		
 	}
 
 	if startPos < 0 || startPos >= uint(length) {
