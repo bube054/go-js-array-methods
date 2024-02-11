@@ -20,7 +20,7 @@ func TestEntries(t *testing.T) {
 		{
 			name: "should give slice of entries",
 			args: args{a: []int{1, 2, 3}},
-			want: []Entry[int]{{index: 0, value: 1}, {index: 1, value: 2}, {index: 2, value: 3}},
+			want: []Entry[int]{{Index: 0, Value: 1}, {Index: 1, Value: 2}, {Index: 2, Value: 3}},
 		},
 		{
 			name: "should give empty slice of entries",

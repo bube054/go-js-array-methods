@@ -1,8 +1,10 @@
 package array
 
+import "reflect"
+
 func IndexOf[T comparable](s []T, e T) int {
 	for index, val := range s {
-		if val == e {
+		if reflect.DeepEqual(val, e) {
 			return index
 		}
 	}
