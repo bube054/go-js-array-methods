@@ -1,11 +1,35 @@
 package array
 
-func Includes[T comparable](s []T, e T) bool {
-	index := IndexOf[T](s, e)
+import (
+	"reflect"
+)
 
-	if index < 0 {
-		return false
+func Includes[T comparable](slice []T, element T, start *int) bool {
+
+	var (
+		startIndex int
+		err        error
+	)
+
+	if start == nil {
+		startIndex, err = ConvertIndex(slice, 0, "start index")
 	} else {
-		return true
+		startIndex, err = ConvertIndex(slice, *start, "start index")
 	}
+
+	if err != nil {
+		return false
+	}
+
+	sliceLength := len(slice)
+
+	for i := startIndex; i < sliceLength; i++ {
+		value := slice[i]
+
+		if reflect.DeepEqual(element, value) {
+			return true
+		}
+	}
+
+	return false
 }

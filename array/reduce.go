@@ -1,34 +1,66 @@
 package array
 
-func Reduce[T comparable](s []T, f ReduceFunc[T], defaultValue any) any {
-	var accumulator = defaultValue
+import "errors"
 
-	for index, value := range s {
-		accumulator = f(accumulator, value, index, s)
+// The Reduce() function executes a Reducer function for slice element. The Reduce() function returns the function's accumulated result and an an error. The Reduce() function does not execute the function for empty slice elements. The Reduce() function does not change the original slice. Note at the first callback, there is no return value from the previous callback. Normally, alice element 0 is used as initial value, and the iteration starts from slice element 1. If an initial value is supplied, this is used, and the iteration starts from slice element 0.
+func Reduce[T comparable](slice []T, fn ReduceFunc[T], initialValue any) (any, error) {
+	var sliceLength = len(slice)
+
+	if sliceLength == 0 && initialValue == nil {
+		return nil, errors.New("Reduce of empty slice with no initial value")
 	}
 
-	return accumulator
-}
-
-func ReduceStrict[T comparable, K comparable](s []T, f ReduceStrictFunc[T, K], defaultValue K) K {
-	var accumulator = defaultValue
-
-	for index, value := range s {
-		accumulator = f(accumulator, value, index, s)
+	if sliceLength == 0 && initialValue != nil {
+		return initialValue, nil
 	}
 
-	return accumulator
+	var accumulator any
+	var startIndex int
+
+	if initialValue == nil {
+		accumulator = slice[0]
+		startIndex = 1
+	} else {
+		accumulator = initialValue
+		startIndex = 0
+	}
+
+	for index := startIndex; index < sliceLength; index++ {
+		value := slice[index]
+		accumulator = fn(accumulator, value, index, slice)
+	}
+
+	return accumulator, nil
 }
 
-// d := []string{"ant", "bison", "camel", "duck", "elephant"}
+// The ReduceStrict() function executes a Reducer function for slice element. The ReduceStrict() function returns the function's accumulated result(typed with the slices type) and an an error. The ReduceStrict() function does not execute the function for empty slice elements. The ReduceStrict() function does not change the original slice. Note at the first callback, there is no return value from the previous callback. Normally, alice element 0 is used as initial value, and the iteration starts from slice element 1. If an initial value is supplied, this is used, and the iteration starts from slice element 0.
+func ReduceStrict[T comparable](slice []T, fn ReduceStrictFunc[T], initialValue *T) (T, error) {
+	var sliceLength = len(slice)
 
-	// r := array.Reduce[string](d, func(acc any, e string, i int, s []string) any {
-	// 	accX := acc.(string)
-	// 	return accX + " " + e
-	// }, "")
+	if sliceLength == 0 && initialValue == nil {
+		var defaultVal T
+		return defaultVal, errors.New("Reduce of empty slice with no initial value")
+	}
 
-// r := array.ReduceStrict[string, string](d, func(acc, e string, i int, s []string) string {
-// 	return acc + " " + e
-// }, "")
+	if sliceLength == 0 && initialValue != nil {
+		return *initialValue, nil
+	}
 
-// fmt.Println(r)
+	var accumulator T
+	var startIndex int
+
+	if initialValue == nil {
+		accumulator = slice[0]
+		startIndex = 1
+	} else {
+		accumulator = *initialValue
+		startIndex = 0
+	}
+
+	for index := startIndex; index < sliceLength; index++ {
+		value := slice[index]
+		accumulator = fn(accumulator, value, index, slice)
+	}
+
+	return accumulator, nil
+}

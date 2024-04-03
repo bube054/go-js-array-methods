@@ -1,32 +1,14 @@
 package array
 
-import (
-	"errors"
-	"fmt"
-)
+// The Pop() function removes (pops) the last element of an slice. The Pop() function does not change the original slice. The Pop() function returns the new slice without the last element and a pointer of removed element.
+func Pop[T comparable](slice []T) ([]T, *T) {
+	sliceLength := len(slice)
 
-func Pop[T comparable](s []T, defaultValue T) ([]T, T, error) {
-	length := len(s)
- 
-	if length == 0 {
-		return s, defaultValue, errors.New(fmt.Sprintf("%v is empty", s))
+	if sliceLength == 0 {
+		return slice, nil
 	}
 
-	lastItemIndex := length - 1
-	lastItem := s[lastItemIndex]
-	withoutLastItem := s[:lastItemIndex]
-	return withoutLastItem, lastItem, nil
-}
+	lastElement := slice[sliceLength-1]
 
-func PopMut[T comparable] (s *[]T, defaultValue T) (T, error) {
-	length := len(*s)
-
-	if length == 0 {
-		return defaultValue, errors.New(fmt.Sprintf("%v is empty", s))
-	}
-
-	lastItemIndex := length - 1
-	lastItem := (*s)[lastItemIndex]
-	*s = (*s)[:lastItemIndex]
-	return lastItem, nil
+	return slice[:sliceLength-1], &lastElement
 }

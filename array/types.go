@@ -1,9 +1,13 @@
 package array
 
-type Predicate[T comparable] func(e T, i int, s []T) bool
+type Predicate[T comparable] func(element T, index int, slice []T) bool
 
-type MapFunc[T comparable] func(e T, i int, s []T) any
+type ForEachFunc[T comparable] func(element T, index int, slice []T)
 
-type ReduceFunc[T comparable] func(acc any, e T, i int, s []T) any 
+type MapFunc[T comparable] func(element T, index int, slice []T) any
 
-type ReduceStrictFunc[T comparable, K comparable] func(acc K, e T, i int, s []T) K 
+type MapFuncStrict[T comparable] func(element T, index int, slice []T) T
+
+type ReduceFunc[T comparable] func(total any, currentValue T, currentIndex int, slice []T) any
+
+type ReduceStrictFunc[T comparable] func(total T, currentValue T, currentIndex int, slice []T) T

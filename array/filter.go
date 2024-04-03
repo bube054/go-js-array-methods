@@ -1,10 +1,11 @@
 package array
 
-func Filter[T comparable](s []T, f Predicate[T]) []T {
+// The filter() function creates a new slice filled with elements that pass a test provided by a function. The filter() function does not execute the function for empty elements. The filter() function does not change the original slice.
+func Filter[T comparable](slice []T, fn Predicate[T]) []T {
 	newList := []T{}
 
-	for index, value := range s {
-		ok := f(value, index, s)
+	for index, value := range slice {
+		ok := fn(value, index, slice)
 		if ok {
 			newList = append(newList, value)
 		}
@@ -12,13 +13,3 @@ func Filter[T comparable](s []T, f Predicate[T]) []T {
 
 	return newList
 }
-
-	// r := array.Filter[string](d, func(e string, i int, s []string) bool {
-	// 	if len(e) > 4 {
-	// 		return true
-	// 	} else {
-	// 		return false
-	// 	}
-	// })
-
-	// fmt.Println(r)
