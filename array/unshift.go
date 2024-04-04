@@ -1,11 +1,7 @@
 package array
 
-func UnShift[T comparable](s []T, e T) []T {
-	newList := []T{e}
-	return append(newList, s...)
-}
-
-func UnShiftMut[T comparable](s *[]T, e T) {
-	newList := []T{e}
-	*s = append(newList, (*s)...)
+// The Unshift() function adds new elements to the beginning of an array. The Unshift() function does not overwrite the original array.
+func UnShift[T comparable](slice []T, element... T) []T {
+	newList := append([]T{}, element...)
+	return append(newList, slice...)
 }

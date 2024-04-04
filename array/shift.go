@@ -1,44 +1,14 @@
 package array
 
-import (
-	"errors"
-	"fmt"
-)
+// The Shift() function removes the first item of an slice. The Shift() function changes the original slice. The Shift() function returns the new slice and a pointer to the  shifted element.
+func Shift[T comparable](slice []T) ([]T, *T) {
+	sliceLength := len(slice)
 
-func Shift[T comparable](s []T, defaultValue T) ([]T, T, error) {
-	length := len(s)
-
-	if length == 0 {
-		return s, defaultValue, errors.New(fmt.Sprintf("%v is empty", s))
+	if sliceLength == 0 {
+		return slice, nil
 	}
 
-	firstItemIndex := 0
-	firstItem := s[firstItemIndex]
-	if length == 1 {
-		empty := []T{}
-		return empty, firstItem, nil
-	} else {
-		secondItemIndex := firstItemIndex + 1
-		withoutFirstItem := s[secondItemIndex:]
-		return withoutFirstItem, firstItem, nil
-	}
-}
+	firstElement := slice[0]
 
-func ShiftMut[T comparable](s *[]T, defaultValue T) (T, error) {
-	length := len(*s)
-
-	if length == 0 {
-		return defaultValue, errors.New(fmt.Sprintf("%v is empty", s))
-	}
-
-	firstItemIndex := 0
-	firstItem := (*s)[firstItemIndex]
-	if length == 1 {
-		*s = []T{}
-		return firstItem, nil
-	} else {
-		secondItemIndex := firstItemIndex + 1
-		*s = (*s)[secondItemIndex:]
-		return firstItem, nil
-	}
+	return slice[1:], &firstElement
 }

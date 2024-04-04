@@ -1,10 +1,11 @@
 package array
 
-func Reverse[T comparable](s []T) []T {
+// The Reverse() function Reverses the order of the elements in an slice. The Reverse() function does not overwrites the original array.
+func Reverse[T comparable](slice []T) []T {
 	newList := []T{}
 
-	for i := len(s) - 1; i >= 0; i-- {
-		item := s[i]
+	for index := len(slice) - 1; index >= 0; index-- {
+		item := slice[index]
 		newList = append(newList, item)
 	}
 

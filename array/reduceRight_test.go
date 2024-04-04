@@ -6,7 +6,7 @@ import (
 )
 
 func TestReduceRight(t *testing.T) {
-	numbers := []int{2, 45, 30, 100}
+	numbers := []int{100}
 
 	myFunc := func(acc any, el int, ind int, slice []int) any {
 		accNum := acc.(int)
@@ -15,7 +15,7 @@ func TestReduceRight(t *testing.T) {
 	}
 
 	// init := 0
-	res, err := ReduceRight(numbers, myFunc, nil)
+	res, err := ReduceRight(numbers, myFunc, 300)
 
 	fmt.Println("RES:", res)
 	fmt.Println("ERR:", err)

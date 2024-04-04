@@ -1,3 +1,4 @@
+// Package array provides functions for manipulating golang slices.
 package array
 
 // The At() function returns an indexed element from a slice.

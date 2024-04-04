@@ -18,14 +18,14 @@ func ReduceRight[T comparable](slice []T, fn ReduceFunc[T], initialValue any) (a
 	var startIndex int
 
 	if initialValue == nil {
-		accumulator = slice[0]
-		startIndex = 1
+		accumulator = slice[sliceLength-1]
+		startIndex = sliceLength-2
 	} else {
 		accumulator = initialValue
-		startIndex = 0
+		startIndex = sliceLength - 1
 	}
 
-	for index := sliceLength - 1; index >= startIndex; index-- {
+	for index := startIndex; index >= 0; index-- {
 		value := slice[index]
 		accumulator = fn(accumulator, value, index, slice)
 	}
@@ -50,14 +50,14 @@ func ReduceRightStrict[T comparable](slice []T, fn ReduceStrictFunc[T], initialV
 	var startIndex int
 
 	if initialValue == nil {
-		accumulator = slice[0]
-		startIndex = 1
+		accumulator = slice[sliceLength-1]
+		startIndex = sliceLength-2
 	} else {
 		accumulator = *initialValue
-		startIndex = 0
+		startIndex = sliceLength - 1
 	}
 
-	for index := sliceLength - 1; index >= startIndex; index-- {
+	for index := startIndex; index >= 0; index-- {
 		value := slice[index]
 		accumulator = fn(accumulator, value, index, slice)
 	}
