@@ -6,10 +6,10 @@ import (
 ) 
 
 func TestIndexOf(t *testing.T) {
-	fruits := []string{"Banana", "Orange", "Apple", "Mango"}
+	fruits := []string{"Orange", "Banana", "Orange", "Apple", "Mango"}
 
-	// start := 1
-	present := IndexOf(fruits, "Orange", nil)
+	start := 1
+	present := IndexOf(fruits, "Orange", &start)
 
 	fmt.Println("Present:", present)
 }

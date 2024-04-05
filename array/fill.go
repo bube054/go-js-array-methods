@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+// The Fill() function fills specified elements in an slice with a value. The fill() method does not overwrites the original slice.
 func Fill[T comparable](slice []T, value T, start int, end int) ([]T, error) {
 	sliceLength := len(slice)
 	newSlice := make([]T, sliceLength)

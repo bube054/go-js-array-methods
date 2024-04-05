@@ -9,7 +9,7 @@ func TestFindIndex(t *testing.T) {
 	ages := []int{3, 10, 18, 20}
 
 	find18YrsOld := func(el int, ind int, list []int) bool {
-		if el > 9 {
+		if el >= 18 {
 			return true
 		} else {
 			return false
