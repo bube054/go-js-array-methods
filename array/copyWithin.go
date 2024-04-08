@@ -5,7 +5,7 @@ import (
 	// "math"
 )
 
-// The CopyWithin() function copies slice elements to another position in an slice. The CopyWithin() function overwrites the existing values. The CopyWithin() function does not add items to the slice.
+// The CopyWithin() function returns a copy of slice elements to another position in an slice and a possible error relating to out of range indexes.. The CopyWithin() function overwrites the existing values in the new slice.
 func CopyWithin[T comparable](slice []T, target int, start int, end int) ([]T, error) {
 	sliceLength := len(slice)
 	newSlice := make([]T, sliceLength)

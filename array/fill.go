@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-// The Fill() function fills specified elements in an slice with a value. The fill() method does not overwrites the original slice.
+// The Fill() function returns fills of specified elements in an slice with a value and a possible error due to indexes out of range.
 func Fill[T comparable](slice []T, value T, start int, end int) ([]T, error) {
 	sliceLength := len(slice)
 	newSlice := make([]T, sliceLength)
@@ -19,6 +19,7 @@ func Fill[T comparable](slice []T, value T, start int, end int) ([]T, error) {
 	newEndIndex, err := ConvertIndex(slice, end, "end index")
 
 	if err != nil {
+		// newEndIndex = sliceLength
 		return nil, err
 	}
 
