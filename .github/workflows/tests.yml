@@ -1,0 +1,25 @@
+name: Go Test
+
+on:
+    push:
+        branches: ["main"] # Triggers on push to main branch
+    pull_request:
+        branches: ["main"] # Triggers on pull requests to main
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4 # Clones your repository
+
+            - name: Set up Go
+              uses: actions/setup-go@v5 # Installs the Go toolchain
+              with:
+                  go-version: "1.25" # Specify your Go version or use a file
+
+            - name: Install dependencies
+              run: go mod download # Downloads modules defined in go.mod
+
+            - name: Run tests
+              run: go test -v ./... # Runs all tests in the project with verbose output
