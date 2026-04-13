@@ -114,7 +114,7 @@ func TestEntries(t *testing.T) {
 }
 
 func TestEntriesWithStrings(t *testing.T) {
-	tests := EntriesTest[string] {
+	tests := EntriesTest[string]{
 		{
 			name:  "entries of string array",
 			slice: []string{"apple", "banana", "cherry"},

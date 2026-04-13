@@ -4,12 +4,13 @@ import (
 	"testing"
 )
 
-type EveryTest[T comparable] []struct{
+type EveryTest[T comparable] []struct {
 	name      string
-		slice     []T
-		predicate func(T, int, []T) bool
-		expected  bool
+	slice     []T
+	predicate func(T, int, []T) bool
+	expected  bool
 }
+
 func TestEvery(t *testing.T) {
 	tests := EveryTest[int]{
 		{
@@ -64,7 +65,7 @@ func TestEvery(t *testing.T) {
 	}
 }
 
-func TestEvery_String(t *testing.T){
+func TestEvery_String(t *testing.T) {
 	tests := EveryTest[string]{
 		{
 			name:  "all elements non-empty",
