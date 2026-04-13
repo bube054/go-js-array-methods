@@ -23,8 +23,7 @@ func CopyWithin[T comparable](slice []T, target int, start int, end int) ([]T, e
 		return nil, err
 	}
 
-	newEndIndex, err := ConvertIndex(slice, end, "end index")
-
+	newEndIndex, err := getLastIndex(end, sliceLength)
 	if err != nil {
 		return nil, err
 	}
@@ -43,4 +42,23 @@ func CopyWithin[T comparable](slice []T, target int, start int, end int) ([]T, e
 	}
 
 	return newSlice, nil
+}
+
+func getLastIndex(end, sliceLength int) (int, error) {
+	// Handle end index specially - it's exclusive, so it can be equal to length
+	var newEndIndex int
+	if end < 0 {
+		// Negative indices are converted relative to length
+		if end < -sliceLength {
+			return -1, fmt.Errorf("end index: %d out of range", end)
+		}
+		newEndIndex = sliceLength + end
+	} else {
+		// Positive indices can be up to length (inclusive of length for exclusive end)
+		if end > sliceLength {
+			return -1, fmt.Errorf("end index: %d out of range", end)
+		}
+		newEndIndex = end
+	}
+	return newEndIndex, nil
 }
