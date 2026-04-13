@@ -127,6 +127,48 @@ func TestAtComprehensive(t *testing.T) {
 	}
 }
 
+func TestArrayAt(t *testing.T) {
+	arr := Array[int]{10, 20, 30, 40, 50}
+	tests := []struct {
+		name          string
+		index         int
+		expectedValue int
+		expectError   bool
+	}{
+		{
+			name:          "Array.At with positive index",
+			index:         2,
+			expectedValue: 30,
+			expectError:   false,
+		},
+		{
+			name:          "Array.At with negative index",
+			index:         -1,
+			expectedValue: 50,
+			expectError:   false,
+		},
+		{
+			name:          "Array.At out of bounds",
+			index:         10,
+			expectedValue: 0,
+			expectError:   true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result, err := arr.At(tt.index)
+			if tt.expectError && err == nil {
+				t.Errorf("Array.At(%d) expected error but got none", tt.index)
+			} else if !tt.expectError && err != nil {
+				t.Errorf("Array.At(%d) got unexpected error: %v", tt.index, err)
+			} else if !tt.expectError && result != tt.expectedValue {
+				t.Errorf("Array.At(%d) = %d, expected %d", tt.index, result, tt.expectedValue)
+			}
+		})
+	}
+}
+
 func TestAtWithStrings(t *testing.T) {
 	tests := []struct {
 		name          string
