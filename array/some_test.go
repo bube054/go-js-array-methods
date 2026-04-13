@@ -1,16 +1,56 @@
 package array
 
 import (
-	"fmt"
 	"testing"
 )
 
-func TestSome(t *testing.T){
-	ages := []int{3, 10, 18, 20}
+func TestSome(t *testing.T) {
+	tests := []struct {
+		name      string
+		slice     []int
+		predicate func(int, int, []int) bool
+		expected  bool
+	}{
+		{
+			name:  "some elements > 10",
+			slice: []int{3, 10, 18, 20},
+			predicate: func(el, _ int, _ []int) bool {
+				return el > 10
+			},
+			expected: true,
+		},
+		{
+			name:  "some returns false for no match",
+			slice: []int{1, 2, 3},
+			predicate: func(el, _ int, _ []int) bool {
+				return el > 10
+			},
+			expected: false,
+		},
+		{
+			name:  "some in empty array",
+			slice: []int{},
+			predicate: func(el, _ int, _ []int) bool {
+				return el > 0
+			},
+			expected: false,
+		},
+		{
+			name:  "some with single match",
+			slice: []int{100},
+			predicate: func(el, _ int, _ []int) bool {
+				return el > 50
+			},
+			expected: true,
+		},
+	}
 
-	age := Some(ages, func(age int, ind int, list []int) bool {
-		return age >  100
-	})
-
-	fmt.Println("RES:", age)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := Some(tt.slice, tt.predicate)
+			if result != tt.expected {
+				t.Errorf("Some() = %v, expected %v", result, tt.expected)
+			}
+		})
+	}
 }
