@@ -1,5 +1,7 @@
 package array
 
+import "fmt"
+
 type Array[T comparable] []T
 
 // The At() method returns an indexed element from the array and returns a possible error relating to out of range indexes.
@@ -84,28 +86,27 @@ func (a Array[T]) IndexOf(element T, start *int) int {
 	return IndexOf([]T(a), element, start)
 }
 
-// The Join() method joins all elements of a string array into a single string using the provided separator.
-// Note: This method only works when the Array contains strings.
-func (a Array[T]) Join(separator string) string {
-	slice := []T(a)
-
-	strS, ok := any(slice).([]string)
-	if !ok {
-		panic("Join method only works for Array[string]")
+// The Join() method joins all elements of the array into a single string using the provided separator.
+// Elements are converted to their string form, so this works for any Array[T].
+// If no separator is provided, a comma is used, matching JavaScript Array.join().
+func (a Array[T]) Join(separator ...string) string {
+	sep := ","
+	if len(separator) > 0 {
+		sep = separator[0]
 	}
-	return Join(strS, &separator)
+
+	strSlice := make([]string, len(a))
+	for i, v := range a {
+		strSlice[i] = fmt.Sprint(v)
+	}
+
+	return Join(strSlice, &sep)
 }
 
-// The ToString() method returns a string representation of a string array.
-// Note: This method only works when the Array contains strings.
+// The ToString() method returns a string representation of the array.
+// It mirrors JavaScript Array.toString() by joining elements with commas.
 func (a Array[T]) ToString() string {
-	slice := []T(a)
-
-	strS, ok := any(slice).([]string)
-	if !ok {
-		panic("ToString method only works for Array[string]")
-	}
-	return ToString(strS)
+	return a.Join()
 }
 
 // The LastIndexOf() method returns the last index at which a given element can be found in the array.

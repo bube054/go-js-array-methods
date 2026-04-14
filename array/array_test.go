@@ -520,6 +520,43 @@ func TestArrayJoin(t *testing.T) {
 	}
 }
 
+func TestArrayJoinNonStringTypes(t *testing.T) {
+	tests := []struct {
+		name      string
+		slice     Array[any]
+		separator string
+		expected  string
+	}{
+		{
+			name:      "Join ints with default separator",
+			slice:     Array[any]{1, 2, 3},
+			separator: ",",
+			expected:  "1,2,3",
+		},
+		{
+			name:      "Join bools with custom separator",
+			slice:     Array[any]{true, false, true},
+			separator: "|",
+			expected:  "true|false|true",
+		},
+		{
+			name:      "Join mixed values",
+			slice:     Array[any]{1, "two", 3.0},
+			separator: "-",
+			expected:  "1-two-3",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := tt.slice.Join(tt.separator)
+			if result != tt.expected {
+				t.Errorf("Join() = %s, expected %s", result, tt.expected)
+			}
+		})
+	}
+}
+
 // TestArrayToString tests the Array.ToString receiver method
 func TestArrayToString(t *testing.T) {
 	tests := []struct {
