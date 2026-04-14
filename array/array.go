@@ -93,8 +93,13 @@ func (a *Array[T]) Join(separator string) string {
 // The ToString() method returns a string representation of a string array.
 // Note: This method only works when the Array contains strings.
 func (a *Array[T]) ToString() string {
-	// Type assertion only works for string arrays
-	return ToString([]string{})
+	slice := []T(*a)
+
+	strS, ok := any(slice).([]string)
+	if !ok {
+		panic("ToString method only works for Array[string]")
+	}
+	return ToString(strS)
 }
 
 // The LastIndexOf() method returns the last index at which a given element can be found in the array.
