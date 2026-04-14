@@ -8,8 +8,12 @@ func (a Array[T]) At(index int) (T, error) {
 }
 
 // The Concat() method concatenates the array with other slices and returns a new concatenated array.
-func (a Array[T]) Concat(slices ...[]T) Array[T] {
-	return Array[T](Concat([]T(a), slices...))
+func (a Array[T]) Concat(slices ...Array[T]) Array[T] {
+	b := make([][]T, len(slices))
+	for i, s := range slices {
+		b[i] = []T(s)
+	}
+	return Array[T](Concat([]T(a), b...))
 }
 
 // The CopyWithin() method copies array elements to another position in the array and returns the modified array.
