@@ -12,7 +12,7 @@ func TestArrayConcat(t *testing.T) {
 	slice3 := []int{7, 8}
 
 	result := arr.Concat(slice2, slice3)
-	expected := []int{1, 2, 3, 4, 5, 6, 7, 8}
+	expected := Array[int]{1, 2, 3, 4, 5, 6, 7, 8}
 
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("Array.Concat() = %v, expected %v", result, expected)
@@ -28,7 +28,7 @@ func TestArrayCopyWithin(t *testing.T) {
 		t.Errorf("Array.CopyWithin() got unexpected error: %v", err)
 	}
 
-	expected := []int{4, 5, 3, 4, 5}
+	expected := Array[int]{4, 5, 3, 4, 5}
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("Array.CopyWithin() = %v, expected %v", result, expected)
 	}
@@ -75,7 +75,7 @@ func TestArrayFill(t *testing.T) {
 		t.Errorf("Array.Fill() got unexpected error: %v", err)
 	}
 
-	expected := []int{1, 0, 0, 4, 5}
+	expected := Array[int]{1, 0, 0, 4, 5}
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("Array.Fill() = %v, expected %v", result, expected)
 	}
@@ -87,7 +87,7 @@ func TestArrayFilter(t *testing.T) {
 	predicate := func(el, _ int, _ []int) bool { return el > 18 }
 
 	result := arr.Filter(predicate)
-	expected := []int{20, 25, 30}
+	expected := Array[int]{20, 25, 30}
 
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("Array.Filter() = %v, expected %v", result, expected)
@@ -187,7 +187,7 @@ func TestArrayMap(t *testing.T) {
 		return el * 10
 	})
 
-	expected := []any{10, 20, 30}
+	expected := Array[any]{10, 20, 30}
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("Array.Map() = %v, expected %v", result, expected)
 	}
@@ -201,7 +201,7 @@ func TestArrayMapStrict(t *testing.T) {
 		return el * 10
 	})
 
-	expected := []int{10, 20, 30}
+	expected := Array[int]{10, 20, 30}
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("Array.MapStrict() = %v, expected %v", result, expected)
 	}
@@ -212,7 +212,7 @@ func TestArrayPop(t *testing.T) {
 	arr := Array[int]{1, 2, 3, 4, 5}
 	result, popped := arr.Pop()
 
-	expectedSlice := []int{1, 2, 3, 4}
+	expectedSlice := Array[int]{1, 2, 3, 4}
 	expectedPopped := 5
 
 	if !reflect.DeepEqual(result, expectedSlice) {
@@ -229,7 +229,7 @@ func TestArrayPush(t *testing.T) {
 	arr := Array[int]{1, 2, 3}
 	result := arr.Push(4, 5)
 
-	expected := []int{1, 2, 3, 4, 5}
+	expected := Array[int]{1, 2, 3, 4, 5}
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("Array.Push() = %v, expected %v", result, expected)
 	}
@@ -278,7 +278,7 @@ func TestArrayReverse(t *testing.T) {
 	arr := Array[int]{1, 2, 3, 4, 5}
 	result := arr.Reverse()
 
-	expected := []int{5, 4, 3, 2, 1}
+	expected := Array[int]{5, 4, 3, 2, 1}
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("Array.Reverse() = %v, expected %v", result, expected)
 	}
@@ -289,7 +289,7 @@ func TestArrayShift(t *testing.T) {
 	arr := Array[int]{1, 2, 3, 4, 5}
 	result, shifted := arr.Shift()
 
-	expectedSlice := []int{2, 3, 4, 5}
+	expectedSlice := Array[int]{2, 3, 4, 5}
 	expectedShifted := 1
 
 	if !reflect.DeepEqual(result, expectedSlice) {
@@ -310,7 +310,7 @@ func TestArraySlice(t *testing.T) {
 		t.Errorf("Array.Slice() got unexpected error: %v", err)
 	}
 
-	expected := []int{2, 3, 4}
+	expected := Array[int]{2, 3, 4}
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("Array.Slice() = %v, expected %v", result, expected)
 	}
@@ -337,7 +337,7 @@ func TestArraySplice(t *testing.T) {
 		t.Errorf("Array.Splice() got unexpected error: %v", err)
 	}
 
-	expectedResult := []int{1, 10, 11, 4, 5}
+	expectedResult := Array[int]{1, 10, 11, 4, 5}
 
 	if !reflect.DeepEqual(result, expectedResult) {
 		t.Errorf("Array.Splice() result = %v, expected %v", result, expectedResult)
@@ -349,7 +349,7 @@ func TestArrayUnShift(t *testing.T) {
 	arr := Array[int]{3, 4, 5}
 	result := arr.UnShift(1, 2)
 
-	expected := []int{1, 2, 3, 4, 5}
+	expected := Array[int]{1, 2, 3, 4, 5}
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("Array.UnShift() = %v, expected %v", result, expected)
 	}
@@ -360,7 +360,7 @@ func TestArrayValueOf(t *testing.T) {
 	arr := Array[int]{1, 2, 3}
 	result := arr.ValueOf()
 
-	expected := []int{1, 2, 3}
+	expected := Array[int]{1, 2, 3}
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("Array.ValueOf() = %v, expected %v", result, expected)
 	}
@@ -375,9 +375,29 @@ func TestArrayWith(t *testing.T) {
 		t.Errorf("Array.With() got unexpected error: %v", err)
 	}
 
-	expected := []int{1, 2, 99, 4, 5}
+	expected := Array[int]{1, 2, 99, 4, 5}
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("Array.With() = %v, expected %v", result, expected)
+	}
+}
+
+// TestArrayMethodChaining verifies that methods returning Array[T] can be chained.
+func TestArrayMethodChaining(t *testing.T) {
+	arr := Array[int]{1, 2, 3, 4, 5}
+
+	chain1 := arr.Filter(func(el, _ int, _ []int) bool {
+		return el%2 == 0
+	}).Push(6).Reverse()
+
+	expected1 := Array[int]{6, 4, 2}
+	if !reflect.DeepEqual(chain1, expected1) {
+		t.Errorf("chained Filter->Push->Reverse = %v, expected %v", chain1, expected1)
+	}
+
+	chain2 := arr.Concat(Array[int]{6, 7}).Reverse()
+	expected2 := Array[int]{7, 6, 5, 4, 3, 2, 1}
+	if !reflect.DeepEqual(chain2, expected2) {
+		t.Errorf("chained Concat->Reverse = %v, expected %v", chain2, expected2)
 	}
 }
 
