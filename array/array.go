@@ -70,12 +70,6 @@ func (a Array[T]) ForEach(fn ForEachFunc[T]) {
 	ForEach([]T(a), fn)
 }
 
-// The Flat() method takes an Array of slices and flattens them into a single slice.
-// This method is specialized for arrays of slices: Array[[]U] -> []U
-// To use this, convert your 2D array to Array[[]T] first, then call Flat().
-// Note: Due to Go's type system limitations, this is a placeholder.
-// Use the package function Flat() directly for 2D arrays: array.Flat([][]T)
-
 // The Includes() method determines whether the array includes a certain element.
 func (a Array[T]) Includes(element T, start *int) bool {
 	return Includes([]T(a), element, start)
