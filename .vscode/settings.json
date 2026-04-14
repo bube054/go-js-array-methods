@@ -34,5 +34,8 @@
     "*": true,
     "go": false
   },
-  "files.autoSave": "afterDelay"
+  "files.autoSave": "afterDelay",
+  "chat.tools.terminal.autoApprove": {
+    "go": true
+  }
 }

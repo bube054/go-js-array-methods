@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/bube054/go-js-array-methods/array"
 )
 
@@ -11,13 +12,12 @@ func main() {
 	// b := []int{4,5,6}
 	// c := []int{7,8,9}
 	// d := []string{"ant", "bison", "camel", "duck", "elephant"}
-	
+
 	r := array.Reverse(a)
 	rr := aa.Reverse()
-	
-	fmt.Println("Normal helper function",r)
-	fmt.Println("Array method",rr)
 
+	fmt.Println("Normal helper function", r)
+	fmt.Println("Array method", rr)
 
 	// r := array.Includes[string](d, "ante")
 	// r := array.IndexOf[string](d, "bisons")

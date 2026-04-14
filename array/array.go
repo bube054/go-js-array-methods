@@ -81,10 +81,13 @@ func (a *Array[T]) IndexOf(element T, start *int) int {
 // The Join() method joins all elements of a string array into a single string using the provided separator.
 // Note: This method only works when the Array contains strings.
 func (a *Array[T]) Join(separator string) string {
-	// Type assertion only works for string arrays
-	// For now, we provide a generic method that would need type checking at runtime
-	// This is a limitation of Go's generic system
-	return Join([]string{}, nil)
+	slice := []T(*a)
+
+	strS, ok := any(slice).([]string)
+	if !ok {
+		panic("Join method only works for Array[string]")
+	}
+	return Join(strS, &separator)
 }
 
 // The ToString() method returns a string representation of a string array.
