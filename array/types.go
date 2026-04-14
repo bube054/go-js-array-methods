@@ -4,7 +4,7 @@ type Predicate[T comparable] func(element T, index int, slice []T) bool
 
 type ForEachFunc[T comparable] func(element T, index int, slice []T)
 
-type MapFunc[T comparable, V any] func(element T, index int, slice []T) V
+type MapFunc[T comparable] func(element T, index int, slice []T) any
 
 type MapFuncStrict[T comparable] func(element T, index int, slice []T) T
 
