@@ -1,7 +1,7 @@
 # go-js-array-methods
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/bube054/go-js-array-methods.svg)](https://pkg.go.dev/github.com/bube054/go-js-array-methods)
-[![Go Report Card](https://goreportcard.com/badge/github.com/bube054/go-js-array-methods)](https://goreportcard.com/report/github.com/bube054/go-js-array-methods)
+[![Go Reference](https://pkg.go.dev/badge/github.com/bube054/go-js-array-methods/v2.svg)](https://pkg.go.dev/github.com/bube054/go-js-array-methods/v2)
+[![Go Report Card](https://goreportcard.com/badge/github.com/bube054/go-js-array-methods/v2)](https://goreportcard.com/report/github.com/bube054/go-js-array-methods/v2)
 [![CI](https://github.com/bube054/go-js-array-methods/actions/workflows/tests.yml/badge.svg)](https://github.com/bube054/go-js-array-methods/actions/workflows/tests.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](license.md)
 
