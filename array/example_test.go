@@ -3,7 +3,7 @@ package array_test
 import (
 	"fmt"
 
-	array "github.com/bube054/go-js-array-methods/array"
+	array "github.com/bube054/go-js-array-methods/v2/array"
 )
 
 // ----- Package-level function examples -----
