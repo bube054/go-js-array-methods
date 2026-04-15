@@ -38,6 +38,19 @@ func (a Array[T]) Fill(value T, start, end int) (Array[T], error) {
 	return Array[T](result), err
 }
 
+// The Flat() method flattens nested arrays up to the specified depth.
+// The Flat() method returns a new array with the sub-array elements concatenated into it. The depth parameter specifies how deep a nested array structure should be flattened. The default is 1.
+// Until Generic Methods are implemented in Go, the Flat() method can only return Array[any] since it needs to handle slices of any type. Once Generic Methods are available, we can update the Flat() method to return Array[T] and handle type assertions accordingly.
+func (a Array[T]) Flat(depths ...int) (Array[any], error) {
+	// Convert Array[T] to []any for flattening
+	anySlice := make([]any, len(a))
+	for i, v := range a {
+		anySlice[i] = v
+	}
+	result, err := Flat[any](anySlice, depths...)
+	return Array[any](result), err
+}
+
 // The Filter() method creates a new array with elements that pass the provided predicate function.
 func (a Array[T]) Filter(fn Predicate[T]) Array[T] {
 	return Array[T](Filter([]T(a), fn))
