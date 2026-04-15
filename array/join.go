@@ -11,6 +11,7 @@ func Join[T any](slice []T, separator *string) string {
 		defaultSeparator := ","
 		separator = &defaultSeparator
 	}
+
 	strSlice := make([]string, len(slice))
 	for i, v := range slice {
 		strSlice[i] = fmt.Sprint(v)
