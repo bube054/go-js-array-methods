@@ -112,7 +112,7 @@ func (a Array[T]) LastIndexOf(element T, start *int) int {
 }
 
 // The Map() method creates a new array with the results of calling a function for every array element.
-func (a Array[T]) Map(fn MapFunc[T]) Array[any] {
+func (a Array[T]) Map(fn MapFunc[T, any]) Array[any] {
 	return Array[any](Map([]T(a), fn))
 }
 
