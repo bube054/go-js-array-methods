@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// The Join() function returns an slice as a string. The Join() function does not change the original slice. Any separator can be specified. The default is comma (,). Join function only works for strings.
+// The Join() function returns an slice as a string. The Join() function does not change the original slice. Any separator can be specified. The default is comma (,).
 func Join[T any](slice []T, separator *string) string {
 	if separator == nil {
 		defaultSeparator := ","
