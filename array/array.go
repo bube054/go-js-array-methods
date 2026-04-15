@@ -1,7 +1,5 @@
 package array
 
-import "fmt"
-
 type Array[T comparable] []T
 
 // The At() method returns an indexed element from the array and returns a possible error relating to out of range indexes.
@@ -89,12 +87,7 @@ func (a Array[T]) Join(separator ...string) string {
 		sep = separator[0]
 	}
 
-	strSlice := make([]string, len(a))
-	for i, v := range a {
-		strSlice[i] = fmt.Sprint(v)
-	}
-
-	return Join(strSlice, &sep)
+	return Join([]T(a), &sep)
 }
 
 // The ToString() method returns a string representation of the array.
