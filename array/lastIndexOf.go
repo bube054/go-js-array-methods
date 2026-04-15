@@ -11,19 +11,18 @@ func LastIndexOf[T comparable](slice []T, element T, start *int) int {
 		err        error
 	)
 
-	if start == nil {
-		startIndex, err = ConvertIndex(slice, 0, "start index")
-	} else {
-		startIndex, err = ConvertIndex(slice, *start, "start index")
-	}
-
-	if err != nil {
-		return -1
-	}
-
 	sliceLength := len(slice)
 
-	for i := sliceLength - 1; i >= startIndex; i-- {
+	if start == nil {
+		startIndex = sliceLength - 1
+	} else {
+		startIndex, err = ConvertIndex(slice, *start, "start index")
+		if err != nil {
+			return -1
+		}
+	}
+
+	for i := startIndex; i >= 0; i-- {
 		value := slice[i]
 
 		if reflect.DeepEqual(element, value) {

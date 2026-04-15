@@ -1,7 +1,7 @@
 package array
 
 type Entry[T comparable] struct {
-	index int
+	index   int
 	element T
 }
 
