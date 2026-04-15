@@ -82,10 +82,7 @@ func (a Array[T]) IndexOf(element T, start *int) int {
 // Elements are converted to their string form, so this works for any Array[T].
 // If no separator is provided, a comma is used, matching JavaScript Array.join().
 func (a Array[T]) Join(separator ...string) string {
-	sep := ","
-	if len(separator) > 0 {
-		sep = separator[0]
-	}
+	sep := OptionalParam(separator, ",")
 
 	return Join([]T(a), &sep)
 }

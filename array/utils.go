@@ -20,3 +20,10 @@ func ConvertIndex[T comparable](slice []T, index int, nameOfIndex string) (int, 
 		return -1, err
 	}
 }
+
+func OptionalParam[T any](params []T, defaultValue T) T {
+	if len(params) > 0 {
+		return params[0]
+	}
+	return defaultValue
+}
