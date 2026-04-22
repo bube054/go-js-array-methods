@@ -55,3 +55,16 @@ func TestFilter(t *testing.T) {
 		})
 	}
 }
+
+// TestArrayFilter tests the Array.Filter receiver method
+func TestArrayFilter(t *testing.T) {
+	arr := Array[int]{10, 20, 25, 30}
+	predicate := func(el, _ int, _ []int) bool { return el > 18 }
+
+	result := arr.Filter(predicate)
+	expected := Array[int]{20, 25, 30}
+
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("Array.Filter() = %v, expected %v", result, expected)
+	}
+}

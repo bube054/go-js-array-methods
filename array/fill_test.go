@@ -58,3 +58,18 @@ func TestFill(t *testing.T) {
 		})
 	}
 }
+
+// TestArrayFill tests the Array.Fill receiver method
+func TestArrayFill(t *testing.T) {
+	arr := Array[int]{1, 2, 3, 4, 5}
+	result, err := arr.Fill(0, 1, 3)
+
+	if err != nil {
+		t.Errorf("Array.Fill() got unexpected error: %v", err)
+	}
+
+	expected := Array[int]{1, 0, 0, 4, 5}
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("Array.Fill() = %v, expected %v", result, expected)
+	}
+}

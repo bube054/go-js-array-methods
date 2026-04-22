@@ -51,3 +51,14 @@ func TestReverseInt(t *testing.T) {
 		t.Errorf("Reverse() = %v, expected %v", result, expected)
 	}
 }
+
+// TestArrayReverse tests the Array.Reverse receiver method
+func TestArrayReverse(t *testing.T) {
+	arr := Array[int]{1, 2, 3, 4, 5}
+	result := arr.Reverse()
+
+	expected := Array[int]{5, 4, 3, 2, 1}
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("Array.Reverse() = %v, expected %v", result, expected)
+	}
+}

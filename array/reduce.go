@@ -64,3 +64,13 @@ func ReduceStrict[T comparable](slice []T, fn ReduceStrictFunc[T], initialValue 
 
 	return accumulator, nil
 }
+
+// The Reduce() method executes a reducer function for each array element and returns a single value.
+func (a Array[T]) Reduce(fn ReduceFunc[T], initialValue any) (any, error) {
+	return Reduce([]T(a), fn, initialValue)
+}
+
+// The ReduceStrict() method executes a reducer function for each array element and returns a value of the same type.
+func (a Array[T]) ReduceStrict(fn ReduceStrictFunc[T], initialValue *T) (T, error) {
+	return ReduceStrict([]T(a), fn, initialValue)
+}

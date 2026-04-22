@@ -12,3 +12,9 @@ func Pop[T comparable](slice []T) ([]T, *T) {
 
 	return slice[:sliceLength-1], &lastElement
 }
+
+// The Pop() method removes the last element from the array and returns the modified array and the removed element.
+func (a Array[T]) Pop() (Array[T], *T) {
+	result, popped := Pop([]T(a))
+	return Array[T](result), popped
+}

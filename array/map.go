@@ -23,3 +23,13 @@ func MapStrict[T comparable](slice []T, fn MapFuncStrict[T]) []T {
 
 	return newList
 }
+
+// The Map() method creates a new array with the results of calling a function for every array element.
+func (a Array[T]) Map(fn MapFunc[T, any]) Array[any] {
+	return Array[any](Map([]T(a), fn))
+}
+
+// The MapStrict() method creates a new array of the same type with the results of calling a function for every array element.
+func (a Array[T]) MapStrict(fn MapFuncStrict[T]) Array[T] {
+	return Array[T](MapStrict([]T(a), fn))
+}

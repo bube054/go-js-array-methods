@@ -33,3 +33,8 @@ func IndexOf[T comparable](slice []T, element T, start *int) int {
 
 	return -1
 }
+
+// The IndexOf() method returns the first index at which a given element can be found in the array.
+func (a Array[T]) IndexOf(element T, start *int) int {
+	return IndexOf([]T(a), element, start)
+}

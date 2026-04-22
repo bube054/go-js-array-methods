@@ -263,3 +263,14 @@ func TestPushMultipleCalls(t *testing.T) {
 		}
 	})
 }
+
+// TestArrayPush tests the Array.Push receiver method
+func TestArrayPush(t *testing.T) {
+	arr := Array[int]{1, 2, 3}
+	result := arr.Push(4, 5)
+
+	expected := Array[int]{1, 2, 3, 4, 5}
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("Array.Push() = %v, expected %v", result, expected)
+	}
+}

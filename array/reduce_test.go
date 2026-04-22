@@ -111,3 +111,41 @@ func TestReduceStrict(t *testing.T) {
 		})
 	}
 }
+
+// TestArrayReduce tests the Array.Reduce receiver method
+func TestArrayReduce(t *testing.T) {
+	arr := Array[int]{1, 2, 3, 4}
+
+	result, err := arr.Reduce(func(acc any, el int, _ int, _ []int) any {
+		accNum := acc.(int)
+		return accNum + el
+	}, 0)
+
+	if err != nil {
+		t.Errorf("Array.Reduce() got unexpected error: %v", err)
+	}
+
+	expected := 10
+	if result.(int) != expected {
+		t.Errorf("Array.Reduce() = %v, expected %d", result, expected)
+	}
+}
+
+// TestArrayReduceStrict tests the Array.ReduceStrict receiver method
+func TestArrayReduceStrict(t *testing.T) {
+	arr := Array[int]{1, 2, 3, 4}
+	initialVal := 0
+
+	result, err := arr.ReduceStrict(func(acc int, el int, _ int, _ []int) int {
+		return acc + el
+	}, &initialVal)
+
+	if err != nil {
+		t.Errorf("Array.ReduceStrict() got unexpected error: %v", err)
+	}
+
+	expected := 10
+	if result != expected {
+		t.Errorf("Array.ReduceStrict() = %d, expected %d", result, expected)
+	}
+}

@@ -11,3 +11,8 @@ func FindLast[T comparable](slice []T, fn Predicate[T]) *T {
 
 	return nil
 }
+
+// The FindLast() method returns the last element that passes the provided predicate function.
+func (a Array[T]) FindLast(fn Predicate[T]) *T {
+	return FindLast([]T(a), fn)
+}

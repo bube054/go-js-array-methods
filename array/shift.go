@@ -12,3 +12,9 @@ func Shift[T comparable](slice []T) ([]T, *T) {
 
 	return slice[1:], &firstElement
 }
+
+// The Shift() method removes the first element from the array and returns the modified array and the removed element.
+func (a Array[T]) Shift() (Array[T], *T) {
+	result, shifted := Shift([]T(a))
+	return Array[T](result), shifted
+}

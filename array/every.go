@@ -11,3 +11,8 @@ func Every[T comparable](slice []T, fn Predicate[T]) bool {
 
 	return true
 }
+
+// The Every() method tests whether all elements in the array pass the provided predicate function.
+func (a Array[T]) Every(fn Predicate[T]) bool {
+	return Every([]T(a), fn)
+}

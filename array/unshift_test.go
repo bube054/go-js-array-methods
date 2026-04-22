@@ -57,3 +57,14 @@ func TestUnShiftStrings(t *testing.T) {
 		t.Errorf("UnShift() = %v, expected %v", newFruits, expected)
 	}
 }
+
+// TestArrayUnShift tests the Array.UnShift receiver method
+func TestArrayUnShift(t *testing.T) {
+	arr := Array[int]{3, 4, 5}
+	result := arr.UnShift(1, 2)
+
+	expected := Array[int]{1, 2, 3, 4, 5}
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("Array.UnShift() = %v, expected %v", result, expected)
+	}
+}

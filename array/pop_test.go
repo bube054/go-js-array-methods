@@ -68,3 +68,20 @@ func TestPopStrings(t *testing.T) {
 		t.Errorf("Popped = %s, expected %s", *fruit, "Mango")
 	}
 }
+
+// TestArrayPop tests the Array.Pop receiver method
+func TestArrayPop(t *testing.T) {
+	arr := Array[int]{1, 2, 3, 4, 5}
+	result, popped := arr.Pop()
+
+	expectedSlice := Array[int]{1, 2, 3, 4}
+	expectedPopped := 5
+
+	if !reflect.DeepEqual(result, expectedSlice) {
+		t.Errorf("Array.Pop() slice = %v, expected %v", result, expectedSlice)
+	}
+
+	if popped == nil || *popped != expectedPopped {
+		t.Errorf("Array.Pop() popped = %v, expected %d", popped, expectedPopped)
+	}
+}

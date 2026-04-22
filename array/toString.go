@@ -4,3 +4,9 @@ package array
 func ToString[T any](slice []T) string {
 	return Join(slice, nil)
 }
+
+// The ToString() method returns a string representation of the array.
+// It mirrors JavaScript Array.toString() by joining elements with commas.
+func (a Array[T]) ToString() string {
+	return a.Join()
+}

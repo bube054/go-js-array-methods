@@ -1,6 +1,7 @@
 package array
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -53,5 +54,20 @@ func TestForEachCallback(t *testing.T) {
 				t.Errorf("callback called %d times, expected %d", callCount, tt.callbackCounts)
 			}
 		})
+	}
+}
+
+// TestArrayForEach tests the Array.ForEach receiver method
+func TestArrayForEach(t *testing.T) {
+	arr := Array[int]{1, 2, 3}
+	var results []int
+
+	arr.ForEach(func(el, _ int, _ []int) {
+		results = append(results, el*2)
+	})
+
+	expected := []int{2, 4, 6}
+	if !reflect.DeepEqual(results, expected) {
+		t.Errorf("Array.ForEach() = %v, expected %v", results, expected)
 	}
 }

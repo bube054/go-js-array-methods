@@ -31,3 +31,9 @@ func Splice[T comparable](slice []T, index int, howMany *int, elements ...T) ([]
 
 	return leftAndMiddleAndRightPartition, nil
 }
+
+// The Splice() method changes the contents of an array by removing or replacing existing elements and/or adding new elements.
+func (a Array[T]) Splice(index int, howMany *int, items ...T) (Array[T], error) {
+	result, err := Splice([]T(a), index, howMany, items...)
+	return Array[T](result), err
+}

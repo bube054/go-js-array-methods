@@ -233,3 +233,21 @@ func TestEntriesReturnNewSlice(t *testing.T) {
 		}
 	})
 }
+
+// TestArrayEntries tests the Array.Entries receiver method
+func TestArrayEntries(t *testing.T) {
+	arr := Array[string]{"a", "b", "c"}
+	result := arr.Entries()
+
+	if len(result) != 3 {
+		t.Errorf("Array.Entries() length = %d, expected 3", len(result))
+	}
+
+	if result[0].index != 0 || result[0].element != "a" {
+		t.Errorf("Array.Entries()[0] = {%d, %s}, expected {0, a}", result[0].index, result[0].element)
+	}
+
+	if result[2].index != 2 || result[2].element != "c" {
+		t.Errorf("Array.Entries()[2] = {%d, %s}, expected {2, c}", result[2].index, result[2].element)
+	}
+}

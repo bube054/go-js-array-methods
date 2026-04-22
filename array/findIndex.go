@@ -10,3 +10,8 @@ func FindIndex[T comparable](slice []T, fn Predicate[T]) int {
 
 	return -1
 }
+
+// The FindIndex() method returns the index of the first element that passes the provided predicate function.
+func (a Array[T]) FindIndex(fn Predicate[T]) int {
+	return FindIndex([]T(a), fn)
+}

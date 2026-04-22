@@ -10,3 +10,8 @@ func Find[T comparable](slice []T, fn Predicate[T]) *T {
 
 	return nil
 }
+
+// The Find() method returns the first element that passes the provided predicate function.
+func (a Array[T]) Find(fn Predicate[T]) *T {
+	return Find([]T(a), fn)
+}

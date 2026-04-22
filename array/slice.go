@@ -26,3 +26,9 @@ func Slice[T comparable](slice []T, start, end int) ([]T, error) {
 
 	return slicePartition, nil
 }
+
+// The Slice() method returns a shallow copy of a portion of the array.
+func (a Array[T]) Slice(start, end int) (Array[T], error) {
+	result, err := Slice([]T(a), start, end)
+	return Array[T](result), err
+}

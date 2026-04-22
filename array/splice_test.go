@@ -58,3 +58,20 @@ func TestSplice(t *testing.T) {
 		})
 	}
 }
+
+// TestArraySplice tests the Array.Splice receiver method
+func TestArraySplice(t *testing.T) {
+	arr := Array[int]{1, 2, 3, 4, 5}
+	howMany := 2
+	result, err := arr.Splice(1, &howMany, 10, 11)
+
+	if err != nil {
+		t.Errorf("Array.Splice() got unexpected error: %v", err)
+	}
+
+	expectedResult := Array[int]{1, 10, 11, 4, 5}
+
+	if !reflect.DeepEqual(result, expectedResult) {
+		t.Errorf("Array.Splice() result = %v, expected %v", result, expectedResult)
+	}
+}
