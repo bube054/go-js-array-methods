@@ -1,4 +1,3 @@
-// Package array provides functions for manipulating golang slices.
 package array
 
 // The At() function returns an indexed element from a slice and returns a possible error relating to out of range indexes.
@@ -14,4 +13,9 @@ func At[T comparable](slice []T, index int) (T, error) {
 	elementAtPosition = slice[newIndex]
 
 	return elementAtPosition, nil
+}
+
+// The At() method returns an indexed element from the array and returns a possible error relating to out of range indexes.
+func (a Array[T]) At(index int) (T, error) {
+	return At([]T(a), index)
 }

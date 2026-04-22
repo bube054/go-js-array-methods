@@ -1,10 +1,5 @@
 package array
 
-// The At() method returns an indexed element from the array and returns a possible error relating to out of range indexes.
-func (a Array[T]) At(index int) (T, error) {
-	return At([]T(a), index)
-}
-
 // The Concat() method concatenates the array with other slices and returns a new concatenated array.
 func (a Array[T]) Concat(slices ...Array[T]) Array[T] {
 	b := make([][]T, len(slices))
