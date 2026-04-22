@@ -62,3 +62,9 @@ func getLastIndex(end, sliceLength int) (int, error) {
 	}
 	return newEndIndex, nil
 }
+
+// The CopyWithin() method copies array elements to another position in the array and returns the modified array.
+func (a Array[T]) CopyWithin(target, start, end int) (Array[T], error) {
+	result, err := CopyWithin([]T(a), target, start, end)
+	return Array[T](result), err
+}

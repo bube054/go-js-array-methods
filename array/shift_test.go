@@ -68,3 +68,20 @@ func TestShiftStrings(t *testing.T) {
 		t.Errorf("Shifted = %s, expected %s", *fruit, "Banana")
 	}
 }
+
+// TestArrayShift tests the Array.Shift receiver method
+func TestArrayShift(t *testing.T) {
+	arr := Array[int]{1, 2, 3, 4, 5}
+	result, shifted := arr.Shift()
+
+	expectedSlice := Array[int]{2, 3, 4, 5}
+	expectedShifted := 1
+
+	if !reflect.DeepEqual(result, expectedSlice) {
+		t.Errorf("Array.Shift() slice = %v, expected %v", result, expectedSlice)
+	}
+
+	if shifted == nil || *shifted != expectedShifted {
+		t.Errorf("Array.Shift() shifted = %v, expected %d", shifted, expectedShifted)
+	}
+}

@@ -1,6 +1,7 @@
 package array
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -92,5 +93,33 @@ func TestMapStrict(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+// TestArrayMap tests the Array.Map receiver method
+func TestArrayMap(t *testing.T) {
+	arr := Array[int]{1, 2, 3}
+
+	result := arr.Map(func(el, _ int, _ []int) any {
+		return el * 10
+	})
+
+	expected := Array[any]{10, 20, 30}
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("Array.Map() = %v, expected %v", result, expected)
+	}
+}
+
+// TestArrayMapStrict tests the Array.MapStrict receiver method
+func TestArrayMapStrict(t *testing.T) {
+	arr := Array[int]{1, 2, 3}
+
+	result := arr.MapStrict(func(el, _ int, _ []int) int {
+		return el * 10
+	})
+
+	expected := Array[int]{10, 20, 30}
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("Array.MapStrict() = %v, expected %v", result, expected)
 	}
 }

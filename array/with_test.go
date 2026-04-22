@@ -54,3 +54,18 @@ func TestWith(t *testing.T) {
 		})
 	}
 }
+
+// TestArrayWith tests the Array.With receiver method
+func TestArrayWith(t *testing.T) {
+	arr := Array[int]{1, 2, 3, 4, 5}
+	result, err := arr.With(2, 99)
+
+	if err != nil {
+		t.Errorf("Array.With() got unexpected error: %v", err)
+	}
+
+	expected := Array[int]{1, 2, 99, 4, 5}
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("Array.With() = %v, expected %v", result, expected)
+	}
+}

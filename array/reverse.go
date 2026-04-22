@@ -11,3 +11,8 @@ func Reverse[T comparable](slice []T) []T {
 
 	return newList
 }
+
+// The Reverse() method reverses the array and returns a new reversed array.
+func (a Array[T]) Reverse() Array[T] {
+	return Array[T](Reverse([]T(a)))
+}

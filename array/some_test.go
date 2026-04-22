@@ -54,3 +54,14 @@ func TestSome(t *testing.T) {
 		})
 	}
 }
+
+// TestArraySome tests the Array.Some receiver method
+func TestArraySome(t *testing.T) {
+	arr := Array[int]{1, 2, 3, 4, 5}
+	predicate := func(el, _ int, _ []int) bool { return el > 3 }
+
+	result := arr.Some(predicate)
+	if !result {
+		t.Errorf("Array.Some() = %v, expected true", result)
+	}
+}

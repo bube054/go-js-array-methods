@@ -4,3 +4,8 @@ package array
 func ValueOf[T comparable](slice []T) []T {
 	return slice
 }
+
+// The ValueOf() method returns the array itself (identity function).
+func (a Array[T]) ValueOf() Array[T] {
+	return Array[T](ValueOf([]T(a)))
+}

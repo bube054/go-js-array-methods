@@ -54,3 +54,16 @@ func TestFindIndex(t *testing.T) {
 		})
 	}
 }
+
+// TestArrayFindIndex tests the Array.FindIndex receiver method
+func TestArrayFindIndex(t *testing.T) {
+	arr := Array[int]{10, 20, 30, 40}
+	predicate := func(el, _ int, _ []int) bool { return el > 25 }
+
+	result := arr.FindIndex(predicate)
+	expected := 2
+
+	if result != expected {
+		t.Errorf("Array.FindIndex() = %d, expected %d", result, expected)
+	}
+}

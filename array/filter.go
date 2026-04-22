@@ -13,3 +13,8 @@ func Filter[T comparable](slice []T, fn Predicate[T]) []T {
 
 	return newList
 }
+
+// The Filter() method creates a new array with elements that pass the provided predicate function.
+func (a Array[T]) Filter(fn Predicate[T]) Array[T] {
+	return Array[T](Filter([]T(a), fn))
+}

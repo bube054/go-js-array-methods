@@ -1,5 +1,7 @@
 package array
 
+type Array[T comparable] []T
+
 type Predicate[T comparable] func(element T, index int, slice []T) bool
 
 type ForEachFunc[T comparable] func(element T, index int, slice []T)

@@ -75,3 +75,18 @@ func TestIncludesInt(t *testing.T) {
 		t.Errorf("Includes(numbers, 10) should be false")
 	}
 }
+
+// TestArrayIncludes tests the Array.Includes receiver method
+func TestArrayIncludes(t *testing.T) {
+	arr := Array[string]{"apple", "banana", "cherry"}
+
+	result := arr.Includes("banana", nil)
+	if !result {
+		t.Errorf("Array.Includes() = %v, expected true", result)
+	}
+
+	result = arr.Includes("grape", nil)
+	if result {
+		t.Errorf("Array.Includes() = %v, expected false", result)
+	}
+}

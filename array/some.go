@@ -11,3 +11,8 @@ func Some[T comparable](slice []T, fn Predicate[T]) bool {
 
 	return false
 }
+
+// The Some() method tests whether at least one element in the array passes the provided predicate function.
+func (a Array[T]) Some(fn Predicate[T]) bool {
+	return Some([]T(a), fn)
+}

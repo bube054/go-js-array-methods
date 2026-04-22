@@ -16,3 +16,8 @@ func Entries[T comparable](slice []T) []Entry[T] {
 
 	return newSlice
 }
+
+// The Entries() method returns an array of [index, element] pairs for each element in the array.
+func (a Array[T]) Entries() []Entry[T] {
+	return Entries([]T(a))
+}

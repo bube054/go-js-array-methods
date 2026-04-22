@@ -19,3 +19,12 @@ func Join[T any](slice []T, separator *string) string {
 
 	return strings.Join(strSlice, *separator)
 }
+
+// The Join() method joins all elements of the array into a single string using the provided separator.
+// Elements are converted to their string form, so this works for any Array[T].
+// If no separator is provided, a comma is used, matching JavaScript Array.join().
+func (a Array[T]) Join(separator ...string) string {
+	sep := OptionalParam(separator, ",")
+
+	return Join([]T(a), &sep)
+}

@@ -54,3 +54,16 @@ func TestFindLastIndex(t *testing.T) {
 		})
 	}
 }
+
+// TestArrayFindLastIndex tests the Array.FindLastIndex receiver method
+func TestArrayFindLastIndex(t *testing.T) {
+	arr := Array[int]{10, 20, 30, 40, 20}
+	predicate := func(el, _ int, _ []int) bool { return el == 20 }
+
+	result := arr.FindLastIndex(predicate)
+	expected := 4
+
+	if result != expected {
+		t.Errorf("Array.FindLastIndex() = %d, expected %d", result, expected)
+	}
+}

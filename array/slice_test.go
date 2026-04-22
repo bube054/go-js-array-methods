@@ -71,3 +71,18 @@ func TestSliceInt(t *testing.T) {
 		t.Errorf("Slice() = %v, expected %v", result, expected)
 	}
 }
+
+// TestArraySlice tests the Array.Slice receiver method
+func TestArraySlice(t *testing.T) {
+	arr := Array[int]{1, 2, 3, 4, 5}
+	result, err := arr.Slice(1, 4)
+
+	if err != nil {
+		t.Errorf("Array.Slice() got unexpected error: %v", err)
+	}
+
+	expected := Array[int]{2, 3, 4}
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("Array.Slice() = %v, expected %v", result, expected)
+	}
+}

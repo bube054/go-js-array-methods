@@ -103,3 +103,35 @@ func TestEvery_String(t *testing.T) {
 		})
 	}
 }
+
+// TestArrayEvery tests the Array.Every receiver method
+func TestArrayEvery(t *testing.T) {
+	tests := []struct {
+		name      string
+		arr       Array[int]
+		predicate func(int, int, []int) bool
+		expected  bool
+	}{
+		{
+			name:      "Array.Every all pass",
+			arr:       Array[int]{2, 4, 6, 8},
+			predicate: func(el, _ int, _ []int) bool { return el%2 == 0 },
+			expected:  true,
+		},
+		{
+			name:      "Array.Every not all pass",
+			arr:       Array[int]{2, 4, 5, 8},
+			predicate: func(el, _ int, _ []int) bool { return el%2 == 0 },
+			expected:  false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := tt.arr.Every(tt.predicate)
+			if result != tt.expected {
+				t.Errorf("Array.Every() = %v, expected %v", result, tt.expected)
+			}
+		})
+	}
+}

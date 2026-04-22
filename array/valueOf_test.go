@@ -45,3 +45,14 @@ func TestValueOfInt(t *testing.T) {
 		t.Errorf("ValueOf() should return the same slice")
 	}
 }
+
+// TestArrayValueOf tests the Array.ValueOf receiver method
+func TestArrayValueOf(t *testing.T) {
+	arr := Array[int]{1, 2, 3}
+	result := arr.ValueOf()
+
+	expected := Array[int]{1, 2, 3}
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("Array.ValueOf() = %v, expected %v", result, expected)
+	}
+}

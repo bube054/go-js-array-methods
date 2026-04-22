@@ -33,3 +33,9 @@ func Fill[T comparable](slice []T, value T, start int, end int) ([]T, error) {
 
 	return newSlice, nil
 }
+
+// The Fill() method fills array elements from a start index to an end index with a static value.
+func (a Array[T]) Fill(value T, start, end int) (Array[T], error) {
+	result, err := Fill([]T(a), value, start, end)
+	return Array[T](result), err
+}

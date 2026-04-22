@@ -32,3 +32,8 @@ func LastIndexOf[T comparable](slice []T, element T, start *int) int {
 
 	return -1
 }
+
+// The LastIndexOf() method returns the last index at which a given element can be found in the array.
+func (a Array[T]) LastIndexOf(element T, start *int) int {
+	return LastIndexOf([]T(a), element, start)
+}

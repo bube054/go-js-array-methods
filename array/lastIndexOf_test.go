@@ -61,3 +61,15 @@ func TestLastIndexOfInt(t *testing.T) {
 		t.Errorf("LastIndexOf should return -1 for non-existent")
 	}
 }
+
+// TestArrayLastIndexOf tests the Array.LastIndexOf receiver method
+func TestArrayLastIndexOf(t *testing.T) {
+	arr := Array[string]{"apple", "banana", "cherry", "banana"}
+
+	result := arr.LastIndexOf("banana", nil)
+	expected := 3
+
+	if result != expected {
+		t.Errorf("Array.LastIndexOf() = %d, expected %d", result, expected)
+	}
+}

@@ -33,3 +33,8 @@ func Includes[T comparable](slice []T, element T, start *int) bool {
 
 	return false
 }
+
+// The Includes() method determines whether the array includes a certain element.
+func (a Array[T]) Includes(element T, start *int) bool {
+	return Includes([]T(a), element, start)
+}

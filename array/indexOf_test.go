@@ -61,3 +61,20 @@ func TestIndexOfInt(t *testing.T) {
 		t.Errorf("IndexOf should return -1 for non-existent")
 	}
 }
+
+// TestArrayIndexOf tests the Array.IndexOf receiver method
+func TestArrayIndexOf(t *testing.T) {
+	arr := Array[string]{"apple", "banana", "cherry", "banana"}
+
+	result := arr.IndexOf("banana", nil)
+	expected := 1
+
+	if result != expected {
+		t.Errorf("Array.IndexOf() = %d, expected %d", result, expected)
+	}
+
+	result = arr.IndexOf("grape", nil)
+	if result != -1 {
+		t.Errorf("Array.IndexOf() = %d, expected -1", result)
+	}
+}
