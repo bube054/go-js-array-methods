@@ -28,4 +28,3 @@ func (a Array[T]) Join(separator ...string) string {
 
 	return Join([]T(a), &sep)
 }
-

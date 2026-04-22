@@ -18,7 +18,7 @@ func TestArrayMethodChaining(t *testing.T) {
 		t.Errorf("chained Filter->Push->Reverse = %v, expected %v", chain1, expected1)
 	}
 
-	chain2 := arr.Concat(Array[int]{6, 7}) .Reverse()
+	chain2 := arr.Concat(Array[int]{6, 7}).Reverse()
 	expected2 := Array[int]{7, 6, 5, 4, 3, 2, 1}
 	if !reflect.DeepEqual(chain2, expected2) {
 		t.Errorf("chained Concat->Reverse = %v, expected %v", chain2, expected2)
