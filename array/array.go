@@ -1,11 +1,5 @@
 package array
 
-// The CopyWithin() method copies array elements to another position in the array and returns the modified array.
-func (a Array[T]) CopyWithin(target, start, end int) (Array[T], error) {
-	result, err := CopyWithin([]T(a), target, start, end)
-	return Array[T](result), err
-}
-
 // The Entries() method returns an array of [index, element] pairs for each element in the array.
 func (a Array[T]) Entries() []Entry[T] {
 	return Entries([]T(a))

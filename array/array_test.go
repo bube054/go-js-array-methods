@@ -5,21 +5,6 @@ import (
 	"testing"
 )
 
-// TestArrayCopyWithin tests the Array.CopyWithin receiver method
-func TestArrayCopyWithin(t *testing.T) {
-	arr := Array[int]{1, 2, 3, 4, 5}
-	result, err := arr.CopyWithin(0, 3, 5)
-
-	if err != nil {
-		t.Errorf("Array.CopyWithin() got unexpected error: %v", err)
-	}
-
-	expected := Array[int]{4, 5, 3, 4, 5}
-	if !reflect.DeepEqual(result, expected) {
-		t.Errorf("Array.CopyWithin() = %v, expected %v", result, expected)
-	}
-}
-
 // TestArrayEvery tests the Array.Every receiver method
 func TestArrayEvery(t *testing.T) {
 	tests := []struct {
