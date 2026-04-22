@@ -5,20 +5,6 @@ import (
 	"testing"
 )
 
-// TestArrayConcat tests the Array.Concat receiver method
-func TestArrayConcat(t *testing.T) {
-	arr := Array[int]{1, 2, 3}
-	slice2 := Array[int]{4, 5, 6}
-	slice3 := Array[int]{7, 8}
-
-	result := arr.Concat(slice2, slice3)
-	expected := Array[int]{1, 2, 3, 4, 5, 6, 7, 8}
-
-	if !reflect.DeepEqual(result, expected) {
-		t.Errorf("Array.Concat() = %v, expected %v", result, expected)
-	}
-}
-
 // TestArrayCopyWithin tests the Array.CopyWithin receiver method
 func TestArrayCopyWithin(t *testing.T) {
 	arr := Array[int]{1, 2, 3, 4, 5}

@@ -12,3 +12,12 @@ func Concat[T comparable](slice1 []T, slice2 ...[]T) []T {
 
 	return all
 }
+
+// The Concat() method concatenates the array with other slices and returns a new concatenated array.
+func (a Array[T]) Concat(slices ...Array[T]) Array[T] {
+	b := make([][]T, len(slices))
+	for i, s := range slices {
+		b[i] = []T(s)
+	}
+	return Array[T](Concat([]T(a), b...))
+}
