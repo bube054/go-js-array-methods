@@ -1,6 +1,7 @@
 package array
 
 type Array[T any] []T
+type ArrayComp[T comparable] []T
 
 type Entry[T any] struct {
 	index   int

@@ -42,7 +42,7 @@ func Flat[T any](slice []any, depths ...int) ([]T, error) {
 
 	// Pre-allocate space using a conservative estimate (len of source * 2)
 	// to minimize early append copy thrashing.
-	result := make([]T, 0, len(slice)*2)
+	result := make([]T, 0, sliceLen*2)
 
 	// Define an internal recursive processor that writes directly to the
 	// allocated master 'result' slice header.
