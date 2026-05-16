@@ -2,12 +2,11 @@ package array
 
 // The filter() function creates a new slice filled with elements that pass a test provided by a function. The filter() function does not execute the function for empty elements.
 func Filter[S ~[]T, T any](slice S, fn Predicate[S, T]) S {
-	newList := make([]T, 0)
+	newList := make(S, 0, len(slice))
 
-	for index, value := range slice {
-		ok := fn(value, index, slice)
-		if ok {
-			newList = append(newList, value)
+	for i := 0; i < len(slice); i++ {
+		if fn(slice[i], i, slice) {
+			newList = append(newList, slice[i])
 		}
 	}
 
