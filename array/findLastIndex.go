@@ -1,9 +1,8 @@
 package array
 
-func FindLastIndex[S ~[]T, T any](slice []T, fn Predicate[S, T]) int {
+func FindLastIndex[S ~[]T, T any](slice S, fn Predicate[S, T]) int {
 	for i := len(slice) - 1; i >= 0; i-- {
-		val := slice[i]
-		if fn(val, i, slice) {
+		if fn(slice[i], i, slice) {
 			return i
 		}
 	}
