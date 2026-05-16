@@ -6,7 +6,7 @@ import (
 
 // ConvertIndex converts negative JS-style indices to absolute Go slice indices.
 // It achieves zero-allocation on the happy path by deferring error construction.
-func ConvertIndex[T any](slice []T, index int, nameOfIndex string) (int, error) {
+func ConvertIndex[S ~[]T, T any](slice S, index int, nameOfIndex string) (int, error) {
 	newIndex := convertIndexSimply(len(slice), index)
 
 	if newIndex == -1 {
