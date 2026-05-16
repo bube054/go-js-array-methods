@@ -2,6 +2,11 @@ package array
 
 type Array[T comparable] []T
 
+type Entry[T any] struct {
+	index   int
+	element T
+}
+
 type Predicate[T comparable] func(element T, index int, slice []T) bool
 
 type ForEachFunc[T comparable] func(element T, index int, slice []T)
