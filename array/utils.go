@@ -26,6 +26,17 @@ func convertIndexSimply(sliceLen, index int) int {
 	return index
 }
 
+func convertEndIndex(sliceLen, index int) int {
+	if index < 0 {
+		index += sliceLen
+	}
+
+	if index < 0 || index > sliceLen {
+		return -1
+	}
+	return index
+}
+
 func OptionalParam[T any](params []T, defaultValue T) T {
 	if len(params) > 0 {
 		return params[0]
