@@ -4,7 +4,7 @@ package array
 func Find[S ~[]T, T any](slice S, fn Predicate[S, T]) *T {
 	for index, val := range slice {
 		if fn(val, index, slice) {
-			return &val
+			return &slice[index]
 		}
 	}
 
