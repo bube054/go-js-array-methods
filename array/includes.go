@@ -38,7 +38,6 @@ func (a Array[T]) Includes(element T, start *int) bool {
 		return false
 	}
 
-
 	for i := startIndex; i < sliceLength; i++ {
 		value := a[i]
 
@@ -52,6 +51,6 @@ func (a Array[T]) Includes(element T, start *int) bool {
 
 // The Includes() method determines whether the array includes a certain element.
 func (a ArrayComp[T]) Includes(element T, start ...int) bool {
-	index := OptionalParam(start,0)
-	return Includes(a,element, &index)
+	index := OptionalParam(start, 0)
+	return Includes(a, element, &index)
 }
