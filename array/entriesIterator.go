@@ -17,3 +17,7 @@ func EntriesIterator[S ~[]T, T any](slice S) iter.Seq2[int, T] {
 		}
 	}
 }
+
+func (a Array[T]) EntriesIterator() iter.Seq2[int, T] {
+	return EntriesIterator(a)
+}
