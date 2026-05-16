@@ -34,6 +34,12 @@ func Flat[T any](slice []any, depths ...int) ([]T, error) {
 		return result, nil
 	}
 
+	sliceLen := len(slice)
+	if sliceLen == 0 {
+		var result []T
+		return result, nil
+	}
+
 	// Pre-allocate space using a conservative estimate (len of source * 2)
 	// to minimize early append copy thrashing.
 	result := make([]T, 0, len(slice)*2)
@@ -43,7 +49,7 @@ func Flat[T any](slice []any, depths ...int) ([]T, error) {
 	var processElement func(v any, currentDepth int) error
 	processElement = func(v any, currentDepth int) error {
 		if v == nil {
-			return fmt.Errorf("element of type %T cannot be converted to T", v)
+			return nil
 		}
 
 		// If depth limit is hit, do not unpack further; treat as scalar element
