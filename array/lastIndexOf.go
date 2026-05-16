@@ -5,7 +5,7 @@ import (
 )
 
 // The IndexOf() function returns the first index (position) of a specified value and a possible error due to indexes out of range. The IndexOf() function returns -1 if the value is not found. The IndexOf() function starts at a specified index and searches from left to right (from the given start postion to the end of the array). By default the search starts at the first element and ends at the last. Negative start values counts from the last element (but still searches from left to right).
-func LastIndexOf[T comparable](slice []T, element T, start *int) int {
+func LastIndexOf[S ~[]T, T any](slice S, element T, start *int) int {
 	var (
 		startIndex int
 		err        error
@@ -35,5 +35,5 @@ func LastIndexOf[T comparable](slice []T, element T, start *int) int {
 
 // The LastIndexOf() method returns the last index at which a given element can be found in the array.
 func (a Array[T]) LastIndexOf(element T, start *int) int {
-	return LastIndexOf([]T(a), element, start)
+	return LastIndexOf(a, element, start)
 }

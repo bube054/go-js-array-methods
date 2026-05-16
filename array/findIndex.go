@@ -1,7 +1,7 @@
 package array
 
 // The FindIndex() function executes a function for each slice element. The FindIndex() function returns the index (position) of the first element that passes a test. The FindIndex() function returns -1 if no match is found. The FindIndex() function does not execute the function for empty slice elements. The FindIndex() function does not change the original slice.
-func FindIndex[T comparable](slice []T, fn Predicate[T]) int {
+func FindIndex[S ~[]T, T any](slice []T, fn Predicate[S, T]) int {
 	for index, val := range slice {
 		if fn(val, index, slice) {
 			return index
@@ -12,6 +12,6 @@ func FindIndex[T comparable](slice []T, fn Predicate[T]) int {
 }
 
 // The FindIndex() method returns the index of the first element that passes the provided predicate function.
-func (a Array[T]) FindIndex(fn Predicate[T]) int {
-	return FindIndex([]T(a), fn)
+func (a Array[T]) FindIndex(fn Predicate[Array[T], T]) int {
+	return FindIndex(a, fn)
 }

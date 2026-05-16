@@ -60,7 +60,7 @@ func TestFind(t *testing.T) {
 // TestArrayFind tests the Array.Find receiver method
 func TestArrayFind(t *testing.T) {
 	arr := Array[int]{10, 20, 30, 40}
-	predicate := func(el, _ int, _ []int) bool { return el > 25 }
+	predicate := func(el, _ int, _ Array[int]) bool { return el > 25 }
 
 	result := arr.Find(predicate)
 	expected := 30

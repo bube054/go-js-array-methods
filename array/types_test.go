@@ -9,7 +9,7 @@ import (
 func TestArrayMethodChaining(t *testing.T) {
 	arr := Array[int]{1, 2, 3, 4, 5}
 
-	chain1 := arr.Filter(func(el, _ int, _ []int) bool {
+	chain1 := arr.Filter(func(el, _ int, _ Array[int]) bool {
 		return el%2 == 0
 	}).Push(6).Reverse()
 

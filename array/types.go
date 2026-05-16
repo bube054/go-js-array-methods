@@ -1,20 +1,20 @@
 package array
 
-type Array[T comparable] []T
+type Array[T any] []T
 
 type Entry[T any] struct {
 	index   int
 	element T
 }
 
-type Predicate[T comparable] func(element T, index int, slice []T) bool
+type Predicate[S ~[]T, T any] func(element T, index int, slice S) bool
 
-type ForEachFunc[T comparable] func(element T, index int, slice []T)
+type ForEachFunc[S ~[]T, T any] func(element T, index int, slice S)
 
-type MapFunc[T comparable, V any] func(element T, index int, slice []T) V
+type MapFunc[S ~[]T, T any, V any] func(element T, index int, slice S) V
 
-type MapFuncStrict[T comparable] func(element T, index int, slice []T) T
+type MapFuncStrict[S ~[]T, T any] func(element T, index int, slice S) T
 
-type ReduceFunc[T comparable] func(total any, currentValue T, currentIndex int, slice []T) any
+type ReduceFunc[S ~[]T, T any] func(total any, currentValue T, currentIndex int, slice S) any
 
-type ReduceStrictFunc[T comparable] func(total T, currentValue T, currentIndex int, slice []T) T
+type ReduceStrictFunc[S ~[]T, T any] func(total T, currentValue T, currentIndex int, slice S) T

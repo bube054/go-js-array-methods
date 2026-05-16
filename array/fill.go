@@ -5,7 +5,7 @@ import (
 )
 
 // The Fill() function returns fills of specified elements in an slice with a value and a possible error due to indexes out of range.
-func Fill[T comparable](slice []T, value T, start int, end int) ([]T, error) {
+func Fill[S ~[]T, T any](slice S, value T, start int, end int) (S, error) {
 	sliceLength := len(slice)
 	newSlice := make([]T, sliceLength)
 	copy(newSlice, slice)
@@ -36,6 +36,5 @@ func Fill[T comparable](slice []T, value T, start int, end int) ([]T, error) {
 
 // The Fill() method fills array elements from a start index to an end index with a static value.
 func (a Array[T]) Fill(value T, start, end int) (Array[T], error) {
-	result, err := Fill([]T(a), value, start, end)
-	return Array[T](result), err
+	return Fill(a, value, start, end)
 }

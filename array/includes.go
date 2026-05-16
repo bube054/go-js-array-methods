@@ -4,7 +4,7 @@ import (
 	"reflect"
 )
 
-func Includes[T comparable](slice []T, element T, start *int) bool {
+func Includes[S ~[]T, T any](slice S, element T, start *int) bool {
 
 	var (
 		startIndex int
@@ -36,5 +36,5 @@ func Includes[T comparable](slice []T, element T, start *int) bool {
 
 // The Includes() method determines whether the array includes a certain element.
 func (a Array[T]) Includes(element T, start *int) bool {
-	return Includes([]T(a), element, start)
+	return Includes(a, element, start)
 }

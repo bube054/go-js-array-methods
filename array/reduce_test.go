@@ -116,7 +116,7 @@ func TestReduceStrict(t *testing.T) {
 func TestArrayReduce(t *testing.T) {
 	arr := Array[int]{1, 2, 3, 4}
 
-	result, err := arr.Reduce(func(acc any, el int, _ int, _ []int) any {
+	result, err := arr.Reduce(func(acc any, el int, _ int, _ Array[int]) any {
 		accNum := acc.(int)
 		return accNum + el
 	}, 0)
@@ -136,7 +136,7 @@ func TestArrayReduceStrict(t *testing.T) {
 	arr := Array[int]{1, 2, 3, 4}
 	initialVal := 0
 
-	result, err := arr.ReduceStrict(func(acc int, el int, _ int, _ []int) int {
+	result, err := arr.ReduceStrict(func(acc int, el int, _ int, _ Array[int]) int {
 		return acc + el
 	}, &initialVal)
 
