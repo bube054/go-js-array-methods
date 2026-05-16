@@ -46,7 +46,7 @@ func BenchmarkMap(b *testing.B) {
 	fn := func(n, _ int, _ []int) int { return n * 2 }
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = Map(src, fn)
+		_ = Map[[]int, int, []int](src, fn)
 	}
 }
 
@@ -126,7 +126,7 @@ func BenchmarkFlat(b *testing.B) {
 
 func BenchmarkArrayFilter(b *testing.B) {
 	src := Array[int](makeInts(benchN))
-	pred := func(n, _ int, _ []int) bool { return n%2 == 0 }
+	pred := func(n, _ int, _ Array[int]) bool { return n%2 == 0 }
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_ = src.Filter(pred)
@@ -135,7 +135,7 @@ func BenchmarkArrayFilter(b *testing.B) {
 
 func BenchmarkArrayMapStrict(b *testing.B) {
 	src := Array[int](makeInts(benchN))
-	fn := func(n, _ int, _ []int) int { return n * 2 }
+	fn := func(n, _ int, _ Array[int]) int { return n * 2 }
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_ = src.MapStrict(fn)
@@ -145,8 +145,8 @@ func BenchmarkArrayMapStrict(b *testing.B) {
 // Pipeline benchmark — what a real chained call costs end-to-end.
 func BenchmarkArrayChain(b *testing.B) {
 	src := Array[int](makeInts(benchN))
-	pred := func(n, _ int, _ []int) bool { return n%2 == 0 }
-	double := func(n, _ int, _ []int) int { return n * 2 }
+	pred := func(n, _ int, _ Array[int]) bool { return n%2 == 0 }
+	double := func(n, _ int, _ Array[int]) int { return n * 2 }
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_ = src.Filter(pred).MapStrict(double).Reverse()

@@ -1,7 +1,7 @@
 package array
 
 // The With() function updates a specified slice element. The With() function returns a new slice. The With() function does not change the original slice.
-func With[T comparable](slice []T, index int, value T) ([]T, error) {
+func With[S ~[]T, T any](slice S, index int, value T) (S, error) {
 	newIndex, err := ConvertIndex(slice, index, "index")
 
 	if err != nil {
@@ -9,7 +9,7 @@ func With[T comparable](slice []T, index int, value T) ([]T, error) {
 	}
 
 	sliceLength := len(slice)
-	newSlice := make([]T, sliceLength)
+	newSlice := make(S, sliceLength)
 	copy(newSlice, slice)
 
 	newSlice[newIndex] = value
@@ -19,6 +19,6 @@ func With[T comparable](slice []T, index int, value T) ([]T, error) {
 
 // The With() method returns a new array with the element at the given index replaced with the given value.
 func (a Array[T]) With(index int, value T) (Array[T], error) {
-	result, err := With([]T(a), index, value)
-	return Array[T](result), err
+
+	return With(a, index, value)
 }

@@ -60,7 +60,7 @@ func TestFindLast(t *testing.T) {
 // TestArrayFindLast tests the Array.FindLast receiver method
 func TestArrayFindLast(t *testing.T) {
 	arr := Array[int]{10, 20, 30, 40, 20}
-	predicate := func(el, _ int, _ []int) bool { return el == 20 }
+	predicate := func(el, _ int, _ Array[int]) bool { return el == 20 }
 
 	result := arr.FindLast(predicate)
 	expected := 20

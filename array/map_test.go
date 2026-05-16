@@ -30,7 +30,7 @@ func TestMap(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := Map(tt.slice, func(e int, _ int, _ []int) any {
+			result := Map[[]int, int, []any](tt.slice, func(e int, _ int, _ []int) any {
 				return e * 10
 			})
 			// Enforce type safety: assert result elements are int
@@ -100,7 +100,7 @@ func TestMapStrict(t *testing.T) {
 func TestArrayMap(t *testing.T) {
 	arr := Array[int]{1, 2, 3}
 
-	result := arr.Map(func(el, _ int, _ []int) any {
+	result := arr.Map(func(el, _ int, _ Array[int]) any {
 		return el * 10
 	})
 
@@ -114,7 +114,7 @@ func TestArrayMap(t *testing.T) {
 func TestArrayMapStrict(t *testing.T) {
 	arr := Array[int]{1, 2, 3}
 
-	result := arr.MapStrict(func(el, _ int, _ []int) int {
+	result := arr.MapStrict(func(el, _ int, _ Array[int]) int {
 		return el * 10
 	})
 

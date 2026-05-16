@@ -33,14 +33,14 @@ func ExampleFilter() {
 
 func ExampleMap() {
 	nums := []int{1, 2, 3}
-	doubled := array.Map(nums, func(n, _ int, _ []int) int { return n * 2 })
+	doubled := array.Map[[]int, int, []int](nums, func(n, _ int, _ []int) int { return n * 2 })
 	fmt.Println(doubled)
 	// Output: [2 4 6]
 }
 
 func ExampleMap_typeChange() {
 	nums := []int{1, 2, 3}
-	labels := array.Map(nums, func(n, _ int, _ []int) string {
+	labels := array.Map[[]int, int, []string](nums, func(n, _ int, _ []int) string {
 		return fmt.Sprintf("#%d", n)
 	})
 	fmt.Println(labels)
@@ -116,7 +116,7 @@ func ExampleArray() {
 
 func ExampleArray_Filter() {
 	arr := array.Array[int]{1, 2, 3, 4, 5}
-	even := arr.Filter(func(n, _ int, _ []int) bool { return n%2 == 0 })
+	even := arr.Filter(func(n, _ int, _ array.Array[int]) bool { return n%2 == 0 })
 	fmt.Println(even)
 	// Output: [2 4]
 }
@@ -125,7 +125,7 @@ func ExampleArray_Filter() {
 func ExampleArray_chaining() {
 	arr := array.Array[int]{1, 2, 3, 4, 5}
 	result := arr.
-		Filter(func(n, _ int, _ []int) bool { return n%2 == 0 }).
+		Filter(func(n, _ int, _ array.Array[int]) bool { return n%2 == 0 }).
 		Push(6).
 		Reverse()
 	fmt.Println(result)
@@ -134,7 +134,7 @@ func ExampleArray_chaining() {
 
 func ExampleArray_MapStrict() {
 	arr := array.Array[int]{1, 2, 3}
-	doubled := arr.MapStrict(func(n, _ int, _ []int) int { return n * 2 })
+	doubled := arr.MapStrict(func(n, _ int, _ array.Array[int]) int { return n * 2 })
 	fmt.Println(doubled)
 	// Output: [2 4 6]
 }

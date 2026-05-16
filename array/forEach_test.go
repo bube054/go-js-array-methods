@@ -62,7 +62,7 @@ func TestArrayForEach(t *testing.T) {
 	arr := Array[int]{1, 2, 3}
 	var results []int
 
-	arr.ForEach(func(el, _ int, _ []int) {
+	arr.ForEach(func(el, _ int, _ Array[int]) {
 		results = append(results, el*2)
 	})
 

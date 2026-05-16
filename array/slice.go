@@ -5,7 +5,7 @@ import (
 )
 
 // The Slice() function returns selected elements in an slice, as a new slice and and error. The Slice() function selects from a given start, up to a (not inclusive) given end. The Slice() function does not change the original slice.
-func Slice[T comparable](slice []T, start, end int) ([]T, error) {
+func Slice[S ~[]T, T any](slice S, start, end int) (S, error) {
 	newStartIndex, err := ConvertIndex(slice, start, "start index")
 
 	if err != nil {
@@ -29,6 +29,6 @@ func Slice[T comparable](slice []T, start, end int) ([]T, error) {
 
 // The Slice() method returns a shallow copy of a portion of the array.
 func (a Array[T]) Slice(start, end int) (Array[T], error) {
-	result, err := Slice([]T(a), start, end)
-	return Array[T](result), err
+
+	return Slice(a, start, end)
 }

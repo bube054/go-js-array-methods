@@ -7,7 +7,7 @@ import (
 type EveryTest[T comparable] []struct {
 	name      string
 	slice     []T
-	predicate func(T, int, []T) bool
+	predicate Predicate[Array[T], T]
 	expected  bool
 }
 
@@ -16,7 +16,7 @@ func TestEvery(t *testing.T) {
 		{
 			name:  "all elements greater than 0",
 			slice: []int{1, 2, 3, 4, 5},
-			predicate: func(el, _ int, _ []int) bool {
+			predicate: func(el, _ int, _ Array[int]) bool {
 				return el > 0
 			},
 			expected: true,
@@ -24,7 +24,7 @@ func TestEvery(t *testing.T) {
 		{
 			name:  "not all elements greater than 3",
 			slice: []int{1, 2, 3, 4, 5},
-			predicate: func(el, _ int, _ []int) bool {
+			predicate: func(el, _ int, _ Array[int]) bool {
 				return el > 3
 			},
 			expected: false,
@@ -32,7 +32,7 @@ func TestEvery(t *testing.T) {
 		{
 			name:  "all elements in empty array",
 			slice: []int{},
-			predicate: func(el, _ int, _ []int) bool {
+			predicate: func(el, _ int, _ Array[int]) bool {
 				return el > 0
 			},
 			expected: true,
@@ -40,7 +40,7 @@ func TestEvery(t *testing.T) {
 		{
 			name:  "single element passes",
 			slice: []int{5},
-			predicate: func(el, _ int, _ []int) bool {
+			predicate: func(el, _ int, _ Array[int]) bool {
 				return el == 5
 			},
 			expected: true,
@@ -48,7 +48,7 @@ func TestEvery(t *testing.T) {
 		{
 			name:  "single element fails",
 			slice: []int{5},
-			predicate: func(el, _ int, _ []int) bool {
+			predicate: func(el, _ int, _ Array[int]) bool {
 				return el == 3
 			},
 			expected: false,
@@ -70,7 +70,7 @@ func TestEvery_String(t *testing.T) {
 		{
 			name:  "all elements non-empty",
 			slice: []string{"a", "b", "c"},
-			predicate: func(el string, _ int, _ []string) bool {
+			predicate: func(el string, _ int, _ Array[string]) bool {
 				return el != ""
 			},
 			expected: true,
@@ -78,7 +78,7 @@ func TestEvery_String(t *testing.T) {
 		{
 			name:  "not all elements non-empty",
 			slice: []string{"a", "", "c"},
-			predicate: func(el string, _ int, _ []string) bool {
+			predicate: func(el string, _ int, _ Array[string]) bool {
 				return el != ""
 			},
 			expected: false,
@@ -86,8 +86,7 @@ func TestEvery_String(t *testing.T) {
 		{
 			name:  "all elements in empty array",
 			slice: []string{},
-
-			predicate: func(el string, _ int, _ []string) bool {
+			predicate: func(el string, _ int, _ Array[string]) bool {
 				return el != ""
 			},
 			expected: true,
@@ -109,19 +108,19 @@ func TestArrayEvery(t *testing.T) {
 	tests := []struct {
 		name      string
 		arr       Array[int]
-		predicate func(int, int, []int) bool
+		predicate Predicate[Array[int], int]
 		expected  bool
 	}{
 		{
 			name:      "Array.Every all pass",
 			arr:       Array[int]{2, 4, 6, 8},
-			predicate: func(el, _ int, _ []int) bool { return el%2 == 0 },
+			predicate: func(el, _ int, _ Array[int]) bool { return el%2 == 0 },
 			expected:  true,
 		},
 		{
 			name:      "Array.Every not all pass",
 			arr:       Array[int]{2, 4, 5, 8},
-			predicate: func(el, _ int, _ []int) bool { return el%2 == 0 },
+			predicate: func(el, _ int, _ Array[int]) bool { return el%2 == 0 },
 			expected:  false,
 		},
 	}

@@ -1,30 +1,49 @@
 package array
 
-import (
-	"reflect"
-)
+import "reflect"
 
-func Includes[T comparable](slice []T, element T, start *int) bool {
+// The Includes() function determines whether the array includes a certain element.
+// NOTE: ❌ POTENTIAL PERFORMANCE TRAP
+// Forces the caller to allocate an integer on the heap just to pass an index.
+// Consider using variadic parameters better performance
+func Includes[S ~[]T, T comparable](slice S, element T, start *int) bool {
 
-	var (
-		startIndex int
-		err        error
-	)
-
-	if start == nil {
-		startIndex, err = ConvertIndex(slice, 0, "start index")
-	} else {
-		startIndex, err = ConvertIndex(slice, *start, "start index")
-	}
-
-	if err != nil {
+	sliceLength := len(slice)
+	if sliceLength == 0 {
 		return false
 	}
 
-	sliceLength := len(slice)
+	startIndex := 0
+	if start != nil {
+		startIndex = convertIndexSimply(sliceLength, *start)
+		if startIndex == -1 {
+			return false
+		}
+	}
 
 	for i := startIndex; i < sliceLength; i++ {
-		value := slice[i]
+		if slice[i] == element {
+			return true
+		}
+	}
+
+	return false
+}
+
+// The Includes() method determines whether the array includes a certain element.
+// Deprecated: Use ArrayComp.Includes or Includes function instead for better performence.
+func (a Array[T]) Includes(element T, start *int) bool {
+	sliceLength := len(a)
+	startIndex := 0
+	if start != nil {
+		startIndex = convertIndexSimply(sliceLength, *start)
+		if startIndex == -1 {
+			return false
+		}
+	}
+
+	for i := startIndex; i < sliceLength; i++ {
+		value := a[i]
 
 		if reflect.DeepEqual(element, value) {
 			return true
@@ -35,6 +54,7 @@ func Includes[T comparable](slice []T, element T, start *int) bool {
 }
 
 // The Includes() method determines whether the array includes a certain element.
-func (a Array[T]) Includes(element T, start *int) bool {
-	return Includes([]T(a), element, start)
+func (a ArrayComp[T]) Includes(element T, start ...int) bool {
+	index := OptionalParam(start, 0)
+	return Includes(a, element, &index)
 }
