@@ -14,10 +14,12 @@ func IndexOf[S ~[]T, T comparable](slice S, element T, start *int) int {
 		return -1
 	}
 
-	startIndex := convertIndexSimply(sliceLength, *start)
-
-	if startIndex == -1 {
-		return -1
+	startIndex := 0
+	if start != nil {
+		startIndex = convertIndexSimply(sliceLength, *start)
+		if startIndex == -1 {
+			return -1
+		}
 	}
 
 	for i := startIndex; i < sliceLength; i++ {
@@ -33,18 +35,15 @@ func IndexOf[S ~[]T, T comparable](slice S, element T, start *int) int {
 // Deprecated: Prefer using IndexOf function or ArrayComp.IndexOf for better performance
 func (a Array[T]) IndexOf(element T, start *int) int {
 	var (
-		startIndex int
+		startIndex int = 0
 		err        error
 	)
 
-	if start == nil {
-		startIndex, err = ConvertIndex(a, 0, "start index")
-	} else {
+	if start != nil {
 		startIndex, err = ConvertIndex(a, *start, "start index")
-	}
-
-	if err != nil {
-		return -1
+		if err != nil {
+			return -1
+		}
 	}
 
 	sliceLength := len(a)

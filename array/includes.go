@@ -13,10 +13,12 @@ func Includes[S ~[]T, T comparable](slice S, element T, start *int) bool {
 		return false
 	}
 
-	startIndex := convertIndexSimply(sliceLength, *start)
-
-	if startIndex == -1 {
-		return false
+	startIndex := 0
+	if start != nil {
+		startIndex = convertIndexSimply(sliceLength, *start)
+		if startIndex == -1 {
+			return false
+		}
 	}
 
 	for i := startIndex; i < sliceLength; i++ {
@@ -32,10 +34,12 @@ func Includes[S ~[]T, T comparable](slice S, element T, start *int) bool {
 // Deprecated: Use ArrayComp.Includes or Includes function instead for better performence.
 func (a Array[T]) Includes(element T, start *int) bool {
 	sliceLength := len(a)
-	startIndex := convertIndexSimply(sliceLength, *start)
-
-	if startIndex == -1 {
-		return false
+	startIndex := 0
+	if start != nil {
+		startIndex = convertIndexSimply(sliceLength, *start)
+		if startIndex == -1 {
+			return false
+		}
 	}
 
 	for i := startIndex; i < sliceLength; i++ {

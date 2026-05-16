@@ -14,10 +14,13 @@ func LastIndexOf[S ~[]T, T comparable](slice S, element T, start *int) int {
 		return -1
 	}
 
-	startIndex := convertIndexSimply(sliceLength, *start)
+	startIndex := sliceLength - 1
+	if start != nil {
+		startIndex = convertIndexSimply(sliceLength, *start)
 
-	if startIndex == -1 {
-		return -1
+		if startIndex == -1 {
+			return -1
+		}
 	}
 
 	for i := startIndex; i >= 0; i-- {
@@ -32,18 +35,13 @@ func LastIndexOf[S ~[]T, T comparable](slice S, element T, start *int) int {
 // The LastIndexOf() method returns the last index at which a given element can be found in the array.
 // Deprecated: Consider using ArrayComp.LastIndexOf instead.
 func (a Array[T]) LastIndexOf(element T, start *int) int {
-	var (
-		startIndex int
-		err        error
-	)
-
 	sliceLength := len(a)
 
-	if start == nil {
-		startIndex = sliceLength - 1
-	} else {
-		startIndex, err = ConvertIndex(a, *start, "start index")
-		if err != nil {
+	startIndex := sliceLength - 1
+
+	if start != nil {
+		startIndex = convertIndexSimply(sliceLength, *start)
+		if startIndex == -1 {
 			return -1
 		}
 	}
