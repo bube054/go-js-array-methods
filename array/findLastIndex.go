@@ -10,7 +10,7 @@ func FindLastIndex[T any](slice []T, fn Predicate[T]) int {
 	return -1
 }
 
-// The FindLastIndex() method returns the index of the last element that passes the provided predicate function.
+// FindLastIndex method returns the index of the last element that passes the provided predicate function.
 func (a Array[T]) FindLastIndex(fn Predicate[T]) int {
 	return FindLastIndex(a, fn)
 }

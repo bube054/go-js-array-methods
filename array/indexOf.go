@@ -48,11 +48,19 @@ func (a Array[T]) IndexOf(element T, start *int) int {
 
 	sliceLength := len(a)
 
-	for i := startIndex; i < sliceLength; i++ {
-		value := a[i]
+	if IsComparable(element) {
+		for i := startIndex; i < sliceLength; i++ {
+			if any(element) == any(a[i]) {
+				return i
+			}
+		}
+	} else {
+		for i := startIndex; i < sliceLength; i++ {
+			value := a[i]
 
-		if reflect.DeepEqual(element, value) {
-			return i
+			if reflect.DeepEqual(element, value) {
+				return i
+			}
 		}
 	}
 

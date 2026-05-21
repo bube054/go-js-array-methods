@@ -2,6 +2,7 @@ package array
 
 import (
 	"fmt"
+	"reflect"
 )
 
 // ConvertIndex converts negative JS-style indices to absolute Go slice indices.
@@ -42,4 +43,14 @@ func OptionalParam[T any](params []T, defaultValue T) T {
 		return params[0]
 	}
 	return defaultValue
+}
+
+func IsComparable[T any](element T) bool {
+	isComparable := false
+	if any(element) == nil {
+		isComparable = true // nil interfaces are natively comparable
+	} else {
+		isComparable = reflect.TypeOf(element).Comparable()
+	}
+	return isComparable
 }

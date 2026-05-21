@@ -1,6 +1,6 @@
 package array
 
-// The filter() function creates a new slice filled with elements that pass a test provided by a function. The filter() function does not execute the function for empty elements.
+// filter function creates a new slice filled with elements that pass a test provided by a function. The filter() function does not execute the function for empty elements.
 func Filter[T any](slice []T, fn Predicate[T]) []T {
 	newList := make([]T, 0, len(slice))
 
@@ -13,7 +13,7 @@ func Filter[T any](slice []T, fn Predicate[T]) []T {
 	return newList
 }
 
-// The Filter() method creates a new array with elements that pass the provided predicate function.
+// Filter method creates a new array with elements that pass the provided predicate function.
 func (a Array[T]) Filter(fn Predicate[T]) Array[T] {
-	return Array[T](Filter([]T(a), fn))
+	return Array[T](Filter(a, fn))
 }

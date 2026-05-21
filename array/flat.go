@@ -5,7 +5,7 @@ import (
 	"reflect"
 )
 
-// The Flat() function concatenates sub-arrays elements into a single new slice.
+// Flat function concatenates sub-arrays elements into a single new slice.
 // The Flat() function returns a new slice containing all elements from the sub-arrays.
 // The Flat() function does not change the original slice. The depth parameter specifies how deep a nested array structure should be flattened. The default is 1.
 // The Flat() function can handle slices of any type, but all elements must be of the same type T. If an element cannot be converted to type T, an error is returned.
@@ -110,7 +110,7 @@ func Flat[T any](slice []any, depths ...int) ([]T, error) {
 	return result, nil
 }
 
-// The Flat() method flattens nested arrays up to the specified depth.
+// Flat method flattens nested arrays up to the specified depth.
 // The Flat() method returns a new array with the sub-array elements concatenated into it. The depth parameter specifies how deep a nested array structure should be flattened. The default is 1.
 // Until Generic Methods are implemented in Go, the Flat() method can only return Array[any] since it needs to handle slices of any type. Once Generic Methods are available, we can update the Flat() method to return Array[T] and handle type assertions accordingly.
 func (a Array[T]) Flat(depths ...int) (Array[any], error) {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-// The Fill() function returns fills of specified elements in an slice with a value and a possible error due to indexes out of range.
+// Fill function returns fills of specified elements in an slice with a value and a possible error due to indexes out of range.
 func Fill[T any](slice []T, value T, start int, end int) ([]T, error) {
 	sliceLength := len(slice)
 
@@ -35,9 +35,9 @@ func Fill[T any](slice []T, value T, start int, end int) ([]T, error) {
 	return newSlice, nil
 }
 
-// The Fill() method fills array elements from a start index to an end index with a static value.
+// Fill method fills array elements from a start index to an end index with a static value.
 func (a Array[T]) Fill(value T, start, end int) (Array[T], error) {
-	filled, err := Fill([]T(a), value, start, end)
+	result, err := Fill(a, value, start, end)
 
-	return Array[T](filled), err
+	return Array[T](result), err
 }

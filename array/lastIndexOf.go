@@ -46,13 +46,20 @@ func (a Array[T]) LastIndexOf(element T, start *int) int {
 		}
 	}
 
-	for i := startIndex; i >= 0; i-- {
-		value := a[i]
+	if IsComparable(element) {
+		for i := startIndex; i >= 0; i-- {
+			if any(element) == any(a[i]) {
+				return i
+			}
+		}
+	} else {
+		for i := startIndex; i >= 0; i-- {
+			value := a[i]
 
-		if reflect.DeepEqual(element, value) {
-			return i
+			if reflect.DeepEqual(element, value) {
+				return i
+			}
 		}
 	}
-
 	return -1
 }

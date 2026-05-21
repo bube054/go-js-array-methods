@@ -1,6 +1,6 @@
 package array
 
-// The entries() function returns an Slice with structs with field/value: {index 0, element "Banana"}. The entries() function does not change the original slice.
+// Entries function returns an Slice with structs with field/value: {index 0, element "Banana"}. The entries() function does not change the original slice.
 //
 // Performance Note for future scaling:
 // This function evaluates eagerly, allocating an O(N) memory block upfront.
@@ -21,7 +21,7 @@ func Entries[T any](slice []T) []Entry[T] {
 	return newSlice
 }
 
-// The Entries() method returns an array of [index, element] pairs for each element in the array.
+// Entries method returns an array of [index, element] pairs for each element in the array.
 func (a Array[T]) Entries() []Entry[T] {
-	return Entries([]T(a))
+	return Entries(a)
 }

@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-// The Slice() function returns selected elements in an slice, as a new slice and and error. The Slice() function selects from a given start, up to a (not inclusive) given end. The Slice() function does not change the original slice.
+// Slice function returns selected elements in an slice, as a new slice and and error. The Slice() function selects from a given start, up to a (not inclusive) given end. The Slice() function does not change the original slice.
 func Slice[T any](slice []T, start, end int) ([]T, error) {
 	newStartIndex, err := ConvertIndex(slice, start, "start index")
 
@@ -27,7 +27,7 @@ func Slice[T any](slice []T, start, end int) ([]T, error) {
 	return slicePartition, nil
 }
 
-// The Slice() method returns a shallow copy of a portion of the array.
+// Slice method returns a shallow copy of a portion of the array.
 func (a Array[T]) Slice(start, end int) (Array[T], error) {
 	sliced, err := Slice(a, start, end)
 	return Array[T](sliced), err

@@ -70,7 +70,7 @@ func (a Array[T]) ReduceRight(fn ReduceFunc[T], initialValue any) (any, error) {
 	return ReduceRight(a, fn, initialValue)
 }
 
-// The ReduceRightStrict() method executes a reducer function for each array element (from right to left) and returns a value of the same type.
+// ReduceRightStrict method executes a reducer function for each array element (from right to left) and returns a value of the same type.
 func (a Array[T]) ReduceRightStrict(fn ReduceStrictFunc[T], initialValue *T) (T, error) {
 	return ReduceRightStrict(a, fn, initialValue)
 }

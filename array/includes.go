@@ -42,11 +42,19 @@ func (a Array[T]) Includes(element T, start *int) bool {
 		}
 	}
 
-	for i := startIndex; i < sliceLength; i++ {
-		value := a[i]
-
-		if reflect.DeepEqual(element, value) {
-			return true
+	// 3. Dual-Track Execution Engine
+	if IsComparable(element) {
+		for i := startIndex; i < sliceLength; i++ {
+			if any(a[i]) == any(element) {
+				return true
+			}
+		}
+	} else {
+		// SLOW PATH: Fallback for slices, maps, and uncomparable structs.
+		for i := startIndex; i < sliceLength; i++ {
+			if reflect.DeepEqual(element, a[i]) {
+				return true
+			}
 		}
 	}
 

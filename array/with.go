@@ -1,6 +1,6 @@
 package array
 
-// The With() function updates a specified slice element. The With() function returns a new slice. The With() function does not change the original slice.
+// With function updates a specified slice element. The With() function returns a new slice. The With() function does not change the original slice.
 func With[T any](slice []T, index int, value T) ([]T, error) {
 	newIndex, err := ConvertIndex(slice, index, "index")
 
@@ -17,7 +17,7 @@ func With[T any](slice []T, index int, value T) ([]T, error) {
 	return newSlice, nil
 }
 
-// The With() method returns a new array with the element at the given index replaced with the given value.
+// With method returns a new array with the element at the given index replaced with the given value.
 func (a Array[T]) With(index int, value T) (Array[T], error) {
 
 	return With(a, index, value)
