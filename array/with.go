@@ -1,7 +1,7 @@
 package array
 
 // The With() function updates a specified slice element. The With() function returns a new slice. The With() function does not change the original slice.
-func With[S ~[]T, T any](slice S, index int, value T) (S, error) {
+func With[T any](slice []T, index int, value T) ([]T, error) {
 	newIndex, err := ConvertIndex(slice, index, "index")
 
 	if err != nil {
@@ -9,7 +9,7 @@ func With[S ~[]T, T any](slice S, index int, value T) (S, error) {
 	}
 
 	sliceLength := len(slice)
-	newSlice := make(S, sliceLength)
+	newSlice := make([]T, sliceLength)
 	copy(newSlice, slice)
 
 	newSlice[newIndex] = value

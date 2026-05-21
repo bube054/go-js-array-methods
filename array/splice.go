@@ -1,7 +1,7 @@
 package array
 
 // The Splice() function adds and/or removes slice elements. The Splice() function does not overwrites the original slice.
-func Splice[S ~[]T, T any](slice S, index int, howMany *int, elements ...T) (S, error) {
+func Splice[T any](slice []T, index int, howMany *int, elements ...T) ([]T, error) {
 	sliceLength := len(slice)
 	newIndex, err := ConvertIndex(slice, index, "index")
 
@@ -32,8 +32,8 @@ func Splice[S ~[]T, T any](slice S, index int, howMany *int, elements ...T) (S, 
 	return leftAndMiddleAndRightPartition, nil
 }
 
-// The Splice() method changes the contents of an array by removing or replacing existing elements and/or adding new elements.
+// Splice method changes the contents of an array by removing or replacing existing elements and/or adding new elements.
 func (a Array[T]) Splice(index int, howMany *int, items ...T) (Array[T], error) {
-
-	return Splice(a, index, howMany, items...)
+	spliced, err := Splice(a, index, howMany, items...)
+	return Array[T](spliced), err
 }

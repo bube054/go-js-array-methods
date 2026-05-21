@@ -1,7 +1,7 @@
 package array
 
 // The Push() function adds new items to the end of an slice. The Push() function returns the new slice.
-func Push[S ~[]T, T any](slice S, elements ...T) S {
+func Push[T any](slice []T, elements ...T) []T {
 	return append(slice, elements...)
 }
 

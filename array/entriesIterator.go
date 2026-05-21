@@ -7,7 +7,7 @@ import "iter"
 // Usage:
 //
 //	for index, element := range arrays.EntriesIterator(mySlice) { ... }
-func EntriesIterator[S ~[]T, T any](slice S) iter.Seq2[int, T] {
+func EntriesIterator[T any](slice []T) iter.Seq2[int, T] {
 	return func(yield func(int, T) bool) {
 		for i, v := range slice {
 			// If the consumer breaks out of the loop early, yield returns false

@@ -1,7 +1,7 @@
 package array
 
 // The ValueOf() function returns the slice itself. The ValueOf() function does not change the original slice. fruits. ValueOf() returns the same as fruits.
-func ValueOf[S ~[]T, T any](slice S) S {
+func ValueOf[T any](slice []T) []T {
 	return slice
 }
 

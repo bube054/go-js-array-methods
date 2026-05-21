@@ -1,7 +1,7 @@
 package array
 
-// Map() creates a new slice from calling a function for every slice element. Map creates a new slice of any type. Map() does not execute the function for empty elements. Map() does not change the original slice.
-func Map[S ~[]T, T any, R ~[]V, V any](slice S, fn MapFunc[S, T, V]) R {
+// Map creates a new slice from calling a function for every slice element. Map creates a new slice of any type. Map() does not execute the function for empty elements. Map() does not change the original slice.
+func Map[T any, V any](slice []T, fn MapFunc[T, V]) []V {
 	newList := make([]V, len(slice))
 
 	for index, value := range slice {
@@ -12,8 +12,8 @@ func Map[S ~[]T, T any, R ~[]V, V any](slice S, fn MapFunc[S, T, V]) R {
 	return newList
 }
 
-// Map() creates a new slice from calling a function for every slice element. Map creates a new slice of the original slice type. Map() does not execute the function for empty elements. Map() does not change the original slice.
-func MapStrict[S ~[]T, T any](slice S, fn MapFuncStrict[S, T]) S {
+// Map creates a new slice from calling a function for every slice element. Map creates a new slice of the original slice type. Map() does not execute the function for empty elements. Map() does not change the original slice.
+func MapStrict[T any](slice []T, fn MapFuncStrict[T]) []T {
 	newList := make([]T, len(slice))
 
 	for index, value := range slice {
@@ -24,12 +24,12 @@ func MapStrict[S ~[]T, T any](slice S, fn MapFuncStrict[S, T]) S {
 	return newList
 }
 
-// The Map() method creates a new array with the results of calling a function for every array element.
-func (a Array[T]) Map(fn MapFunc[Array[T], T, any]) Array[any] {
-	return Map[Array[T], T, Array[any]](a, fn)
+// Map method creates a new array with the results of calling a function for every array element.
+func (a Array[T]) Map(fn MapFunc[T, any]) Array[any] {
+	return Map(a, fn)
 }
 
-// The MapStrict() method creates a new array of the same type with the results of calling a function for every array element.
-func (a Array[T]) MapStrict(fn MapFuncStrict[Array[T], T]) Array[T] {
+// MapStrict method creates a new array of the same type with the results of calling a function for every array element.
+func (a Array[T]) MapStrict(fn MapFuncStrict[T]) Array[T] {
 	return MapStrict(a, fn)
 }

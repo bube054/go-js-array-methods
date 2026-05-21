@@ -7,7 +7,7 @@ package array
 // If processing ultra-large datasets where garbage collection pressure becomes
 // a bottleneck, consider using entriesIterator which is using Go 1.23+ range-over-func iterators
 // (iter.Seq2[int, T]) to stream entries lazily with zero heap allocations.
-func Entries[S ~[]T, T any](slice S) []Entry[T] {
+func Entries[T any](slice []T) []Entry[T] {
 	newSlice := make([]Entry[T], len(slice))
 	sliceLen := len(slice)
 
@@ -23,5 +23,5 @@ func Entries[S ~[]T, T any](slice S) []Entry[T] {
 
 // The Entries() method returns an array of [index, element] pairs for each element in the array.
 func (a Array[T]) Entries() []Entry[T] {
-	return Entries(a)
+	return Entries([]T(a))
 }

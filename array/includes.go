@@ -2,11 +2,11 @@ package array
 
 import "reflect"
 
-// The Includes() function determines whether the array includes a certain element.
+// Includes function determines whether the array includes a certain element.
 // NOTE: ❌ POTENTIAL PERFORMANCE TRAP
 // Forces the caller to allocate an integer on the heap just to pass an index.
 // Consider using variadic parameters better performance
-func Includes[S ~[]T, T comparable](slice S, element T, start *int) bool {
+func Includes[T comparable](slice []T, element T, start *int) bool {
 
 	sliceLength := len(slice)
 	if sliceLength == 0 {
@@ -30,8 +30,8 @@ func Includes[S ~[]T, T comparable](slice S, element T, start *int) bool {
 	return false
 }
 
-// The Includes() method determines whether the array includes a certain element.
-// Deprecated: Use ArrayComp.Includes or Includes function instead for better performence.
+// Includes method determines whether the array includes a certain element.
+// Note: Use Includes function instead for better performence.
 func (a Array[T]) Includes(element T, start *int) bool {
 	sliceLength := len(a)
 	startIndex := 0
@@ -51,10 +51,4 @@ func (a Array[T]) Includes(element T, start *int) bool {
 	}
 
 	return false
-}
-
-// The Includes() method determines whether the array includes a certain element.
-func (a ArrayComp[T]) Includes(element T, start ...int) bool {
-	index := OptionalParam(start, 0)
-	return Includes(a, element, &index)
 }

@@ -3,7 +3,7 @@ package array
 import "fmt"
 
 // The At() function returns an indexed element from a slice and returns a possible error relating to out of range indexes.
-func At[S ~[]T, T any](slice S, index int) (element T, err error) {
+func At[T any](slice []T, index int) (element T, err error) {
 	newIndex := convertIndexSimply(len(slice), index)
 
 	if newIndex == -1 {

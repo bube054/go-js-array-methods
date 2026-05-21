@@ -6,7 +6,7 @@ import (
 )
 
 // The CopyWithin() function returns a copy of slice elements to another position in an slice and a possible error relating to out of range indexes.. The CopyWithin() function overwrites the existing values in the new slice.
-func CopyWithin[S ~[]T, T any](slice S, target int, start int, end int) (S, error) {
+func CopyWithin[T any](slice []T, target int, start int, end int) ([]T, error) {
 	sliceLength := len(slice)
 
 	// 1. Validate and Normalize indices BEFORE any heap allocations
@@ -38,7 +38,7 @@ func CopyWithin[S ~[]T, T any](slice S, target int, start int, end int) (S, erro
 	}
 
 	// 3. Allocate and duplicate the base array ONLY on verified happy path
-	newSlice := make(S, sliceLength)
+	newSlice := make([]T, sliceLength)
 	copy(newSlice, slice)
 
 	// Short-circuit if there's nothing to copy
@@ -56,5 +56,5 @@ func CopyWithin[S ~[]T, T any](slice S, target int, start int, end int) (S, erro
 
 // The CopyWithin() method copies array elements to another position in the array and returns the modified array.
 func (a Array[T]) CopyWithin(target, start, end int) (Array[T], error) {
-	return CopyWithin(a, target, start, end)
+	return CopyWithin([]T(a), target, start, end)
 }

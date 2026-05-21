@@ -4,11 +4,11 @@ import (
 	"reflect"
 )
 
-// The IndexOf() function returns the first index (position) of a specified value and a possible error due to indexes out of range. The IndexOf() function returns -1 if the value is not found. The IndexOf() function starts at a specified index and searches from left to right (from the given start postion to the end of the array). By default the search starts at the first element and ends at the last. Negative start values counts from the last element (but still searches from left to right).
+// IndexOf function returns the first index (position) of a specified value and a possible error due to indexes out of range. The IndexOf() function returns -1 if the value is not found. The IndexOf() function starts at a specified index and searches from left to right (from the given start postion to the end of the array). By default the search starts at the first element and ends at the last. Negative start values counts from the last element (but still searches from left to right).
 // NOTE: ❌ POTENTIAL PERFORMANCE TRAP
 // Forces the caller to allocate an integer on the heap just to pass an index.
 // Consider using variadic parameters better performance
-func LastIndexOf[S ~[]T, T comparable](slice S, element T, start *int) int {
+func LastIndexOf[T comparable](slice []T, element T, start *int) int {
 	sliceLength := len(slice)
 	if sliceLength == 0 {
 		return -1
@@ -32,8 +32,8 @@ func LastIndexOf[S ~[]T, T comparable](slice S, element T, start *int) int {
 	return -1
 }
 
-// The LastIndexOf() method returns the last index at which a given element can be found in the array.
-// Deprecated: Consider using ArrayComp.LastIndexOf instead.
+// LastIndexOf method returns the last index at which a given element can be found in the array.
+// Note: Consider using LastIndexOf function instead for better performance.
 func (a Array[T]) LastIndexOf(element T, start *int) int {
 	sliceLength := len(a)
 
@@ -55,10 +55,4 @@ func (a Array[T]) LastIndexOf(element T, start *int) int {
 	}
 
 	return -1
-}
-
-// The LastIndexOf() method returns the last index at which a given element can be found in the array.
-func (a ArrayComp[T]) LastIndexOf(element T, start ...int) int {
-	index := OptionalParam(start, 0)
-	return LastIndexOf(a, element, &index)
 }

@@ -2,8 +2,8 @@ package array
 
 import "errors"
 
-// The Reduce() function executes a Reducer function for slice element. The ReduceRight() function works from right to left. The Reduce() function returns the function's accumulated result and an an error. The Reduce() function does not execute the function for empty slice elements. The Reduce() function does not change the original slice. Note at the first callback, there is no return value from the previous callback. Normally, alice element 0 is used as initial value, and the iteration starts from slice element 1. If an initial value is supplied, this is used, and the iteration starts from slice element 0.
-func ReduceRight[S ~[]T, T any](slice S, fn ReduceFunc[S, T], initialValue any) (any, error) {
+// Reduce function executes a Reducer function for slice element. The ReduceRight() function works from right to left. The Reduce() function returns the function's accumulated result and an an error. The Reduce() function does not execute the function for empty slice elements. The Reduce() function does not change the original slice. Note at the first callback, there is no return value from the previous callback. Normally, alice element 0 is used as initial value, and the iteration starts from slice element 1. If an initial value is supplied, this is used, and the iteration starts from slice element 0.
+func ReduceRight[T any](slice []T, fn ReduceFunc[T], initialValue any) (any, error) {
 	var sliceLength = len(slice)
 
 	if sliceLength == 0 && initialValue == nil {
@@ -33,8 +33,8 @@ func ReduceRight[S ~[]T, T any](slice S, fn ReduceFunc[S, T], initialValue any) 
 	return accumulator, nil
 }
 
-// The ReduceStrict() function executes a Reducer function for slice element. The ReduceRightStrict() function works from right to left . The ReduceStrict() function returns the function's accumulated result(typed with the slices type) and an an error. The ReduceStrict() function does not execute the function for empty slice elements. The ReduceStrict() function does not change the original slice. Note at the first callback, there is no return value from the previous callback. Normally, alice element 0 is used as initial value, and the iteration starts from slice element 1. If an initial value is supplied, this is used, and the iteration starts from slice element 0.
-func ReduceRightStrict[S ~[]T, T any](slice S, fn ReduceStrictFunc[S, T], initialValue *T) (T, error) {
+// ReduceStrict function executes a Reducer function for slice element. The ReduceRightStrict() function works from right to left . The ReduceStrict() function returns the function's accumulated result(typed with the slices type) and an an error. The ReduceStrict() function does not execute the function for empty slice elements. The ReduceStrict() function does not change the original slice. Note at the first callback, there is no return value from the previous callback. Normally, alice element 0 is used as initial value, and the iteration starts from slice element 1. If an initial value is supplied, this is used, and the iteration starts from slice element 0.
+func ReduceRightStrict[T any](slice []T, fn ReduceStrictFunc[T], initialValue *T) (T, error) {
 	var sliceLength = len(slice)
 
 	if sliceLength == 0 && initialValue == nil {
@@ -66,11 +66,11 @@ func ReduceRightStrict[S ~[]T, T any](slice S, fn ReduceStrictFunc[S, T], initia
 }
 
 // The ReduceRight() method executes a reducer function for each array element (from right to left) and returns a single value.
-func (a Array[T]) ReduceRight(fn ReduceFunc[Array[T], T], initialValue any) (any, error) {
+func (a Array[T]) ReduceRight(fn ReduceFunc[T], initialValue any) (any, error) {
 	return ReduceRight(a, fn, initialValue)
 }
 
 // The ReduceRightStrict() method executes a reducer function for each array element (from right to left) and returns a value of the same type.
-func (a Array[T]) ReduceRightStrict(fn ReduceStrictFunc[Array[T], T], initialValue *T) (T, error) {
+func (a Array[T]) ReduceRightStrict(fn ReduceStrictFunc[T], initialValue *T) (T, error) {
 	return ReduceRightStrict(a, fn, initialValue)
 }

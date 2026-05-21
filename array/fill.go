@@ -5,7 +5,7 @@ import (
 )
 
 // The Fill() function returns fills of specified elements in an slice with a value and a possible error due to indexes out of range.
-func Fill[S ~[]T, T any](slice S, value T, start int, end int) (S, error) {
+func Fill[T any](slice []T, value T, start int, end int) ([]T, error) {
 	sliceLength := len(slice)
 
 	newStartIndex := convertIndexSimply(sliceLength, start)
@@ -24,7 +24,7 @@ func Fill[S ~[]T, T any](slice S, value T, start int, end int) (S, error) {
 		return nil, fmt.Errorf("start index: %d cannot be greater than end index: %d", start, end)
 	}
 
-	newSlice := make(S, sliceLength)
+	newSlice := make([]T, sliceLength)
 	copy(newSlice, slice)
 
 	targetZone := newSlice[newStartIndex:newEndIndex]
@@ -37,5 +37,7 @@ func Fill[S ~[]T, T any](slice S, value T, start int, end int) (S, error) {
 
 // The Fill() method fills array elements from a start index to an end index with a static value.
 func (a Array[T]) Fill(value T, start, end int) (Array[T], error) {
-	return Fill(a, value, start, end)
+	filled, err := Fill([]T(a), value, start, end)
+
+	return Array[T](filled), err
 }

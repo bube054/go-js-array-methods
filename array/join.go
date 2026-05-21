@@ -7,7 +7,7 @@ import (
 )
 
 // The Join() function returns an slice as a string. The Join() function does not change the original slice. Any separator can be specified. The default is comma (,).
-func Join[S ~[]T, T any](slice S, separator *string) string {
+func Join[T any](slice []T, separator *string) string {
 	if len(slice) == 0 {
 		return ""
 	}
@@ -55,7 +55,7 @@ func Join[S ~[]T, T any](slice S, separator *string) string {
 	return b.String()
 }
 
-// The Join() method joins all elements of the array into a single string using the provided separator.
+// Join method joins all elements of the array into a single string using the provided separator.
 // Elements are converted to their string form, so this works for any Array[T].
 // If no separator is provided, a comma is used, matching JavaScript Array.join().
 func (a Array[T]) Join(separator ...string) string {
