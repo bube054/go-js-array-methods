@@ -8,8 +8,8 @@ func TestReduceRight(t *testing.T) {
 	tests := []struct {
 		name         string
 		slice        []int
-		initialValue any
-		expected     any
+		initialValue int
+		expected     int
 		expectError  bool
 	}{
 		{
@@ -29,17 +29,16 @@ func TestReduceRight(t *testing.T) {
 		{
 			name:         "reduceRight empty array without initial errors",
 			slice:        []int{},
-			initialValue: nil,
-			expected:     nil,
-			expectError:  true,
+			initialValue: 0,
+			expected:     0,
+			expectError:  false,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			myFunc := func(acc any, el int, _ int, _ []int) any {
-				accNum := acc.(int)
-				return accNum - el
+			myFunc := func(acc int, el int, _ int, _ []int) int {
+				return acc - el
 			}
 
 			result, err := ReduceRight(tt.slice, myFunc, tt.initialValue)
@@ -48,7 +47,7 @@ func TestReduceRight(t *testing.T) {
 				t.Errorf("ReduceRight() expected error but got none")
 			} else if !tt.expectError && err != nil {
 				t.Errorf("ReduceRight() got unexpected error: %v", err)
-			} else if !tt.expectError && result.(int) != tt.expected.(int) {
+			} else if !tt.expectError && result != tt.expected {
 				t.Errorf("ReduceRight() = %v, expected %v", result, tt.expected)
 			}
 		})

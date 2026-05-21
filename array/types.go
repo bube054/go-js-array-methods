@@ -15,6 +15,6 @@ type MapFunc[T any, V any] func(element T, index int, slice []T) V
 
 type MapFuncStrict[T any] func(element T, index int, slice []T) T
 
-type ReduceFunc[T any] func(total any, currentValue T, currentIndex int, slice []T) any
+type ReduceFunc[T any, R any] func(total R, currentValue T, currentIndex int, slice []T) R
 
 type ReduceStrictFunc[T any] func(total T, currentValue T, currentIndex int, slice []T) T
