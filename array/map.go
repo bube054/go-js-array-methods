@@ -2,11 +2,15 @@ package array
 
 // Map creates a new slice from calling a function for every slice element. Map creates a new slice of any type. Map() does not execute the function for empty elements. Map() does not change the original slice.
 func Map[T any, V any](slice []T, fn MapFunc[T, V]) []V {
-	newList := make([]V, len(slice))
+	sliceLen := len(slice)
+	if sliceLen == 0 {
+		return nil
+	}
 
-	for index, value := range slice {
-		newItem := fn(value, index, slice)
-		newList[index] = newItem
+	newList := make([]V, sliceLen)
+
+	for i := 0; i < sliceLen; i++ {
+		newList[i] = fn(slice[i], i, slice)
 	}
 
 	return newList
@@ -14,11 +18,15 @@ func Map[T any, V any](slice []T, fn MapFunc[T, V]) []V {
 
 // Map creates a new slice from calling a function for every slice element. Map creates a new slice of the original slice type. Map() does not execute the function for empty elements. Map() does not change the original slice.
 func MapStrict[T any](slice []T, fn MapFuncStrict[T]) []T {
-	newList := make([]T, len(slice))
+	sliceLen := len(slice)
+	if sliceLen == 0 {
+		return nil
+	}
 
-	for index, value := range slice {
-		newItem := fn(value, index, slice)
-		newList[index] = newItem
+	newList := make([]T, sliceLen)
+
+	for i := 0; i < sliceLen; i++ {
+		newList[i] = fn(slice[i], i, slice)
 	}
 
 	return newList
