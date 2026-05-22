@@ -2,11 +2,16 @@ package array
 
 // Reverse function Reverses the order of the elements in an slice. The Reverse() function does not overwrites the original array.
 func Reverse[T any](slice []T) []T {
-	newList := make([]T, 0, len(slice))
+	sliceLen := len(slice)
+	var newList []T
+	if sliceLen == 0 {
+		return newList
+	}
 
-	for index := len(slice) - 1; index >= 0; index-- {
-		item := slice[index]
-		newList = append(newList, item)
+	newList = make([]T, sliceLen)
+
+	for i, j := sliceLen-1, 0; i >= 0; i, j = i-1, j+1 {
+		newList[j] = slice[i]
 	}
 
 	return newList

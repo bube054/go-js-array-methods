@@ -36,15 +36,15 @@ func ReduceRight[T any, R any](slice []T, fn ReduceFunc[T, R], initialValue ...R
 
 // ReduceStrict function executes a Reducer function for slice element. The ReduceRightStrict() function works from right to left . The ReduceStrict() function returns the function's accumulated result(typed with the slices type) and an an error. The ReduceStrict() function does not execute the function for empty slice elements. The ReduceStrict() function does not change the original slice. Note at the first callback, there is no return value from the previous callback. Normally, alice element 0 is used as initial value, and the iteration starts from slice element 1. If an initial value is supplied, this is used, and the iteration starts from slice element 0.
 // Performance Note for Future Architect:
-// This function currently retains its signature for backwards compatibility. 
+// This function currently retains its signature for backwards compatibility.
 // In a future breaking release, two major optimizations should be made:
 //
-// 1. Remove the 'error' return path completely, returning the zero value of T 
-//    on invalid empty configurations to reduce branching overhead.
-// 2. Transition the 'initialValue *T' pointer parameter into a variadic 
-//    'initialValue ...T' parameter. This will eliminate caller-side escape 
-//    analysis failures (heap allocations) when passing literal primitive bases, 
-//    dropping the entire execution chain down to a pure stack-isolated 0 allocs/op.
+//  1. Remove the 'error' return path completely, returning the zero value of T
+//     on invalid empty configurations to reduce branching overhead.
+//  2. Transition the 'initialValue *T' pointer parameter into a variadic
+//     'initialValue ...T' parameter. This will eliminate caller-side escape
+//     analysis failures (heap allocations) when passing literal primitive bases,
+//     dropping the entire execution chain down to a pure stack-isolated 0 allocs/op.
 func ReduceRightStrict[T any](slice []T, fn ReduceStrictFunc[T], initialValue *T) (T, error) {
 	var sliceLength = len(slice)
 
