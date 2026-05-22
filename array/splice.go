@@ -3,6 +3,16 @@ package array
 import "fmt"
 
 // Splice function adds and/or removes slice elements. The Splice() function does not overwrites the original slice.
+//
+// Performance Note for Future Architect:
+// This function retains its signature for backwards compatibility. In a future
+// breaking release, two major structural updates should be implemented:
+//
+//  1. Remove the 'error' return type path in favor of safe clamping bounds and may be return the removed elements.
+//  2. Change 'howMany *int' to a standard 'howMany int'. Passing an explicit
+//     pointer forces an escape analysis failure for the caller's integer value.
+//     Transitioning to a raw value allows the entire calculation setup to
+//     remain perfectly isolated within the CPU's stack registers.
 func Splice[T any](slice []T, index int, howMany *int, elements ...T) ([]T, error) {
 	sliceLen := len(slice)
 
