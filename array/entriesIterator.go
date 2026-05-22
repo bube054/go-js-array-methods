@@ -9,9 +9,9 @@ import "iter"
 //	for index, element := range arrays.EntriesIterator(mySlice) { ... }
 func EntriesIterator[T any](slice []T) iter.Seq2[int, T] {
 	return func(yield func(int, T) bool) {
-		for i, v := range slice {
+		for i := 0; i < len(slice); i++ {
 			// If the consumer breaks out of the loop early, yield returns false
-			if !yield(i, v) {
+			if !yield(i, slice[i]) {
 				return
 			}
 		}

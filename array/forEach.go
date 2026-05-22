@@ -1,8 +1,8 @@
 package array
 
 func ForEach[T any](slice []T, fn ForEachFunc[T]) {
-	for index, value := range slice {
-		fn(value, index, slice)
+	for i := 0; i < len(slice); i++ {
+		fn(slice[i], i, slice)
 	}
 }
 

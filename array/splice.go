@@ -51,7 +51,7 @@ func Splice[T any](slice []T, index int, howMany *int, elements ...T) ([]T, erro
 	finalLen := newIndex + insertLen + tailLen
 
 	if finalLen == 0 {
-		return nil, nil
+		return make([]T, 0), nil
 	}
 
 	// 4. Single-Allocation Core Execution

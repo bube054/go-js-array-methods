@@ -4,7 +4,7 @@ package array
 func Map[T any, V any](slice []T, fn MapFunc[T, V]) []V {
 	sliceLen := len(slice)
 	if sliceLen == 0 {
-		return nil
+		return make([]V, 0)
 	}
 
 	newList := make([]V, sliceLen)
@@ -20,7 +20,7 @@ func Map[T any, V any](slice []T, fn MapFunc[T, V]) []V {
 func MapStrict[T any](slice []T, fn MapFuncStrict[T]) []T {
 	sliceLen := len(slice)
 	if sliceLen == 0 {
-		return nil
+		return slice
 	}
 
 	newList := make([]T, sliceLen)

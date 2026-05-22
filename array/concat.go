@@ -5,16 +5,27 @@ package array
 // The concat() function does not change the existing slices.
 func Concat[T any](slice1 []T, slices ...[]T) []T {
 	totalLen := len(slice1)
-	for _, s := range slices {
-		totalLen += len(s)
+	for i := 0; i < len(slices); i++ {
+		totalLen += len(slices[i])
 	}
 
-	result := make([]T, 0, totalLen)
+	if len(slices) == 0 {
+		return slice1
+	}
 
-	result = append(result, slice1...)
+	result := make([]T, totalLen)
+	if len(slice1) > 0 {
+		copy(result, slice1)
+	}
 
-	for _, s := range slices {
-		result = append(result, s...)
+	pos := len(slice1)
+	for i := 0; i < len(slices); i++ {
+		s := slices[i]
+		if len(s) == 0 {
+			continue
+		}
+		copy(result[pos:], s)
+		pos += len(s)
 	}
 
 	return result
