@@ -21,7 +21,7 @@ func TestSplice(t *testing.T) {
 			index:       2,
 			howMany:     func() *int { v := 2; return &v }(),
 			elements:    []string{},
-			expected:    []string{"Banana", "Orange", "Mango", "Kiwi"},
+			expected:    []string{"Banana", "Orange", "Kiwi"},
 			expectError: false,
 		},
 		{

@@ -1,35 +1,63 @@
 package array
 
+import "fmt"
+
 // Splice function adds and/or removes slice elements. The Splice() function does not overwrites the original slice.
 func Splice[T any](slice []T, index int, howMany *int, elements ...T) ([]T, error) {
-	sliceLength := len(slice)
-	newIndex, err := ConvertIndex(slice, index, "index")
+	sliceLen := len(slice)
 
-	if err != nil {
-		return slice, err
+	// 1. Inlined Pure Index Bounds Normalization (0 Allocations)
+	newIndex := convertIndexSimply(sliceLen, index)
+	if newIndex == -1 {
+		return slice, fmt.Errorf("Invalid index %d", index)
 	}
 
-	if howMany == nil {
-		defaultHowMany := 0
-		howMany = &defaultHowMany
+	if newIndex > sliceLen {
+		newIndex = sliceLen
 	}
 
-	removalRange := sliceLength - newIndex
-	rightSlicePartitionBeginning := *howMany + newIndex
-
-	if rightSlicePartitionBeginning > removalRange {
-		rightSlicePartitionBeginning = removalRange
+	// 2. Safely evaluate howMany pointer without allocating default memory
+	count := 0
+	if howMany != nil {
+		count = *howMany
+		if count < 0 {
+			count = 0
+		}
+	} else {
+		// If howMany is omitted/nil, JavaScript standards delete everything
+		// from newIndex to the end of the slice.
+		count = sliceLen - newIndex
 	}
 
-	leftSlicePartition := slice[:newIndex]
-	newMiddleSlicePartition := elements
-	rightSlicePartition := slice[rightSlicePartitionBeginning:]
-	rightSlicePartitionCopy := make([]T, len(rightSlicePartition))
-	copy(rightSlicePartitionCopy, rightSlicePartition) // to prevent weird slice stuff
-	leftAndMiddlePartition := append(leftSlicePartition, newMiddleSlicePartition...)
-	leftAndMiddleAndRightPartition := append(leftAndMiddlePartition, rightSlicePartitionCopy...)
+	// Clamp count so it doesn't exceed the right edge of the slice
+	if newIndex+count > sliceLen {
+		count = sliceLen - newIndex
+	}
 
-	return leftAndMiddleAndRightPartition, nil
+	// 3. Exact Sizing Calculation (The Performance Game-Changer)
+	insertLen := len(elements)
+	tailIdx := newIndex + count
+	tailLen := sliceLen - tailIdx
+	finalLen := newIndex + insertLen + tailLen
+
+	if finalLen == 0 {
+		return nil, nil
+	}
+
+	// 4. Single-Allocation Core Execution
+	// We create the entire resulting array block exactly once. Zero heap thrashing.
+	result := make([]T, finalLen)
+
+	// Stitch all segments together using raw memory blocks copying
+	copy(result[0:newIndex], slice[0:newIndex])
+	if insertLen > 0 {
+		copy(result[newIndex:newIndex+insertLen], elements)
+	}
+	if tailLen > 0 {
+		copy(result[newIndex+insertLen:], slice[tailIdx:])
+	}
+
+	return result, nil
 }
 
 // Splice method changes the contents of an array by removing or replacing existing elements and/or adding new elements.
