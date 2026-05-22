@@ -55,6 +55,22 @@ func TestShift(t *testing.T) {
 	}
 }
 
+func TestShiftReturnedPointerValueIsIndependentOfSource(t *testing.T) {
+	slice := []int{1, 2, 3}
+	newSlice, ptr := Shift(slice)
+	if ptr == nil || *ptr != 1 {
+		t.Fatalf("expected shifted pointer to equal 1, got %v", ptr)
+	}
+
+	slice[0] = 100
+	if *ptr != 1 {
+		t.Fatalf("expected shifted pointer to remain stable after source mutation, got %d", *ptr)
+	}
+	if len(newSlice) != 2 || newSlice[0] != 2 || newSlice[1] != 3 {
+		t.Fatalf("unexpected new slice after Shift: %v", newSlice)
+	}
+}
+
 func TestShiftStrings(t *testing.T) {
 	fruits := []string{"Banana", "Orange", "Apple", "Mango"}
 	newFruits, fruit := Shift(fruits)

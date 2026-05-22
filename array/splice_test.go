@@ -75,3 +75,19 @@ func TestArraySplice(t *testing.T) {
 		t.Errorf("Array.Splice() result = %v, expected %v", result, expectedResult)
 	}
 }
+
+func TestSpliceReturnsNonNilEmptySlice(t *testing.T) {
+	slice := []int{1}
+	howMany := 1
+	result, err := Splice(slice, 0, &howMany)
+
+	if err != nil {
+		t.Fatalf("expected nil error but got %v", err)
+	}
+	if result == nil {
+		t.Fatal("expected non-nil result for Splice that produces an empty slice")
+	}
+	if len(result) != 0 {
+		t.Fatalf("expected empty result, got length %d", len(result))
+	}
+}

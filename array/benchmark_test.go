@@ -113,6 +113,43 @@ func BenchmarkJoin(b *testing.B) {
 	}
 }
 
+func BenchmarkSliceZeroAllocs(b *testing.B) {
+	src := make([]int, benchN)
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_, _ = Slice(src, 1, len(src))
+	}
+}
+
+func BenchmarkWithAllocations(b *testing.B) {
+	src := make([]int, benchN)
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_, _ = With(src, 0, 1)
+	}
+}
+
+func BenchmarkSomeZeroAllocs(b *testing.B) {
+	src := makeInts(benchN)
+	pred := func(n, _ int, _ []int) bool { return n == 1 }
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = Some(src, pred)
+	}
+}
+
+func BenchmarkConvertIndexZeroAllocs(b *testing.B) {
+	sliceLen := benchN
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = convertIndex(sliceLen, benchN-1)
+	}
+}
+
 // Flat uses reflect under the hood — worth tracking.
 func BenchmarkFlat(b *testing.B) {
 	src := makeNestedAny(1_000)

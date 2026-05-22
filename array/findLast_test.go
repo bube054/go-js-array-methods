@@ -58,6 +58,19 @@ func TestFindLast(t *testing.T) {
 }
 
 // TestArrayFindLast tests the Array.FindLast receiver method
+func TestFindLastReturnedPointerReflectsSourceMutation(t *testing.T) {
+	slice := []int{1, 2, 3, 2}
+	ptr := FindLast(slice, func(el, _ int, _ []int) bool { return el == 2 })
+	if ptr == nil || *ptr != 2 {
+		t.Fatalf("expected pointer to last matching value 2, got %v", ptr)
+	}
+
+	slice[3] = 99
+	if *ptr != 99 {
+		t.Fatalf("expected returned pointer to reflect updated backing slice value, got %d", *ptr)
+	}
+}
+
 func TestArrayFindLast(t *testing.T) {
 	arr := Array[int]{10, 20, 30, 40, 20}
 	predicate := func(el, _ int, _ []int) bool { return el == 20 }
