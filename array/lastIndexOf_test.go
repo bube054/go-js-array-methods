@@ -40,6 +40,20 @@ func TestLastIndexOf(t *testing.T) {
 			start:    nil,
 			expected: -1,
 		},
+		{
+			name:     "lastIndexOf with start beyond end returns -1",
+			slice:    []string{"Orange", "Apple", "Mango", "Apple", "Banana", "Apple"},
+			element:  "Apple",
+			start:    func() *int { v := 100; return &v }(),
+			expected: -1,
+		},
+		{
+			name:     "lastIndexOf with extreme negative start returns -1",
+			slice:    []string{"Orange", "Apple", "Mango", "Apple", "Banana", "Apple"},
+			element:  "Apple",
+			start:    func() *int { v := -9999; return &v }(),
+			expected: -1,
+		},
 	}
 
 	for _, tt := range tests {
@@ -71,5 +85,22 @@ func TestArrayLastIndexOf(t *testing.T) {
 
 	if result != expected {
 		t.Errorf("Array.LastIndexOf() = %d, expected %d", result, expected)
+	}
+}
+
+func TestArrayLastIndexOfEmptySlice(t *testing.T) {
+	arr := Array[string]{}
+	if arr.LastIndexOf("apple", nil) != -1 {
+		t.Fatal("Array.LastIndexOf() on empty array should return -1")
+	}
+}
+
+func TestArrayLastIndexOfNonComparable(t *testing.T) {
+	arr := Array[[]int]{{1, 2}, {3, 4}, {3, 4}}
+	if arr.LastIndexOf([]int{3, 4}, nil) != 2 {
+		t.Fatalf("Array.LastIndexOf() = %d, expected %d", arr.LastIndexOf([]int{3, 4}, nil), 2)
+	}
+	if arr.LastIndexOf([]int{7, 8}, nil) != -1 {
+		t.Fatalf("Array.LastIndexOf() = %d, expected -1", arr.LastIndexOf([]int{7, 8}, nil))
 	}
 }

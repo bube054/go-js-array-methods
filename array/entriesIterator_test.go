@@ -116,6 +116,28 @@ func TestEntriesIterator(t *testing.T) {
 	})
 }
 
+func TestArrayEntriesIterator(t *testing.T) {
+	arr := Array[string]{"a", "b", "c"}
+	gotIdx := make([]int, 0, len(arr))
+	gotVal := make([]string, 0, len(arr))
+
+	it := arr.EntriesIterator()
+	it(func(i int, v string) bool {
+		gotIdx = append(gotIdx, i)
+		gotVal = append(gotVal, v)
+		return true
+	})
+
+	for i := range arr {
+		if gotIdx[i] != i {
+			t.Fatalf("Array.EntriesIterator index mismatch: got %v want %v", gotIdx[i], i)
+		}
+		if gotVal[i] != arr[i] {
+			t.Fatalf("Array.EntriesIterator value mismatch: got %v want %v", gotVal[i], arr[i])
+		}
+	}
+}
+
 func BenchmarkEntriesIterator(b *testing.B) {
 	sizes := []int{10, 1000, 100000}
 

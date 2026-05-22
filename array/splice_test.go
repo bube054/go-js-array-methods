@@ -42,6 +42,24 @@ func TestSplice(t *testing.T) {
 			expected:    nil,
 			expectError: true,
 		},
+		{
+			name:        "splice with nil howMany removes to end",
+			slice:       []string{"Banana", "Orange", "Apple", "Mango"},
+			index:       1,
+			howMany:     nil,
+			elements:    []string{"Pear"},
+			expected:    []string{"Banana", "Pear"},
+			expectError: false,
+		},
+		{
+			name:        "splice with negative howMany treats as zero",
+			slice:       []string{"Banana", "Orange", "Apple"},
+			index:       1,
+			howMany:     func() *int { v := -1; return &v }(),
+			elements:    []string{"Pear"},
+			expected:    []string{"Banana", "Pear", "Orange", "Apple"},
+			expectError: false,
+		},
 	}
 
 	for _, tt := range tests {

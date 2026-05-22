@@ -61,6 +61,18 @@ func TestReduce(t *testing.T) {
 	}
 }
 
+func TestReduceIncompatibleTypesErrors(t *testing.T) {
+	slice := []int{1, 2, 3}
+	myFunc := func(acc string, el int, _ int, _ []int) string {
+		return acc + " " + string(rune(el))
+	}
+
+	_, err := Reduce(slice, myFunc)
+	if err == nil {
+		t.Fatal("expected Reduce() with incompatible types and no initial value to error")
+	}
+}
+
 func TestReduceStrict(t *testing.T) {
 	tests := []struct {
 		name        string
@@ -90,6 +102,13 @@ func TestReduceStrict(t *testing.T) {
 			expected:    0,
 			expectError: true,
 		},
+		{
+			name:        "reduceStrict empty array with initial returns initial",
+			slice:       []int{},
+			initialPtr:  func() *int { v := 99; return &v }(),
+			expected:    99,
+			expectError: false,
+		},
 	}
 
 	for _, tt := range tests {
@@ -108,6 +127,23 @@ func TestReduceStrict(t *testing.T) {
 				t.Errorf("ReduceStrict() = %d, expected %d", result, tt.expected)
 			}
 		})
+	}
+}
+
+func TestReduceRightNoInitialValue(t *testing.T) {
+	slice := []int{1, 2, 3}
+
+	result, err := ReduceRight(slice, func(acc int, el int, _ int, _ []int) int {
+		return acc - el
+	})
+
+	if err != nil {
+		t.Errorf("ReduceRight() got unexpected error: %v", err)
+	}
+
+	expected := 0
+	if result != expected {
+		t.Errorf("ReduceRight() = %v, expected %v", result, expected)
 	}
 }
 

@@ -128,3 +128,33 @@ func TestConvertEndIndexBoundaryValues(t *testing.T) {
 		})
 	}
 }
+func TestOptionalParam(t *testing.T) {
+	if OptionalParam([]int{10, 20}, 5) != 10 {
+		t.Fatalf("OptionalParam([]int{10,20},5) = %d, expected 10", OptionalParam([]int{10, 20}, 5))
+	}
+	if OptionalParam([]int{}, 5) != 5 {
+		t.Fatalf("OptionalParam([]int{},5) = %d, expected 5", OptionalParam([]int{}, 5))
+	}
+}
+
+func TestIsComparable(t *testing.T) {
+	if !isComparable(10) {
+		t.Fatal("expected int to be comparable")
+	}
+	if isComparable([]int{1, 2}) {
+		t.Fatal("expected slice to be non-comparable")
+	}
+	var nilAny any
+	if !isComparable(nilAny) {
+		t.Fatal("expected nil to be comparable")
+	}
+	if isComparable(map[string]int{"a": 1}) {
+		t.Fatal("expected map to be non-comparable")
+	}
+	if isComparable(func() {}) {
+		t.Fatal("expected func to be non-comparable")
+	}
+	if isComparable(struct{ Items []int }{Items: []int{1}}) {
+		t.Fatal("expected struct containing slice to be non-comparable")
+	}
+}

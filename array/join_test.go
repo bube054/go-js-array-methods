@@ -164,3 +164,11 @@ func TestArrayJoinNonStringTypes(t *testing.T) {
 		})
 	}
 }
+
+func TestArrayJoinInt64(t *testing.T) {
+	slice := Array[int64]{1, 2, 3}
+	result := slice.Join(",")
+	if result != "1,2,3" {
+		t.Fatalf("Array.Join() = %s, expected %s", result, "1,2,3")
+	}
+}

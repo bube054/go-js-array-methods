@@ -42,6 +42,24 @@ func TestFill(t *testing.T) {
 			expected:    nil,
 			expectError: true,
 		},
+		{
+			name:        "fill start index out of range errors",
+			slice:       []string{"a", "b", "c"},
+			value:       "x",
+			start:       10,
+			end:         2,
+			expected:    nil,
+			expectError: true,
+		},
+		{
+			name:        "fill end index out of range errors",
+			slice:       []string{"a", "b", "c"},
+			value:       "x",
+			start:       0,
+			end:         10,
+			expected:    nil,
+			expectError: true,
+		},
 	}
 
 	for _, tt := range tests {
