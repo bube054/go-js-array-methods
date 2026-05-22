@@ -16,7 +16,7 @@ func IndexOf[T comparable](slice []T, element T, start *int) int {
 
 	startIndex := 0
 	if start != nil {
-		startIndex = convertIndexSimply(sliceLength, *start)
+		startIndex = convertIndex(sliceLength, *start)
 		if startIndex == -1 {
 			return -1
 		}
@@ -48,7 +48,7 @@ func (a Array[T]) IndexOf(element T, start *int) int {
 
 	sliceLength := len(a)
 
-	if IsComparable(element) {
+	if isComparable(element) {
 		for i := startIndex; i < sliceLength; i++ {
 			if any(element) == any(a[i]) {
 				return i

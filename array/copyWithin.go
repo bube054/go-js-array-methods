@@ -10,12 +10,12 @@ func CopyWithin[T any](slice []T, target int, start int, end int) ([]T, error) {
 	sliceLength := len(slice)
 
 	// 1. Validate and Normalize indices BEFORE any heap allocations
-	newTargetIndex := convertIndexSimply(sliceLength, target)
+	newTargetIndex := convertIndex(sliceLength, target)
 	if newTargetIndex == -1 {
 		return nil, fmt.Errorf("target index: %d out of range", target)
 	}
 
-	newStartIndex := convertIndexSimply(sliceLength, start)
+	newStartIndex := convertIndex(sliceLength, start)
 	if newStartIndex == -1 {
 		return nil, fmt.Errorf("start index: %d out of range", start)
 	}

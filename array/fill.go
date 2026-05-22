@@ -8,7 +8,7 @@ import (
 func Fill[T any](slice []T, value T, start int, end int) ([]T, error) {
 	sliceLength := len(slice)
 
-	newStartIndex := convertIndexSimply(sliceLength, start)
+	newStartIndex := convertIndex(sliceLength, start)
 	if newStartIndex == -1 {
 		return nil, fmt.Errorf("start index: %d out of range", start)
 	}

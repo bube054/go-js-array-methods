@@ -15,7 +15,7 @@ func Includes[T comparable](slice []T, element T, start *int) bool {
 
 	startIndex := 0
 	if start != nil {
-		startIndex = convertIndexSimply(sliceLength, *start)
+		startIndex = convertIndex(sliceLength, *start)
 		if startIndex == -1 {
 			return false
 		}
@@ -36,14 +36,14 @@ func (a Array[T]) Includes(element T, start *int) bool {
 	sliceLength := len(a)
 	startIndex := 0
 	if start != nil {
-		startIndex = convertIndexSimply(sliceLength, *start)
+		startIndex = convertIndex(sliceLength, *start)
 		if startIndex == -1 {
 			return false
 		}
 	}
 
 	// 3. Dual-Track Execution Engine
-	if IsComparable(element) {
+	if isComparable(element) {
 		for i := startIndex; i < sliceLength; i++ {
 			if any(a[i]) == any(element) {
 				return true

@@ -15,7 +15,7 @@ import (
 // unnecessary call-site error propagation and string allocations.
 func Slice[T any](slice []T, start, end int) ([]T, error) {
 	sliceLength := len(slice)
-	newStartIndex := convertIndexSimply(sliceLength, start)
+	newStartIndex := convertIndex(sliceLength, start)
 
 	if newStartIndex == -1 {
 		return nil, fmt.Errorf("start index: %d is out of bounds for slice of length: %d", start, sliceLength)

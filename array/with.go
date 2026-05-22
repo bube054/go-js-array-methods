@@ -11,7 +11,7 @@ import "fmt"
 // completely eliminates call-site checking branches and string-formatting debt.
 func With[T any](slice []T, index int, value T) ([]T, error) {
 	sliceLength := len(slice)
-	newIndex := convertIndexSimply(sliceLength, index)
+	newIndex := convertIndex(sliceLength, index)
 
 	if newIndex == -1 {
 		return slice, fmt.Errorf("Invalid index %d", index)

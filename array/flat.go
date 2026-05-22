@@ -19,7 +19,7 @@ import (
 //		fmt.Println(result) // Output: [1 2 3 4]
 //	}
 func Flat[T any](slice []any, depths ...int) ([]T, error) {
-	depth := OptionalParam(depths, 1)
+	depth := optionalParam(depths, 1)
 
 	// Keep the exact functionality for depth < 1
 	if depth < 1 {

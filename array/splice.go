@@ -17,7 +17,7 @@ func Splice[T any](slice []T, index int, howMany *int, elements ...T) ([]T, erro
 	sliceLen := len(slice)
 
 	// 1. Inlined Pure Index Bounds Normalization (0 Allocations)
-	newIndex := convertIndexSimply(sliceLen, index)
+	newIndex := convertIndex(sliceLen, index)
 	if newIndex == -1 {
 		return slice, fmt.Errorf("Invalid index %d", index)
 	}

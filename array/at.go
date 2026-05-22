@@ -4,7 +4,7 @@ import "fmt"
 
 // At function returns an indexed element from a slice and returns a possible error relating to out of range indexes.
 func At[T any](slice []T, index int) (element T, err error) {
-	newIndex := convertIndexSimply(len(slice), index)
+	newIndex := convertIndex(len(slice), index)
 
 	if newIndex == -1 {
 		return element, fmt.Errorf("index: %d out of range", index)

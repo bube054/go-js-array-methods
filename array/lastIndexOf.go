@@ -16,7 +16,7 @@ func LastIndexOf[T comparable](slice []T, element T, start *int) int {
 
 	startIndex := sliceLength - 1
 	if start != nil {
-		startIndex = convertIndexSimply(sliceLength, *start)
+		startIndex = convertIndex(sliceLength, *start)
 
 		if startIndex == -1 {
 			return -1
@@ -40,13 +40,13 @@ func (a Array[T]) LastIndexOf(element T, start *int) int {
 	startIndex := sliceLength - 1
 
 	if start != nil {
-		startIndex = convertIndexSimply(sliceLength, *start)
+		startIndex = convertIndex(sliceLength, *start)
 		if startIndex == -1 {
 			return -1
 		}
 	}
 
-	if IsComparable(element) {
+	if isComparable(element) {
 		for i := startIndex; i >= 0; i-- {
 			if any(element) == any(a[i]) {
 				return i
