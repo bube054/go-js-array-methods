@@ -31,7 +31,7 @@ func TestReduce(t *testing.T) {
 			slice:        []int{},
 			initialValue: []int{},
 			expected:     0,
-			expectError:  false,
+			expectError:  true,
 		},
 		{
 			name:         "reduce empty array with initial",

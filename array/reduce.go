@@ -19,6 +19,10 @@ func Reduce[T any, R any](slice []T, fn ReduceFunc[T, R], initialValue ...R) (R,
 	}
 
 	if sliceLen == 0 {
+		if !hasInitial {
+			var zero R
+			return zero, errors.New("TypeError: Reduce of empty slice with no initial value")
+		}
 		return accumulator, nil
 	}
 

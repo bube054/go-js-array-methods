@@ -61,7 +61,7 @@ func BenchmarkMapStrict(b *testing.B) {
 
 func BenchmarkReduce(b *testing.B) {
 	src := makeInts(benchN)
-	fn := func(acc any, n, _ int, _ []int) any { return acc.(int) + n }
+	fn := func(acc, n, _ int, _ []int) int { return acc + n }
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_, _ = Reduce(src, fn, 0)
