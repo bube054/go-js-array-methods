@@ -189,3 +189,33 @@ func BenchmarkArrayChain(b *testing.B) {
 		_ = src.Filter(pred).MapStrict(double).Reverse()
 	}
 }
+
+type reduceBenchAccumulator struct {
+	total int
+}
+
+func BenchmarkReduceAs(b *testing.B) {
+	src := makeInts(benchN)
+	initial := reduceBenchAccumulator{}
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = ReduceAs(src, func(acc reduceBenchAccumulator, n int, _ int, _ []int) reduceBenchAccumulator {
+			acc.total += n
+			return acc
+		}, initial)
+	}
+}
+
+func BenchmarkReduceRightAs(b *testing.B) {
+	src := makeInts(benchN)
+	initial := reduceBenchAccumulator{}
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = ReduceRightAs(src, func(acc reduceBenchAccumulator, n int, _ int, _ []int) reduceBenchAccumulator {
+			acc.total += n
+			return acc
+		}, initial)
+	}
+}
