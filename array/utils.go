@@ -96,7 +96,7 @@ func flatProcessor[T any](result *[]T, currentSlice []any, currentDepth int) err
 		}
 
 		// 1. DEPTH CHECK: If depth limit is hit, we CANNOT unpack further. Everything must be T.
-		if currentDepth == 0 {
+		if currentDepth <= 0 {
 			if t, ok := v.(T); ok {
 				*result = append(*result, t)
 				continue
