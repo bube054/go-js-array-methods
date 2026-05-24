@@ -1,37 +1,25 @@
 package array
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 // Reduce function executes a Reducer function for slice element. The ReduceRight() function works from right to left. The Reduce() function returns the function's accumulated result and an an error. The Reduce() function does not execute the function for empty slice elements. The Reduce() function does not change the original slice. Note at the first callback, there is no return value from the previous callback. Normally, alice element 0 is used as initial value, and the iteration starts from slice element 1. If an initial value is supplied, this is used, and the iteration starts from slice element 0.
-func ReduceRight[T any, R any](slice []T, fn ReduceFunc[T, R], initialValue ...R) (R, error) {
-	sliceLen := len(slice)
-
-	var accumulator R
-	hasInitial := false
-	if len(initialValue) > 0 {
-		accumulator = initialValue[0]
-		hasInitial = true
-	}
-
-	if sliceLen == 0 {
-		return accumulator, nil
-	}
-
-	startIndex := sliceLen - 1
-	if !hasInitial {
-		if initial, ok := any(slice[sliceLen-1]).(R); ok {
-			accumulator = initial
-			startIndex = sliceLen - 2
-		} else {
-			return accumulator, errors.New("Reduce of slice with incompatible types and no initial value")
+func ReduceRight[T any](slice []T, fn ReduceFunc[T], initialValue any) (result any, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("%v", r)
 		}
+	}()
+
+	asFn := ReduceAsFunc[T, any](fn)
+
+	if initialValue == nil {
+		return ReduceRightAs(slice, asFn), nil
 	}
 
-	for i := startIndex; i >= 0; i-- {
-		accumulator = fn(accumulator, slice[i], i, slice)
-	}
-
-	return accumulator, nil
+	return ReduceRightAs(slice, asFn, initialValue), nil
 }
 
 // ReduceStrict function executes a Reducer function for slice element. The ReduceRightStrict() function works from right to left . The ReduceStrict() function returns the function's accumulated result(typed with the slices type) and an an error. The ReduceStrict() function does not execute the function for empty slice elements. The ReduceStrict() function does not change the original slice. Note at the first callback, there is no return value from the previous callback. Normally, alice element 0 is used as initial value, and the iteration starts from slice element 1. If an initial value is supplied, this is used, and the iteration starts from slice element 0.
@@ -81,7 +69,7 @@ func ReduceRightStrict[T any](slice []T, fn ReduceStrictFunc[T], initialValue *T
 // complexity. In a future major version, this should be removed in
 // favor of returning the zero-value of R for invalid input states, which
 // will further reduce execution overhead and simplify call-site logic.
-func (a Array[T]) ReduceRight(fn ReduceFunc[T, any], initialValue any) (any, error) {
+func (a Array[T]) ReduceRight(fn ReduceFunc[T], initialValue any) (any, error) {
 	return ReduceRight(a, fn, initialValue)
 }
 

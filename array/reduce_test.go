@@ -8,35 +8,35 @@ func TestReduce(t *testing.T) {
 	tests := []struct {
 		name         string
 		slice        []int
-		initialValue []int
-		expected     int
+		initialValue any
+		expected     any
 		expectError  bool
 	}{
 		{
 			name:         "reduce with initial value",
 			slice:        []int{175, 50, 25},
-			initialValue: []int{0},
+			initialValue: 0,
 			expected:     -250, // 0 - 175 - 50 - 25
 			expectError:  false,
 		},
 		{
 			name:         "reduce without initial value",
 			slice:        []int{1, 2, 3, 4},
-			initialValue: []int{},
+			initialValue: nil,
 			expected:     -8, // 1 - 2 - 3 - 4
 			expectError:  false,
 		},
 		{
 			name:         "reduce empty array without initial errors",
 			slice:        []int{},
-			initialValue: []int{},
+			initialValue: nil,
 			expected:     0,
 			expectError:  true,
 		},
 		{
 			name:         "reduce empty array with initial",
 			slice:        []int{},
-			initialValue: []int{42},
+			initialValue: 42,
 			expected:     42,
 			expectError:  false,
 		},
@@ -44,11 +44,11 @@ func TestReduce(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			myFunc := func(acc int, el int, _ int, _ []int) int {
-				return acc - el
+			myFunc := func(acc any, el int, _ int, _ []int) any {
+				return acc.(int) - el
 			}
 
-			result, err := Reduce(tt.slice, myFunc, tt.initialValue...)
+			result, err := Reduce(tt.slice, myFunc, tt.initialValue)
 
 			if tt.expectError && err == nil {
 				t.Errorf("Reduce() expected error but got none")
@@ -63,11 +63,11 @@ func TestReduce(t *testing.T) {
 
 func TestReduceIncompatibleTypesErrors(t *testing.T) {
 	slice := []int{1, 2, 3}
-	myFunc := func(acc string, el int, _ int, _ []int) string {
-		return acc + " " + string(rune(el))
+	myFunc := func(acc any, el int, _ int, _ []int) any {
+		return acc.(string) + " " + string(rune(el))
 	}
 
-	_, err := Reduce(slice, myFunc)
+	_, err := Reduce(slice, myFunc, nil)
 	if err == nil {
 		t.Fatal("expected Reduce() with incompatible types and no initial value to error")
 	}
@@ -133,9 +133,9 @@ func TestReduceStrict(t *testing.T) {
 func TestReduceRightNoInitialValue(t *testing.T) {
 	slice := []int{1, 2, 3}
 
-	result, err := ReduceRight(slice, func(acc int, el int, _ int, _ []int) int {
-		return acc - el
-	})
+	result, err := ReduceRight(slice, func(acc any, el int, _ int, _ []int) any {
+		return acc.(int) - el
+	}, nil)
 
 	if err != nil {
 		t.Errorf("ReduceRight() got unexpected error: %v", err)

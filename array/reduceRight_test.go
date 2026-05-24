@@ -37,8 +37,8 @@ func TestReduceRight(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			myFunc := func(acc int, el int, _ int, _ []int) int {
-				return acc - el
+			myFunc := func(acc any, el int, _ int, _ []int) any {
+				return acc.(int) - el
 			}
 
 			result, err := ReduceRight(tt.slice, myFunc, tt.initialValue)

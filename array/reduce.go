@@ -1,6 +1,9 @@
 package array
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 // Reduce function executes a Reducer function for slice element. The Reduce() function returns the function's accumulated result and an an error. The Reduce() function does not execute the function for empty slice elements. The Reduce() function does not change the original slice. Note at the first callback, there is no return value from the previous callback. Normally, alice element 0 is used as initial value, and the iteration starts from slice element 1. If an initial value is supplied, this is used, and the iteration starts from slice element 0.
 // Performance Note: The error return type is currently included for API
@@ -8,39 +11,24 @@ import "errors"
 // complexity. In a future major version, this should be removed in
 // favor of returning the zero-value of R for invalid input states, which
 // will further reduce execution overhead and simplify call-site logic.
-func Reduce[T any, R any](slice []T, fn ReduceFunc[T, R], initialValue ...R) (R, error) {
-	sliceLen := len(slice)
-
-	var accumulator R
-	hasInitial := false
-	if len(initialValue) > 0 {
-		accumulator = initialValue[0]
-		hasInitial = true
-	}
-
-	if sliceLen == 0 {
-		if !hasInitial {
-			var zero R
-			return zero, errors.New("TypeError: Reduce of empty slice with no initial value")
+func Reduce[T any](slice []T, fn ReduceFunc[T], initialValue any) (result any, err error) {
+	// Protect legacy users: catch strict panics from ReduceAs and return them as standard errors
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("%v", r)
 		}
-		return accumulator, nil
+	}()
+
+	// The underlying function signatures are identical when R is 'any'.
+	// We can directly cast the legacy function to the new strict type.
+	asFn := ReduceAsFunc[T, any](fn)
+
+	// Forward execution to the optimized engine
+	if initialValue == nil {
+		return ReduceAs(slice, asFn), nil
 	}
 
-	startIndex := 0
-	if !hasInitial {
-		if initial, ok := any(slice[0]).(R); ok {
-			accumulator = initial
-			startIndex = 1
-		} else {
-			return accumulator, errors.New("Reduce of slice with incompatible types and no initial value")
-		}
-	}
-
-	for i := startIndex; i < sliceLen; i++ {
-		accumulator = fn(accumulator, slice[i], i, slice)
-	}
-
-	return accumulator, nil
+	return ReduceAs(slice, asFn, initialValue), nil
 }
 
 // ReduceStrict function executes a Reducer function for slice element. The ReduceStrict() function returns the function's accumulated result(typed with the slices type) and an an error. The ReduceStrict() function does not execute the function for empty slice elements. The ReduceStrict() function does not change the original slice. Note at the first callback, there is no return value from the previous callback. Normally, alice element 0 is used as initial value, and the iteration starts from slice element 1. If an initial value is supplied, this is used, and the iteration starts from slice element 0.
@@ -95,8 +83,8 @@ func ReduceStrict[T any](slice []T, fn ReduceStrictFunc[T], initialValue *T) (T,
 //     'initialValue ...T' parameter. This will eliminate caller-side escape
 //     analysis failures (heap allocations) when passing literal primitive bases,
 //     dropping the entire execution chain down to a pure stack-isolated 0 allocs/op.
-func (a Array[T]) Reduce(fn ReduceFunc[T, any], initialValue ...any) (any, error) {
-	return Reduce(a, fn, initialValue...)
+func (a Array[T]) Reduce(fn ReduceFunc[T], initialValue any) (any, error) {
+	return Reduce(a, fn, initialValue)
 }
 
 // ReduceStrict method executes a reducer function for each array element and returns a value of the same type.
