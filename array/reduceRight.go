@@ -6,6 +6,11 @@ import (
 )
 
 // Reduce function executes a Reducer function for slice element. The ReduceRight() function works from right to left. The Reduce() function returns the function's accumulated result and an an error. The Reduce() function does not execute the function for empty slice elements. The Reduce() function does not change the original slice. Note at the first callback, there is no return value from the previous callback. Normally, alice element 0 is used as initial value, and the iteration starts from slice element 1. If an initial value is supplied, this is used, and the iteration starts from slice element 0.
+// Deprecation Notice: This legacy signature uses 'any' and will eventually be
+// deprecated in favor of the strictly typed ReduceRightAs[T, R] function.
+// For future-proof, zero-allocation, type-safe code, please use ReduceRightAs[T, R].
+// In a future major release, ReduceRightAs will be merged into this ReduceRight function
+// to provide strict generic type safety by default.
 func ReduceRight[T any](slice []T, fn ReduceFunc[T], initialValue any) (result any, err error) {
 	defer func() {
 		if r := recover(); r != nil {

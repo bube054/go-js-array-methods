@@ -6,11 +6,11 @@ import (
 )
 
 // Reduce function executes a Reducer function for slice element. The Reduce() function returns the function's accumulated result and an an error. The Reduce() function does not execute the function for empty slice elements. The Reduce() function does not change the original slice. Note at the first callback, there is no return value from the previous callback. Normally, alice element 0 is used as initial value, and the iteration starts from slice element 1. If an initial value is supplied, this is used, and the iteration starts from slice element 0.
-// Performance Note: The error return type is currently included for API
-// compatibility, but introduces unnecessary interface boxing and branching
-// complexity. In a future major version, this should be removed in
-// favor of returning the zero-value of R for invalid input states, which
-// will further reduce execution overhead and simplify call-site logic.
+// Deprecation Notice: This legacy signature uses 'any' and will eventually be
+// deprecated in favor of the strictly typed ReduceAs[T, R] function.
+// For future-proof, zero-allocation, type-safe code, please use ReduceAs[T, R].
+// In a future major release, ReduceAs will be merged into this Reduce function
+// to provide strict generic type safety by default.
 func Reduce[T any](slice []T, fn ReduceFunc[T], initialValue any) (result any, err error) {
 	// Protect legacy users: catch strict panics from ReduceAs and return them as standard errors
 	defer func() {
