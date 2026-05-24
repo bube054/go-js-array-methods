@@ -1,15 +1,26 @@
 package array
 
-import (
-	"fmt"
-	// "math"
-)
+import "fmt"
 
-// CopyWithin function returns a copy of slice elements to another position in an slice and a possible error relating to out of range indexes.. The CopyWithin() function overwrites the existing values in the new slice.
+// CopyWithin returns a new slice with values copied into the target position.
+//
+// Behavior:
+//   - The original slice is not modified.
+//   - Negative indexes are normalized from the end of the slice.
+//   - Invalid bounds return an error.
+//
+// Performance Note:
+//   - The function allocates one output slice and performs a single copy of the affected region.
+//
+// Example:
+//
+//	numbers := []int{1, 2, 3, 4}
+//	result, err := CopyWithin(numbers, 1, 2, 4)
+//	// result == []int{1, 3, 4, 4}
+//	// err == nil
 func CopyWithin[T any](slice []T, target int, start int, end int) ([]T, error) {
 	sliceLength := len(slice)
 
-	// 1. Validate and Normalize indices BEFORE any heap allocations
 	newTargetIndex := convertIndex(sliceLength, target)
 	if newTargetIndex == -1 {
 		return nil, fmt.Errorf("target index: %d out of range", target)
@@ -49,7 +60,8 @@ func CopyWithin[T any](slice []T, target int, start int, end int) ([]T, error) {
 	return newSlice, nil
 }
 
-// CopyWithin method copies array elements to another position in the array and returns the modified array.
+// CopyWithin returns a new array with values copied into the target position.
+// It is the receiver-based form of CopyWithin.
 func (a Array[T]) CopyWithin(target, start, end int) (Array[T], error) {
 	result, err := CopyWithin(a, target, start, end)
 	return Array[T](result), err

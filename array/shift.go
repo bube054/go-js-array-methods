@@ -1,16 +1,22 @@
 package array
 
-// Shift function removes the first item of an slice. The Shift() function changes the original slice. The Shift() function returns the new slice and a pointer to the  shifted element.
+// Shift returns a new slice without the first element and the removed value.
 //
-// Performance Note for Future Architect:
-// Shift currently returns a pointer to the removed element (*T), which forces
-// the Go compiler's escape analysis to push the element onto the heap (1 alloc/op).
-// Additionally, because the pointer looks directly into the removed element, the
-// underlying backing array slot cannot be zeroed out without corrupting caller data.
+// Behavior:
+//   - The original slice is not modified.
+//   - Empty slices return the original slice and nil.
 //
-// In a future breaking release (v2.0), this signature should be changed to
-// return by value (slice []T, element T, ok bool) to eliminate heap allocations
-// completely and allow proper garbage collection cleanup of the shifted slot.
+// Performance Note:
+//   - The current signature returns a pointer to the removed element, which can trigger escape analysis and heap allocation.
+//   - Roadmap Notice: a future major release should return the value directly to remove this escape path.
+//
+// Example:
+//
+//	numbers := []int{1, 2, 3}
+//	trimmed, removed := Shift(numbers)
+//	// trimmed == []int{2, 3}
+//	// removed != nil
+//	// *removed == 1
 func Shift[T any](slice []T) ([]T, *T) {
 	sliceLength := len(slice)
 
@@ -23,7 +29,8 @@ func Shift[T any](slice []T) ([]T, *T) {
 	return slice[1:], &firstElement
 }
 
-// Shift method removes the first element from the array and returns the modified array and the removed element.
+// Shift returns a new array without the first element and the removed value.
+// It is the receiver-based form of Shift.
 func (a Array[T]) Shift() (Array[T], *T) {
 
 	return Shift(a)

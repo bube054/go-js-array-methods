@@ -1,12 +1,21 @@
 package array
 
-// Entries function returns an Slice with structs with field/value: {index 0, element "Banana"}. The entries() function does not change the original slice.
+// Entries returns an eager slice of Entry values containing the source indexes and elements.
 //
-// Performance Note for future scaling:
-// This function evaluates eagerly, allocating an O(N) memory block upfront.
-// If processing ultra-large datasets where garbage collection pressure becomes
-// a bottleneck, consider using entriesIterator which is using Go 1.23+ range-over-func iterators
-// (iter.Seq2[int, T]) to stream entries lazily with zero heap allocations.
+// Behavior:
+//   - The original slice is not modified.
+//   - The returned slice has one Entry per input element.
+//
+// Performance Note:
+//   - This function allocates an O(N) result slice up front.
+//   - If you need a streaming path for very large datasets, use EntriesIterator, which evaluates lazily with 0 allocs/op.
+//
+// Example:
+//
+//	numbers := []int{10, 20}
+//	entries := Entries(numbers)
+//	// entries[0].index == 0
+//	// entries[0].element == 10
 func Entries[T any](slice []T) []Entry[T] {
 	newSlice := make([]Entry[T], len(slice))
 	sliceLen := len(slice)
@@ -21,7 +30,8 @@ func Entries[T any](slice []T) []Entry[T] {
 	return newSlice
 }
 
-// Entries method returns an array of [index, element] pairs for each element in the array.
+// Entries returns an eager slice of Entry values for the receiver.
+// It is the receiver-based form of Entries.
 func (a Array[T]) Entries() []Entry[T] {
 	return Entries(a)
 }

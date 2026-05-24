@@ -2,21 +2,27 @@ package array
 
 import "fmt"
 
-// Splice function adds and/or removes slice elements. The Splice() function does not overwrites the original slice.
+// Splice returns a new slice with elements inserted, removed, or replaced.
 //
-// Performance Note for Future Architect:
-// This function retains its signature for backwards compatibility. In a future
-// breaking release, two major structural updates should be implemented:
+// Behavior:
+//   - The original slice is not modified.
+//   - The optional howMany pointer controls how many elements are removed; nil removes to the end.
+//   - Invalid indexes return an error.
 //
-//  1. Remove the 'error' return type path in favor of safe clamping bounds and may be return the removed elements.
-//  2. Change 'howMany *int' to a standard 'howMany int'. Passing an explicit
-//     pointer forces an escape analysis failure for the caller's integer value.
-//     Transitioning to a raw value allows the entire calculation setup to
-//     remain perfectly isolated within the CPU's stack registers.
+// Performance Note:
+//   - The implementation builds the result in a single allocation and copies each segment once.
+//   - Roadmap Notice: the howMany pointer is retained for compatibility; a future major release should switch to a plain int to avoid avoidable escape-analysis pressure.
+//
+// Example:
+//
+//	numbers := []int{1, 2, 3, 4}
+//	count := 1
+//	result, err := Splice(numbers, 1, &count, 9)
+//	// result == []int{1, 9, 3, 4}
+//	// err == nil
 func Splice[T any](slice []T, index int, howMany *int, elements ...T) ([]T, error) {
 	sliceLen := len(slice)
 
-	// 1. Inlined Pure Index Bounds Normalization (0 Allocations)
 	newIndex := convertIndex(sliceLen, index)
 	if newIndex == -1 {
 		return slice, fmt.Errorf("Invalid index %d", index)
@@ -26,7 +32,6 @@ func Splice[T any](slice []T, index int, howMany *int, elements ...T) ([]T, erro
 		newIndex = sliceLen
 	}
 
-	// 2. Safely evaluate howMany pointer without allocating default memory
 	count := 0
 	if howMany != nil {
 		count = *howMany
@@ -34,17 +39,13 @@ func Splice[T any](slice []T, index int, howMany *int, elements ...T) ([]T, erro
 			count = 0
 		}
 	} else {
-		// If howMany is omitted/nil, JavaScript standards delete everything
-		// from newIndex to the end of the slice.
 		count = sliceLen - newIndex
 	}
 
-	// Clamp count so it doesn't exceed the right edge of the slice
 	if newIndex+count > sliceLen {
 		count = sliceLen - newIndex
 	}
 
-	// 3. Exact Sizing Calculation (The Performance Game-Changer)
 	insertLen := len(elements)
 	tailIdx := newIndex + count
 	tailLen := sliceLen - tailIdx
@@ -54,11 +55,7 @@ func Splice[T any](slice []T, index int, howMany *int, elements ...T) ([]T, erro
 		return make([]T, 0), nil
 	}
 
-	// 4. Single-Allocation Core Execution
-	// We create the entire resulting array block exactly once. Zero heap thrashing.
 	result := make([]T, finalLen)
-
-	// Stitch all segments together using raw memory blocks copying
 	copy(result[0:newIndex], slice[0:newIndex])
 	if insertLen > 0 {
 		copy(result[newIndex:newIndex+insertLen], elements)
@@ -70,7 +67,8 @@ func Splice[T any](slice []T, index int, howMany *int, elements ...T) ([]T, erro
 	return result, nil
 }
 
-// Splice method changes the contents of an array by removing or replacing existing elements and/or adding new elements.
+// Splice returns a new array with elements inserted, removed, or replaced.
+// It is the receiver-based form of Splice.
 func (a Array[T]) Splice(index int, howMany *int, items ...T) (Array[T], error) {
 	spliced, err := Splice(a, index, howMany, items...)
 	return Array[T](spliced), err

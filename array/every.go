@@ -1,6 +1,22 @@
 package array
 
-// Every function executes a function for each slice element. The Every() function returns true if the function returns true for all elements. The Every() function returns false if the function returns false for one element. The Every() function does not execute the function for empty elements. The Every() function does not change the original slice.
+// Every returns true when every element satisfies the predicate.
+//
+// Behavior:
+//   - The original slice is not modified.
+//   - The predicate is not called for empty slices.
+//   - The function short-circuits on the first false result.
+//
+// Performance Note:
+//   - This is a bare-metal O(n) traversal with no heap allocations.
+//
+// Example:
+//
+//	numbers := []int{2, 4, 6}
+//	allEven := Every(numbers, func(value int, _ int, _ []int) bool {
+//		return value%2 == 0
+//	})
+//	// allEven == true
 func Every[T any](slice []T, fn Predicate[T]) bool {
 	for i := 0; i < len(slice); i++ {
 		if !fn(slice[i], i, slice) {
@@ -11,7 +27,8 @@ func Every[T any](slice []T, fn Predicate[T]) bool {
 	return true
 }
 
-// Every method tests whether all elements in the array pass the provided predicate function.
+// Every returns true when every element in the receiver satisfies the predicate.
+// It is the receiver-based form of Every.
 func (a Array[T]) Every(fn Predicate[T]) bool {
 	return Every(a, fn)
 }
