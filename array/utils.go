@@ -82,3 +82,76 @@ func isComparable[T any](element T) bool {
 		return true
 	}
 }
+
+// flatProcessor is a recursive helper function that processes elements for the Flat() method.
+// It handles both fast paths (known slice types) and a slow path (reflection) for unexpected slice types.
+// The function appends valid T elements to the result slice while respecting the specified depth limit.
+func flatProcessor[T any](result *[]T, currentSlice []any, currentDepth int) error {
+	sliceLen := len(currentSlice)
+
+	for i := 0; i < sliceLen; i++ {
+		v := currentSlice[i]
+		if v == nil {
+			continue
+		}
+
+		// 1. DEPTH CHECK: If depth limit is hit, we CANNOT unpack further. Everything must be T.
+		if currentDepth == 0 {
+			if t, ok := v.(T); ok {
+				*result = append(*result, t)
+				continue
+			}
+			return fmt.Errorf("element of type %T cannot be converted to T", v)
+		}
+
+		// 2. FAST PATHS: We have depth > 0. We MUST try to unpack slices FIRST.
+		switch val := v.(type) {
+		case []any:
+			if err := flatProcessor(result, val, currentDepth-1); err != nil {
+				return err
+			}
+			continue
+		case []T:
+			// If T is concrete, these elements cannot be unpacked further. Fast-dump them.
+			subLen := len(val)
+			for j := 0; j < subLen; j++ {
+				*result = append(*result, val[j])
+			}
+			continue
+		}
+
+		// 3. SLOW PATH: Fallback to reflection for arbitrary primitive slices ([]int, etc.)
+		rv := reflect.ValueOf(v)
+		if rv.Kind() == reflect.Slice {
+			rvLen := rv.Len()
+			for j := 0; j < rvLen; j++ {
+				elem := rv.Index(j).Interface()
+				
+				// Fast base-case for slow-path elements to avoid recursive allocation
+				if currentDepth-1 == 0 {
+					if t, ok := elem.(T); ok {
+						*result = append(*result, t)
+					} else {
+						return fmt.Errorf("element of type %T cannot be converted to T", elem)
+					}
+				} else {
+					// Route back into the processor to handle arbitrary deep nesting
+					if err := flatProcessor(result, []any{elem}, currentDepth-1); err != nil {
+						return err
+					}
+				}
+			}
+			continue
+		}
+
+		// 4. BASE CASE: Not a slice at all. Treat as scalar T.
+		if t, ok := v.(T); ok {
+			*result = append(*result, t)
+			continue
+		}
+
+		return fmt.Errorf("element of type %T cannot be converted to T", v)
+	}
+
+	return nil
+}

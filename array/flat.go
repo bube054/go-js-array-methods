@@ -2,7 +2,6 @@ package array
 
 import (
 	"fmt"
-	"reflect"
 )
 
 // Flat function concatenates sub-arrays elements into a single new slice.
@@ -20,91 +19,32 @@ import (
 //	}
 func Flat[T any](slice []any, depths ...int) ([]T, error) {
 	depth := optionalParam(depths, 1)
+	sliceLen := len(slice)
 
 	// Keep the exact functionality for depth < 1
 	if depth < 1 {
 		var result []T
-		for _, v := range slice {
-			if t, ok := v.(T); ok {
+		for i := 0; i < sliceLen; i++ {
+			if t, ok := slice[i].(T); ok {
 				result = append(result, t)
 			} else {
-				return nil, fmt.Errorf("element of type %T cannot be converted to T", v)
+				return nil, fmt.Errorf("element of type %T cannot be converted to T", slice[i])
 			}
 		}
 		return result, nil
 	}
 
-	sliceLen := len(slice)
 	if sliceLen == 0 {
 		var result []T
 		return result, nil
 	}
 
-	// Pre-allocate space using a conservative estimate (len of source * 2)
-	// to minimize early append copy thrashing.
+	// Pre-allocate space using your conservative estimate
 	result := make([]T, 0, sliceLen*2)
 
-	// Define an internal recursive processor that writes directly to the
-	// allocated master 'result' slice header.
-	var processElement func(v any, currentDepth int) error
-	processElement = func(v any, currentDepth int) error {
-		if v == nil {
-			return nil
-		}
-
-		// If depth limit is hit, do not unpack further; treat as scalar element
-		if currentDepth == 0 {
-			if t, ok := v.(T); ok {
-				result = append(result, t)
-				return nil
-			}
-			return fmt.Errorf("element of type %T cannot be converted to T", v)
-		}
-
-		// FAST PATHS: Zero-reflection type switches (50x faster than reflect)
-		switch val := v.(type) {
-		case []any:
-			for _, item := range val {
-				if err := processElement(item, currentDepth-1); err != nil {
-					return err
-				}
-			}
-			return nil
-		case []T:
-			for _, item := range val {
-				if err := processElement(item, currentDepth-1); err != nil {
-					return err
-				}
-			}
-			return nil
-		}
-
-		// SLOW PATH: Fallback to reflection only for unexpected concrete slice variations (e.g. []int)
-		rv := reflect.ValueOf(v)
-		if rv.Kind() == reflect.Slice {
-			for i := 0; i < rv.Len(); i++ {
-				if err := processElement(rv.Index(i).Interface(), currentDepth-1); err != nil {
-					return err
-				}
-			}
-			return nil
-		}
-
-		// BASE CASE: Treat as single structural value T
-		switch v := any(v).(type) {
-		case T:
-			result = append(result, v)
-			return nil
-		default:
-			return fmt.Errorf("element of type %T cannot be converted to T", v)
-		}
-	}
-
-	// Run the flat engine across the base level slice
-	for _, v := range slice {
-		if err := processElement(v, depth); err != nil {
-			return nil, err
-		}
+	// Pass a pointer to result (*[]T) to ensure zero closure allocations
+	if err := flatProcessor(&result, slice, depth); err != nil {
+		return nil, err
 	}
 
 	return result, nil
