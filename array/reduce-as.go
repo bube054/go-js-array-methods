@@ -1,5 +1,27 @@
 package array
 
+// ReduceAs executes a user-provided callback function on each element of the slice,
+// from left to right, passing in the return value from the calculation on the preceding element.
+// It uses dual-generic type parameters [T, R] to reduce a slice of type T into a completely distinct
+// accumulator type R, achieving maximum performance with zero runtime memory allocations.
+//
+// If an initial value is provided, the accumulator is initialized to that value, and the reduction
+// starts at index 0. If initialValue is omitted, the first element of the slice is used as the initial
+// accumulator value, and the loop starts at index 1.
+//
+// Behavior:
+//   - If the slice is empty and an initial value is provided, it returns the initial value.
+//   - If the slice is empty and no initial value is provided, it panics with a TypeError.
+//   - If no initial value is provided and the slice element type T cannot be structurally verified
+//     as the accumulator type R, it panics with a TypeError.
+//
+// Example:
+//
+//	words := []string{"zero", "allocs"}
+//	totalChars := array.ReduceAs(words, func(acc int, word string, i int, s []string) int {
+//		return acc + len(word)
+//	}, 0)
+//	// totalChars = 10
 func ReduceAs[T any, R any](slice []T, fn ReduceAsFunc[T, R], initialValue ...R) R {
 	sliceLen := len(slice)
 
