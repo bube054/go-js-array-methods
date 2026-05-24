@@ -126,7 +126,7 @@ func flatProcessor[T any](result *[]T, currentSlice []any, currentDepth int) err
 			rvLen := rv.Len()
 			for j := 0; j < rvLen; j++ {
 				elem := rv.Index(j).Interface()
-				
+
 				// Fast base-case for slow-path elements to avoid recursive allocation
 				if currentDepth-1 == 0 {
 					if t, ok := elem.(T); ok {
