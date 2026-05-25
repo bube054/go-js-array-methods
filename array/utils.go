@@ -158,20 +158,114 @@ func flatProcessor[T any](result *[]T, currentSlice []any, currentDepth int) err
 	return nil
 }
 
-// writeAny is a helper function that writes any value to a strings.Builder.
-func writeAny[T any](b *strings.Builder, val T) {
-	var buf [64]byte // Stack-allocated buffer for primitive parsing
+//========================================================
+// JOIN UTILITIES
+//========================================================
+
+// joinNumeric processes any numeric slice type with 1 alloc/op via compile-time specialization
+func joinNumeric[V numeric](s []V, sep string) string {
+	var b strings.Builder
+	b.Grow(len(s)*4 + len(sep)*(len(s)-1))
+
+	var buf [64]byte
+	b.Write(appendNumeric(buf[:0], s[0]))
+	for i := 1; i < len(s); i++ {
+		b.WriteString(sep)
+		b.Write(appendNumeric(buf[:0], s[i]))
+	}
+	return b.String()
+}
+
+// appendNumeric acts as your centralized "numberToString" configuration center
+func appendNumeric[V numeric](buf []byte, val V) []byte {
+	switch v := any(val).(type) {
+	case int:
+		return strconv.AppendInt(buf, int64(v), 10)
+	case int8:
+		return strconv.AppendInt(buf, int64(v), 10)
+	case int16:
+		return strconv.AppendInt(buf, int64(v), 10)
+	case int32:
+		return strconv.AppendInt(buf, int64(v), 10)
+	case int64:
+		return strconv.AppendInt(buf, v, 10)
+	case uint:
+		return strconv.AppendUint(buf, uint64(v), 10)
+	case uint8:
+		return strconv.AppendUint(buf, uint64(v), 10)
+	case uint16:
+		return strconv.AppendUint(buf, uint64(v), 10)
+	case uint32:
+		return strconv.AppendUint(buf, uint64(v), 10)
+	case uint64:
+		return strconv.AppendUint(buf, v, 10)
+	case float32:
+		return strconv.AppendFloat(buf, float64(v), 'g', -1, 32)
+	case float64:
+		return strconv.AppendFloat(buf, v, 'g', -1, 64)
+	default:
+		return buf
+	}
+}
+
+// joinBool leverages strconv.FormatBool's zero-allocation constants
+func joinBool(s []bool, sep string) string {
+	var b strings.Builder
+	b.Grow(len(s)*5 + len(sep)*(len(s)-1))
+	b.WriteString(strconv.FormatBool(s[0]))
+	for i := 1; i < len(s); i++ {
+		b.WriteString(sep)
+		b.WriteString(strconv.FormatBool(s[i]))
+	}
+	return b.String()
+}
+
+// joinFallback cleanly handles unoptimized custom structural objects
+func joinFallback[T any](slice []T, sep string) string {
+	var b strings.Builder
+	b.Grow(len(slice)*8 + len(sep)*(len(slice)-1))
+
+	writeFallbackElement(&b, slice[0])
+	for i := 1; i < len(slice); i++ {
+		b.WriteString(sep)
+		writeFallbackElement(&b, slice[i])
+	}
+	return b.String()
+}
+
+func writeFallbackElement[T any](b *strings.Builder, val T) {
+	var buf [64]byte
 	switch v := any(val).(type) {
 	case string:
 		b.WriteString(v)
-	case int:
-		b.Write(strconv.AppendInt(buf[:0], int64(v), 10))
-	case int64:
-		b.Write(strconv.AppendInt(buf[:0], v, 10))
-	case float64:
-		b.Write(strconv.AppendFloat(buf[:0], v, 'g', -1, 64))
 	case bool:
 		b.WriteString(strconv.FormatBool(v))
+
+	case int:
+		b.Write(appendNumeric(buf[:0], v))
+	case int8:
+		b.Write(appendNumeric(buf[:0], v))
+	case int16:
+		b.Write(appendNumeric(buf[:0], v))
+	case int32:
+		b.Write(appendNumeric(buf[:0], v))
+	case int64:
+		b.Write(appendNumeric(buf[:0], v))
+	case uint:
+		b.Write(appendNumeric(buf[:0], v))
+	case uint8:
+		b.Write(appendNumeric(buf[:0], v))
+	case uint16:
+		b.Write(appendNumeric(buf[:0], v))
+	case uint32:
+		b.Write(appendNumeric(buf[:0], v))
+	case uint64:
+		b.Write(appendNumeric(buf[:0], v))
+	case float32:
+		b.Write(appendNumeric(buf[:0], v))
+	case float64:
+		b.Write(appendNumeric(buf[:0], v))
+
 	default:
 		b.WriteString(fmt.Sprint(v))
 	}
