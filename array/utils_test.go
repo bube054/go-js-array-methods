@@ -1,7 +1,9 @@
 package array
 
 import (
+	"bytes"
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -9,6 +11,8 @@ type flatProcessorTestStruct struct {
 	Name  string
 	Value int
 }
+
+type namedInt int
 
 func makeDeepNestedSlice(depth int, value any) []any {
 	current := value
@@ -355,6 +359,285 @@ func TestFlatProcessor_Errors(t *testing.T) {
 			}
 			if err.Error() != tt.expected {
 				t.Fatalf("flatProcessor() error = %q, want %q", err.Error(), tt.expected)
+			}
+		})
+	}
+}
+
+func TestAppendNumeric(t *testing.T) {
+	tests := []struct {
+		name     string
+		testFn   func() []byte
+		expected []byte
+	}{
+		{
+			name:     "int positive",
+			testFn:   func() []byte { return appendNumeric([]byte{}, int(123)) },
+			expected: []byte("123"),
+		},
+		{
+			name:     "int negative",
+			testFn:   func() []byte { return appendNumeric(nil, int(-456)) },
+			expected: []byte("-456"),
+		},
+		{
+			name:     "int8 max boundary",
+			testFn:   func() []byte { return appendNumeric([]byte{}, int8(127)) },
+			expected: []byte("127"),
+		},
+		{
+			name:     "int8 min boundary",
+			testFn:   func() []byte { return appendNumeric([]byte{}, int8(-128)) },
+			expected: []byte("-128"),
+		},
+		{
+			name:     "int16 zero",
+			testFn:   func() []byte { return appendNumeric(nil, int16(0)) },
+			expected: []byte("0"),
+		},
+		{
+			name:     "int32 negative",
+			testFn:   func() []byte { return appendNumeric([]byte{}, int32(-2147483648)) },
+			expected: []byte("-2147483648"),
+		},
+		{
+			name:     "int64 positive",
+			testFn:   func() []byte { return appendNumeric([]byte{}, int64(9223372036854775807)) },
+			expected: []byte("9223372036854775807"),
+		},
+		{
+			name:     "uint positive",
+			testFn:   func() []byte { return appendNumeric(nil, uint(42)) },
+			expected: []byte("42"),
+		},
+		{
+			name:     "uint8 max boundary",
+			testFn:   func() []byte { return appendNumeric([]byte{}, uint8(^uint8(0))) },
+			expected: []byte("255"),
+		},
+		{
+			name:     "uint16 zero",
+			testFn:   func() []byte { return appendNumeric([]byte{}, uint16(0)) },
+			expected: []byte("0"),
+		},
+		{
+			name:     "uint32 positive",
+			testFn:   func() []byte { return appendNumeric(nil, uint32(4294967295)) },
+			expected: []byte("4294967295"),
+		},
+		{
+			name:     "uint64 positive",
+			testFn:   func() []byte { return appendNumeric([]byte{}, uint64(18446744073709551615)) },
+			expected: []byte("18446744073709551615"),
+		},
+		{
+			name:     "float32 whole",
+			testFn:   func() []byte { return appendNumeric([]byte{}, float32(42)) },
+			expected: []byte("42"),
+		},
+		{
+			name:     "float32 scientific",
+			testFn:   func() []byte { return appendNumeric([]byte{}, float32(1.5e-7)) },
+			expected: []byte("1.5e-07"),
+		},
+		{
+			name:     "float64 decimal",
+			testFn:   func() []byte { return appendNumeric(nil, float64(123.456789)) },
+			expected: []byte("123.456789"),
+		},
+		{
+			name:     "float64 scientific",
+			testFn:   func() []byte { return appendNumeric([]byte{}, float64(1.23e20)) },
+			expected: []byte("1.23e+20"),
+		},
+		{
+			name:     "default fallback for named int",
+			testFn:   func() []byte { return appendNumeric([]byte{}, namedInt(7)) },
+			expected: []byte{},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.testFn(); !bytes.Equal(got, tt.expected) {
+				t.Fatalf("appendNumeric() = %q, want %q", got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestJoinNumeric(t *testing.T) {
+	tests := []struct {
+		name     string
+		slice    any
+		sep      string
+		expected string
+	}{
+		{name: "int", slice: []int{1, -2, 0}, sep: ",", expected: "1,-2,0"},
+		{name: "int8", slice: []int8{127, -128, 0}, sep: "|", expected: "127|-128|0"},
+		{name: "int16", slice: []int16{300, -300}, sep: ":", expected: "300:-300"},
+		{name: "int32", slice: []int32{2147483647, -2147483648}, sep: ";", expected: "2147483647;-2147483648"},
+		{name: "int64", slice: []int64{9223372036854775807, -9223372036854775808}, sep: " / ", expected: "9223372036854775807 / -9223372036854775808"},
+		{name: "uint", slice: []uint{1, 2, 3}, sep: ",", expected: "1,2,3"},
+		{name: "uint8", slice: []uint8{0, 255, 1}, sep: "-", expected: "0-255-1"},
+		{name: "uint16", slice: []uint16{65535, 0}, sep: "|", expected: "65535|0"},
+		{name: "uint32", slice: []uint32{4294967295, 1}, sep: "|", expected: "4294967295|1"},
+		{name: "uint64", slice: []uint64{18446744073709551615, 2}, sep: ",", expected: "18446744073709551615,2"},
+		{name: "float32", slice: []float32{42, 1.5e-7, 123.456789}, sep: "|", expected: "42|1.5e-07|123.45679"},
+		{name: "float64", slice: []float64{123.456789, 1.23e20, 0}, sep: ",", expected: "123.456789,1.23e+20,0"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			switch s := tt.slice.(type) {
+			case []int:
+				if got := joinNumeric(s, tt.sep); got != tt.expected {
+					t.Fatalf("joinNumeric() = %q, want %q", got, tt.expected)
+				}
+			case []int8:
+				if got := joinNumeric(s, tt.sep); got != tt.expected {
+					t.Fatalf("joinNumeric() = %q, want %q", got, tt.expected)
+				}
+			case []int16:
+				if got := joinNumeric(s, tt.sep); got != tt.expected {
+					t.Fatalf("joinNumeric() = %q, want %q", got, tt.expected)
+				}
+			case []int32:
+				if got := joinNumeric(s, tt.sep); got != tt.expected {
+					t.Fatalf("joinNumeric() = %q, want %q", got, tt.expected)
+				}
+			case []int64:
+				if got := joinNumeric(s, tt.sep); got != tt.expected {
+					t.Fatalf("joinNumeric() = %q, want %q", got, tt.expected)
+				}
+			case []uint:
+				if got := joinNumeric(s, tt.sep); got != tt.expected {
+					t.Fatalf("joinNumeric() = %q, want %q", got, tt.expected)
+				}
+			case []uint8:
+				if got := joinNumeric(s, tt.sep); got != tt.expected {
+					t.Fatalf("joinNumeric() = %q, want %q", got, tt.expected)
+				}
+			case []uint16:
+				if got := joinNumeric(s, tt.sep); got != tt.expected {
+					t.Fatalf("joinNumeric() = %q, want %q", got, tt.expected)
+				}
+			case []uint32:
+				if got := joinNumeric(s, tt.sep); got != tt.expected {
+					t.Fatalf("joinNumeric() = %q, want %q", got, tt.expected)
+				}
+			case []uint64:
+				if got := joinNumeric(s, tt.sep); got != tt.expected {
+					t.Fatalf("joinNumeric() = %q, want %q", got, tt.expected)
+				}
+			case []float32:
+				if got := joinNumeric(s, tt.sep); got != tt.expected {
+					t.Fatalf("joinNumeric() = %q, want %q", got, tt.expected)
+				}
+			case []float64:
+				if got := joinNumeric(s, tt.sep); got != tt.expected {
+					t.Fatalf("joinNumeric() = %q, want %q", got, tt.expected)
+				}
+			default:
+				t.Fatalf("unsupported slice type %T", tt.slice)
+			}
+		})
+	}
+}
+
+func TestJoinBool(t *testing.T) {
+	tests := []struct {
+		name     string
+		slice    []bool
+		sep      string
+		expected string
+	}{
+		{name: "mixed truthy", slice: []bool{true, false, true}, sep: ",", expected: "true,false,true"},
+		{name: "all false", slice: []bool{false, false}, sep: "|", expected: "false|false"},
+		{name: "single true", slice: []bool{true}, sep: ",", expected: "true"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := joinBool(tt.slice, tt.sep); got != tt.expected {
+				t.Fatalf("joinBool() = %q, want %q", got, tt.expected)
+			}
+		})
+	}
+}
+
+type fallbackStruct struct {
+	Name string
+}
+
+func TestJoinFallback(t *testing.T) {
+	tests := []struct {
+		name     string
+		slice    any
+		sep      string
+		expected string
+	}{
+		{name: "strings", slice: []string{"alpha", "beta"}, sep: ",", expected: "alpha,beta"},
+		{name: "bools", slice: []bool{true, false}, sep: "|", expected: "true|false"},
+		{name: "ints", slice: []int{1, 2}, sep: ":", expected: "1:2"},
+		{name: "structs", slice: []fallbackStruct{{Name: "alice"}, {Name: "bob"}}, sep: "|", expected: "{alice}|{bob}"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			switch s := tt.slice.(type) {
+			case []string:
+				if got := joinFallback(s, tt.sep); got != tt.expected {
+					t.Fatalf("joinFallback() = %q, want %q", got, tt.expected)
+				}
+			case []bool:
+				if got := joinFallback(s, tt.sep); got != tt.expected {
+					t.Fatalf("joinFallback() = %q, want %q", got, tt.expected)
+				}
+			case []int:
+				if got := joinFallback(s, tt.sep); got != tt.expected {
+					t.Fatalf("joinFallback() = %q, want %q", got, tt.expected)
+				}
+			case []fallbackStruct:
+				if got := joinFallback(s, tt.sep); got != tt.expected {
+					t.Fatalf("joinFallback() = %q, want %q", got, tt.expected)
+				}
+			default:
+				t.Fatalf("unsupported slice type %T", tt.slice)
+			}
+		})
+	}
+}
+
+func TestWriteFallbackElement(t *testing.T) {
+	tests := []struct {
+		name     string
+		value    any
+		expected string
+	}{
+		{name: "string", value: "alpha", expected: "alpha"},
+		{name: "bool", value: true, expected: "true"},
+		{name: "int", value: int(42), expected: "42"},
+		{name: "int8", value: int8(-128), expected: "-128"},
+		{name: "int16", value: int16(32767), expected: "32767"},
+		{name: "int32", value: int32(-2147483648), expected: "-2147483648"},
+		{name: "int64", value: int64(9223372036854775807), expected: "9223372036854775807"},
+		{name: "uint", value: uint(42), expected: "42"},
+		{name: "uint8", value: uint8(255), expected: "255"},
+		{name: "uint16", value: uint16(65535), expected: "65535"},
+		{name: "uint32", value: uint32(4294967295), expected: "4294967295"},
+		{name: "uint64", value: uint64(18446744073709551615), expected: "18446744073709551615"},
+		{name: "float32", value: float32(1.5e-7), expected: "1.5e-07"},
+		{name: "float64", value: float64(1.23e20), expected: "1.23e+20"},
+		{name: "struct fallback", value: fallbackStruct{Name: "alice"}, expected: "{alice}"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var b strings.Builder
+			writeFallbackElement(&b, tt.value)
+			if got := b.String(); got != tt.expected {
+				t.Fatalf("writeFallbackElement() = %q, want %q", got, tt.expected)
 			}
 		})
 	}
