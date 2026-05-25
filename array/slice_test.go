@@ -46,6 +46,14 @@ func TestSlice(t *testing.T) {
 			expected:    nil,
 			expectError: true,
 		},
+		{
+			name:        "slice out of bounds end errors",
+			slice:       []string{"a", "b", "c"},
+			start:       1,
+			end:         10,
+			expected:    nil,
+			expectError: true,
+		},
 	}
 
 	for _, tt := range tests {

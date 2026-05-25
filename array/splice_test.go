@@ -60,6 +60,15 @@ func TestSplice(t *testing.T) {
 			expected:    []string{"Banana", "Pear", "Orange", "Apple"},
 			expectError: false,
 		},
+		{
+			name:        "splice clamps overlarge howMany to end",
+			slice:       []string{"Banana", "Orange", "Apple", "Mango"},
+			index:       2,
+			howMany:     func() *int { v := 10; return &v }(),
+			elements:    []string{"Pear"},
+			expected:    []string{"Banana", "Orange", "Pear"},
+			expectError: false,
+		},
 	}
 
 	for _, tt := range tests {

@@ -95,6 +95,26 @@ func TestArrayLastIndexOfEmptySlice(t *testing.T) {
 	}
 }
 
+func TestArrayLastIndexOfInvalidStart(t *testing.T) {
+	tests := []struct {
+		name     string
+		start    int
+		expected int
+	}{
+		{name: "negative start out of bounds", start: -9999, expected: -1},
+		{name: "positive start out of bounds", start: 9999, expected: -1},
+	}
+
+	arr := Array[string]{"apple", "banana", "cherry", "banana"}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := arr.LastIndexOf("banana", &tt.start); got != tt.expected {
+				t.Fatalf("Array.LastIndexOf() = %d, expected %d", got, tt.expected)
+			}
+		})
+	}
+}
+
 func TestArrayLastIndexOfNonComparable(t *testing.T) {
 	arr := Array[[]int]{{1, 2}, {3, 4}, {3, 4}}
 	if arr.LastIndexOf([]int{3, 4}, nil) != 2 {

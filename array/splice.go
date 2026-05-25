@@ -28,10 +28,6 @@ func Splice[T any](slice []T, index int, howMany *int, elements ...T) ([]T, erro
 		return slice, fmt.Errorf("Invalid index %d", index)
 	}
 
-	if newIndex > sliceLen {
-		newIndex = sliceLen
-	}
-
 	count := 0
 	if howMany != nil {
 		count = *howMany

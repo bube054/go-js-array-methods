@@ -45,6 +45,15 @@ func TestCopyWithin(t *testing.T) {
 			expectError: true,
 		},
 		{
+			name:        "target index out of range error",
+			slice:       []int{1, 2, 3, 4, 5},
+			target:      999,
+			start:       0,
+			end:         2,
+			expected:    nil,
+			expectError: true,
+		},
+		{
 			name:        "negative start index out of bounds error",
 			slice:       []int{1, 2, 3, 4, 5},
 			target:      0,

@@ -83,6 +83,13 @@ func TestReduceRightStrict(t *testing.T) {
 			expected:    50,
 			expectError: false,
 		},
+		{
+			name:        "reduceRightStrict empty array without initial errors",
+			slice:       []int{},
+			initialPtr:  nil,
+			expected:    0,
+			expectError: true,
+		},
 	}
 
 	for _, tt := range tests {
@@ -103,6 +110,31 @@ func TestReduceRightStrict(t *testing.T) {
 		})
 	}
 }
+
+func TestReduceRightNilInitialValue(t *testing.T) {
+	result, err := ReduceRight([]int{1, 2, 3}, func(acc any, value int, _ int, _ []int) any {
+		return acc.(int) + value
+	}, nil)
+	if err != nil {
+		t.Fatalf("ReduceRight() unexpected error: %v", err)
+	}
+	if result != 6 {
+		t.Fatalf("ReduceRight() = %v, expected %v", result, 6)
+	}
+}
+
+func TestReduceRightRecoverPanic(t *testing.T) {
+	_, err := ReduceRight([]int{1, 2, 3}, func(acc any, value int, _ int, _ []int) any {
+		panic("boom")
+	}, 0)
+	if err == nil {
+		t.Fatal("ReduceRight() expected error but got nil")
+	}
+	if err.Error() != "boom" {
+		t.Fatalf("ReduceRight() error = %q, want %q", err.Error(), "boom")
+	}
+}
+
 func TestArrayReduceRightReceiverMethods(t *testing.T) {
 	arr := Array[int]{1, 2, 3, 4}
 

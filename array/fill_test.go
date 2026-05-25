@@ -37,7 +37,7 @@ func TestFill(t *testing.T) {
 			name:        "fill start > end errors",
 			slice:       []string{"a", "b", "c"},
 			value:       "x",
-			start:       3,
+			start:       2,
 			end:         1,
 			expected:    nil,
 			expectError: true,

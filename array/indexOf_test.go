@@ -100,6 +100,26 @@ func TestArrayIndexOfEmptySlice(t *testing.T) {
 	}
 }
 
+func TestArrayIndexOfInvalidStart(t *testing.T) {
+	tests := []struct {
+		name     string
+		start    int
+		expected int
+	}{
+		{name: "negative start out of bounds", start: -9999, expected: -1},
+		{name: "positive start out of bounds", start: 9999, expected: -1},
+	}
+
+	arr := Array[string]{"apple", "banana", "cherry"}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := arr.IndexOf("banana", &tt.start); got != tt.expected {
+				t.Fatalf("Array.IndexOf() = %d, expected %d", got, tt.expected)
+			}
+		})
+	}
+}
+
 func TestArrayIndexOfNonComparable(t *testing.T) {
 	arr := Array[[]int]{{1, 2}, {3, 4}, {5, 6}}
 	if arr.IndexOf([]int{3, 4}, nil) != 1 {
