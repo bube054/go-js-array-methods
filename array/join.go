@@ -1,7 +1,6 @@
 package array
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -31,32 +30,61 @@ func Join[T any](slice []T, separator *string) string {
 		sep = *separator
 	}
 
-	if strSlice, ok := any(slice).([]string); ok {
-		return strings.Join(strSlice, sep)
+	// 1. O(1) Slice-Level Type Assertion (Zero-Allocation Hot Paths)
+	switch s := any(slice).(type) {
+	case []string:
+		return strings.Join(s, sep)
+
+	case []int:
+		var b strings.Builder
+		b.Grow(len(s)*3 + len(sep)*(len(s)-1))
+		b.WriteString(strconv.Itoa(s[0]))
+		for _, v := range s[1:] {
+			b.WriteString(sep)
+			b.WriteString(strconv.Itoa(v))
+		}
+		return b.String()
+
+	case []int64:
+		var b strings.Builder
+		b.Grow(len(s)*4 + len(sep)*(len(s)-1))
+		b.WriteString(strconv.FormatInt(s[0], 10))
+		for _, v := range s[1:] {
+			b.WriteString(sep)
+			b.WriteString(strconv.FormatInt(v, 10))
+		}
+		return b.String()
+
+	case []float64:
+		var b strings.Builder
+		b.Grow(len(s)*8 + len(sep)*(len(s)-1))
+		b.WriteString(strconv.FormatFloat(s[0], 'g', -1, 64))
+		for _, v := range s[1:] {
+			b.WriteString(sep)
+			b.WriteString(strconv.FormatFloat(v, 'g', -1, 64))
+		}
+		return b.String()
+
+	case []bool:
+		var b strings.Builder
+		b.Grow(len(s)*4 + len(sep)*(len(s)-1))
+		b.WriteString(strconv.FormatBool(s[0]))
+		for _, v := range s[1:] {
+			b.WriteString(sep)
+			b.WriteString(strconv.FormatBool(v))
+		}
+		return b.String()
 	}
 
+	// 2. Fallback Path (For custom structs, `[]any`, or unhandled types)
 	var b strings.Builder
 	b.Grow(len(slice)*8 + len(sep)*(len(slice)-1))
 
-	for i := 0; i < len(slice); i++ {
-		if i > 0 {
-			b.WriteString(sep)
-		}
-
-		switch v := any(slice[i]).(type) {
-		case string:
-			b.WriteString(v)
-		case int:
-			b.WriteString(strconv.Itoa(v))
-		case int64:
-			b.WriteString(strconv.FormatInt(v, 10))
-		case float64:
-			b.WriteString(strconv.FormatFloat(v, 'g', -1, 64))
-		case bool:
-			b.WriteString(strconv.FormatBool(v))
-		default:
-			b.WriteString(fmt.Sprint(v))
-		}
+	// Process the first element outside the loop to eliminate `if i > 0` checks
+	writeAny(&b, any(slice[0]))
+	for _, v := range slice[1:] {
+		b.WriteString(sep)
+		writeAny(&b, any(v))
 	}
 
 	return b.String()

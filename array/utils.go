@@ -3,6 +3,8 @@ package array
 import (
 	"fmt"
 	"reflect"
+	"strconv"
+	"strings"
 )
 
 // optionalParam is a helper function to handle optional parameters with default values.
@@ -154,4 +156,22 @@ func flatProcessor[T any](result *[]T, currentSlice []any, currentDepth int) err
 	}
 
 	return nil
+}
+
+// writeAny is a helper function that writes any value to a strings.Builder.
+func writeAny(b *strings.Builder, val any) {
+	switch v := val.(type) {
+	case string:
+		b.WriteString(v)
+	case int:
+		b.WriteString(strconv.Itoa(v))
+	case int64:
+		b.WriteString(strconv.FormatInt(v, 10))
+	case float64:
+		b.WriteString(strconv.FormatFloat(v, 'g', -1, 64))
+	case bool:
+		b.WriteString(strconv.FormatBool(v))
+	default:
+		b.WriteString(fmt.Sprint(v))
+	}
 }
