@@ -159,16 +159,17 @@ func flatProcessor[T any](result *[]T, currentSlice []any, currentDepth int) err
 }
 
 // writeAny is a helper function that writes any value to a strings.Builder.
-func writeAny(b *strings.Builder, val any) {
-	switch v := val.(type) {
+func writeAny[T any](b *strings.Builder, val T) {
+	var buf [64]byte // Stack-allocated buffer for primitive parsing
+	switch v := any(val).(type) {
 	case string:
 		b.WriteString(v)
 	case int:
-		b.WriteString(strconv.Itoa(v))
+		b.Write(strconv.AppendInt(buf[:0], int64(v), 10))
 	case int64:
-		b.WriteString(strconv.FormatInt(v, 10))
+		b.Write(strconv.AppendInt(buf[:0], v, 10))
 	case float64:
-		b.WriteString(strconv.FormatFloat(v, 'g', -1, 64))
+		b.Write(strconv.AppendFloat(buf[:0], v, 'g', -1, 64))
 	case bool:
 		b.WriteString(strconv.FormatBool(v))
 	default:

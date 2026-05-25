@@ -30,44 +30,50 @@ func Join[T any](slice []T, separator *string) string {
 		sep = *separator
 	}
 
-	// 1. O(1) Slice-Level Type Assertion (Zero-Allocation Hot Paths)
 	switch s := any(slice).(type) {
 	case []string:
 		return strings.Join(s, sep)
 
 	case []int:
 		var b strings.Builder
-		b.Grow(len(s)*3 + len(sep)*(len(s)-1))
-		b.WriteString(strconv.Itoa(s[0]))
+		b.Grow(len(s)*4 + len(sep)*(len(s)-1))
+		var buf [32]byte 
+
+		b.Write(strconv.AppendInt(buf[:0], int64(s[0]), 10))
 		for _, v := range s[1:] {
 			b.WriteString(sep)
-			b.WriteString(strconv.Itoa(v))
+			b.Write(strconv.AppendInt(buf[:0], int64(v), 10))
 		}
 		return b.String()
 
 	case []int64:
 		var b strings.Builder
 		b.Grow(len(s)*4 + len(sep)*(len(s)-1))
-		b.WriteString(strconv.FormatInt(s[0], 10))
+		var buf [32]byte
+
+		b.Write(strconv.AppendInt(buf[:0], s[0], 10))
 		for _, v := range s[1:] {
 			b.WriteString(sep)
-			b.WriteString(strconv.FormatInt(v, 10))
+			b.Write(strconv.AppendInt(buf[:0], v, 10))
 		}
 		return b.String()
 
 	case []float64:
 		var b strings.Builder
 		b.Grow(len(s)*8 + len(sep)*(len(s)-1))
-		b.WriteString(strconv.FormatFloat(s[0], 'g', -1, 64))
+		var buf [64]byte
+
+		b.Write(strconv.AppendFloat(buf[:0], s[0], 'g', -1, 64))
 		for _, v := range s[1:] {
 			b.WriteString(sep)
-			b.WriteString(strconv.FormatFloat(v, 'g', -1, 64))
+			b.Write(strconv.AppendFloat(buf[:0], v, 'g', -1, 64))
 		}
 		return b.String()
 
 	case []bool:
 		var b strings.Builder
 		b.Grow(len(s)*4 + len(sep)*(len(s)-1))
+
 		b.WriteString(strconv.FormatBool(s[0]))
 		for _, v := range s[1:] {
 			b.WriteString(sep)
@@ -75,16 +81,15 @@ func Join[T any](slice []T, separator *string) string {
 		}
 		return b.String()
 	}
-
 	// 2. Fallback Path (For custom structs, `[]any`, or unhandled types)
 	var b strings.Builder
 	b.Grow(len(slice)*8 + len(sep)*(len(slice)-1))
 
 	// Process the first element outside the loop to eliminate `if i > 0` checks
-	writeAny(&b, any(slice[0]))
-	for _, v := range slice[1:] {
+	writeAny(&b, slice[0])
+	for i := 1; i < len(slice); i++ {
 		b.WriteString(sep)
-		writeAny(&b, any(v))
+		writeAny(&b, slice[i])
 	}
 
 	return b.String()
