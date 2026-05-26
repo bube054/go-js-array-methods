@@ -7,7 +7,6 @@ import "reflect"
 // Behavior:
 //   - The original slice is not modified.
 //   - The optional start offset is normalized from the end of the slice when negative.
-//   - When the element is not comparable, the function falls back to reflect.DeepEqual.
 //
 // Performance Note:
 //   - Current benchmark on this machine: 0 allocs/op and 5.59 µs/op.
@@ -43,6 +42,7 @@ func Includes[T comparable](slice []T, element T, start *int) bool {
 
 // Includes returns true when the receiver contains the target element.
 // It is the receiver-based form of Includes.
+//   - When the element is not comparable, the function falls back to reflect.DeepEqual.
 func (a Array[T]) Includes(element T, start *int) bool {
 	sliceLength := len(a)
 	startIndex := 0
