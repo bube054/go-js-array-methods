@@ -1,11 +1,25 @@
 package array
 
-// The ValueOf() function returns the slice itself. The ValueOf() function does not change the original slice. fruits. ValueOf() returns the same as fruits.
-func ValueOf[T comparable](slice []T) []T {
+// ValueOf returns the input slice unchanged.
+//
+// Behavior:
+//   - The original slice is not modified.
+//   - This is an identity function.
+//
+// Performance Note:
+//   - This is allocation-free and returns the same backing slice.
+//
+// Example:
+//
+//	numbers := []int{1, 2, 3}
+//	result := ValueOf(numbers)
+//	// result == numbers
+func ValueOf[T any](slice []T) []T {
 	return slice
 }
 
-// The ValueOf() method returns the array itself (identity function).
+// ValueOf returns the receiver unchanged.
+// It is the receiver-based form of ValueOf.
 func (a Array[T]) ValueOf() Array[T] {
-	return Array[T](ValueOf([]T(a)))
+	return ValueOf(a)
 }

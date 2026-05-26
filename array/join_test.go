@@ -164,3 +164,96 @@ func TestArrayJoinNonStringTypes(t *testing.T) {
 		})
 	}
 }
+
+func TestArrayJoinInt64(t *testing.T) {
+	slice := Array[int64]{1, 2, 3}
+	result := slice.Join(",")
+	if result != "1,2,3" {
+		t.Fatalf("Array.Join() = %s, expected %s", result, "1,2,3")
+	}
+}
+
+func TestJoinPrimitiveSlices(t *testing.T) {
+	tests := []struct {
+		name      string
+		slice     any
+		separator string
+		expected  string
+	}{
+		{name: "bool slice", slice: []bool{true, false, true}, separator: "|", expected: "true|false|true"},
+		{name: "int slice", slice: []int{1, -2, 0}, separator: ",", expected: "1,-2,0"},
+		{name: "int8 slice", slice: []int8{1, -2}, separator: "-", expected: "1--2"},
+		{name: "int16 slice", slice: []int16{300, -300}, separator: ":", expected: "300:-300"},
+		{name: "int32 slice", slice: []int32{2147483647, -2147483648}, separator: ";", expected: "2147483647;-2147483648"},
+		{name: "int64 slice", slice: []int64{1, 2}, separator: ",", expected: "1,2"},
+		{name: "uint slice", slice: []uint{1, 2}, separator: "|", expected: "1|2"},
+		{name: "uint8 slice", slice: []uint8{0, 255}, separator: ",", expected: "0,255"},
+		{name: "uint16 slice", slice: []uint16{65535, 0}, separator: "|", expected: "65535|0"},
+		{name: "uint32 slice", slice: []uint32{4294967295, 1}, separator: "-", expected: "4294967295-1"},
+		{name: "uint64 slice", slice: []uint64{1, 2}, separator: ",", expected: "1,2"},
+		{name: "float32 slice", slice: []float32{42, 1.5e-7}, separator: "|", expected: "42|1.5e-07"},
+		{name: "float64 slice", slice: []float64{123.456789, 1.23e20}, separator: ",", expected: "123.456789,1.23e+20"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			sep := tt.separator
+			switch s := tt.slice.(type) {
+			case []bool:
+				if got := Join(s, &sep); got != tt.expected {
+					t.Fatalf("Join() = %q, want %q", got, tt.expected)
+				}
+			case []int:
+				if got := Join(s, &sep); got != tt.expected {
+					t.Fatalf("Join() = %q, want %q", got, tt.expected)
+				}
+			case []int8:
+				if got := Join(s, &sep); got != tt.expected {
+					t.Fatalf("Join() = %q, want %q", got, tt.expected)
+				}
+			case []int16:
+				if got := Join(s, &sep); got != tt.expected {
+					t.Fatalf("Join() = %q, want %q", got, tt.expected)
+				}
+			case []int32:
+				if got := Join(s, &sep); got != tt.expected {
+					t.Fatalf("Join() = %q, want %q", got, tt.expected)
+				}
+			case []int64:
+				if got := Join(s, &sep); got != tt.expected {
+					t.Fatalf("Join() = %q, want %q", got, tt.expected)
+				}
+			case []uint:
+				if got := Join(s, &sep); got != tt.expected {
+					t.Fatalf("Join() = %q, want %q", got, tt.expected)
+				}
+			case []uint8:
+				if got := Join(s, &sep); got != tt.expected {
+					t.Fatalf("Join() = %q, want %q", got, tt.expected)
+				}
+			case []uint16:
+				if got := Join(s, &sep); got != tt.expected {
+					t.Fatalf("Join() = %q, want %q", got, tt.expected)
+				}
+			case []uint32:
+				if got := Join(s, &sep); got != tt.expected {
+					t.Fatalf("Join() = %q, want %q", got, tt.expected)
+				}
+			case []uint64:
+				if got := Join(s, &sep); got != tt.expected {
+					t.Fatalf("Join() = %q, want %q", got, tt.expected)
+				}
+			case []float32:
+				if got := Join(s, &sep); got != tt.expected {
+					t.Fatalf("Join() = %q, want %q", got, tt.expected)
+				}
+			case []float64:
+				if got := Join(s, &sep); got != tt.expected {
+					t.Fatalf("Join() = %q, want %q", got, tt.expected)
+				}
+			default:
+				t.Fatalf("unsupported slice type %T", tt.slice)
+			}
+		})
+	}
+}

@@ -55,6 +55,22 @@ func TestPop(t *testing.T) {
 	}
 }
 
+func TestPopReturnedPointerValueIsIndependentOfSource(t *testing.T) {
+	slice := []int{1, 2, 3}
+	newSlice, ptr := Pop(slice)
+	if ptr == nil || *ptr != 3 {
+		t.Fatalf("expected popped pointer to equal 3, got %v", ptr)
+	}
+
+	slice[2] = 100
+	if *ptr != 3 {
+		t.Fatalf("expected popped pointer to remain stable after source mutation, got %d", *ptr)
+	}
+	if len(newSlice) != 2 || newSlice[0] != 1 || newSlice[1] != 2 {
+		t.Fatalf("unexpected new slice after Pop: %v", newSlice)
+	}
+}
+
 func TestPopStrings(t *testing.T) {
 	fruits := []string{"Banana", "Orange", "Apple", "Mango"}
 	newFruits, fruit := Pop(fruits)

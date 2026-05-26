@@ -113,6 +113,43 @@ func BenchmarkJoin(b *testing.B) {
 	}
 }
 
+func BenchmarkSliceZeroAllocs(b *testing.B) {
+	src := make([]int, benchN)
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_, _ = Slice(src, 1, len(src))
+	}
+}
+
+func BenchmarkWithAllocations(b *testing.B) {
+	src := make([]int, benchN)
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_, _ = With(src, 0, 1)
+	}
+}
+
+func BenchmarkSomeZeroAllocs(b *testing.B) {
+	src := makeInts(benchN)
+	pred := func(n, _ int, _ []int) bool { return n == 1 }
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = Some(src, pred)
+	}
+}
+
+func BenchmarkConvertIndexZeroAllocs(b *testing.B) {
+	sliceLen := benchN
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = convertIndex(sliceLen, benchN-1)
+	}
+}
+
 // Flat uses reflect under the hood — worth tracking.
 func BenchmarkFlat(b *testing.B) {
 	src := makeNestedAny(1_000)
@@ -150,5 +187,60 @@ func BenchmarkArrayChain(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_ = src.Filter(pred).MapStrict(double).Reverse()
+	}
+}
+
+type reduceBenchAccumulator struct {
+	total int
+}
+
+func BenchmarkReduceAs(b *testing.B) {
+	src := makeInts(benchN)
+	initial := reduceBenchAccumulator{}
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = ReduceAs(src, func(acc reduceBenchAccumulator, n int, _ int, _ []int) reduceBenchAccumulator {
+			acc.total += n
+			return acc
+		}, initial)
+	}
+}
+
+func BenchmarkReduceRightAs(b *testing.B) {
+	src := makeInts(benchN)
+	initial := reduceBenchAccumulator{}
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = ReduceRightAs(src, func(acc reduceBenchAccumulator, n int, _ int, _ []int) reduceBenchAccumulator {
+			acc.total += n
+			return acc
+		}, initial)
+	}
+}
+
+func BenchmarkKeysZeroAllocs(b *testing.B) {
+	data := make([]int, 1000)
+	b.ResetTimer()
+	b.ReportAllocs()
+
+	for i := 0; i < b.N; i++ {
+		// The loop itself should consume 0 heap allocations
+		for range Keys(data) {
+			// tight loop
+		}
+	}
+}
+
+func BenchmarkValuesZeroAllocs(b *testing.B) {
+	data := make([]int, 1000)
+	b.ResetTimer()
+	b.ReportAllocs()
+
+	for i := 0; i < b.N; i++ {
+		for range Values(data) {
+			// tight loop
+		}
 	}
 }

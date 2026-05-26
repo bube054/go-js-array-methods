@@ -1,23 +1,37 @@
 package array
 
-type Entry[T comparable] struct {
-	index   int
-	element T
-}
-
-// The entries() function returns an Slice with structs with field/value: {index 0, element "Banana"}. The entries() function does not change the original slice.
-func Entries[T comparable](slice []T) []Entry[T] {
+// Entries returns an eager slice of Entry values containing the source indexes and elements.
+//
+// Behavior:
+//   - The original slice is not modified.
+//   - The returned slice has one Entry per input element.
+//
+// Performance Note:
+//   - This function allocates an O(N) result slice up front.
+//   - If you need a streaming path for very large datasets, use EntriesIterator, which evaluates lazily with 0 allocs/op.
+//
+// Example:
+//
+//	numbers := []int{10, 20}
+//	entries := Entries(numbers)
+//	// entries[0].index == 0
+//	// entries[0].element == 10
+func Entries[T any](slice []T) []Entry[T] {
 	newSlice := make([]Entry[T], len(slice))
+	sliceLen := len(slice)
 
-	for i := range slice {
-		element := slice[i]
-		newSlice[i] = Entry[T]{index: i, element: element}
+	for i := 0; i < sliceLen; i++ {
+		newSlice[i] = Entry[T]{
+			index:   i,
+			element: slice[i],
+		}
 	}
 
 	return newSlice
 }
 
-// The Entries() method returns an array of [index, element] pairs for each element in the array.
+// Entries returns an eager slice of Entry values for the receiver.
+// It is the receiver-based form of Entries.
 func (a Array[T]) Entries() []Entry[T] {
-	return Entries([]T(a))
+	return Entries(a)
 }

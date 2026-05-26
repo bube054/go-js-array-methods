@@ -21,7 +21,7 @@ func TestSplice(t *testing.T) {
 			index:       2,
 			howMany:     func() *int { v := 2; return &v }(),
 			elements:    []string{},
-			expected:    []string{"Banana", "Orange", "Mango", "Kiwi"},
+			expected:    []string{"Banana", "Orange", "Kiwi"},
 			expectError: false,
 		},
 		{
@@ -41,6 +41,33 @@ func TestSplice(t *testing.T) {
 			elements:    []string{},
 			expected:    nil,
 			expectError: true,
+		},
+		{
+			name:        "splice with nil howMany removes to end",
+			slice:       []string{"Banana", "Orange", "Apple", "Mango"},
+			index:       1,
+			howMany:     nil,
+			elements:    []string{"Pear"},
+			expected:    []string{"Banana", "Pear"},
+			expectError: false,
+		},
+		{
+			name:        "splice with negative howMany treats as zero",
+			slice:       []string{"Banana", "Orange", "Apple"},
+			index:       1,
+			howMany:     func() *int { v := -1; return &v }(),
+			elements:    []string{"Pear"},
+			expected:    []string{"Banana", "Pear", "Orange", "Apple"},
+			expectError: false,
+		},
+		{
+			name:        "splice clamps overlarge howMany to end",
+			slice:       []string{"Banana", "Orange", "Apple", "Mango"},
+			index:       2,
+			howMany:     func() *int { v := 10; return &v }(),
+			elements:    []string{"Pear"},
+			expected:    []string{"Banana", "Orange", "Pear"},
+			expectError: false,
 		},
 	}
 
@@ -73,5 +100,21 @@ func TestArraySplice(t *testing.T) {
 
 	if !reflect.DeepEqual(result, expectedResult) {
 		t.Errorf("Array.Splice() result = %v, expected %v", result, expectedResult)
+	}
+}
+
+func TestSpliceReturnsNonNilEmptySlice(t *testing.T) {
+	slice := []int{1}
+	howMany := 1
+	result, err := Splice(slice, 0, &howMany)
+
+	if err != nil {
+		t.Fatalf("expected nil error but got %v", err)
+	}
+	if result == nil {
+		t.Fatal("expected non-nil result for Splice that produces an empty slice")
+	}
+	if len(result) != 0 {
+		t.Fatalf("expected empty result, got length %d", len(result))
 	}
 }

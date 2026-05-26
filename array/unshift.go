@@ -1,12 +1,38 @@
 package array
 
-// The Unshift() function adds new elements to the beginning of an slice. The Unshift() function does not overwrite the original slice.
-func UnShift[T comparable](slice []T, element ...T) []T {
-	newList := append([]T{}, element...)
-	return append(newList, slice...)
+// UnShift returns a new slice with the provided elements prepended.
+//
+// Behavior:
+//   - The original slice is not modified.
+//   - Empty input returns the original slice.
+//
+// Performance Note:
+//   - The function allocates one new slice and copies the existing data once.
+//
+// Example:
+//
+//	numbers := []int{3, 4}
+//	result := UnShift(numbers, 1, 2)
+//	// result == []int{1, 2, 3, 4}
+func UnShift[T any](slice []T, element ...T) []T {
+	elementLen := len(element)
+	sliceLen := len(slice)
+	finalLen := elementLen + sliceLen
+
+	if finalLen == 0 {
+		return slice
+	}
+
+	newList := make([]T, finalLen)
+
+	copy(newList[:elementLen], element)
+	copy(newList[elementLen:], slice)
+
+	return newList
 }
 
-// The UnShift() method adds one or more elements to the beginning of the array and returns the new array.
+// UnShift returns a new array with the provided elements prepended.
+// It is the receiver-based form of UnShift.
 func (a Array[T]) UnShift(elements ...T) Array[T] {
-	return Array[T](UnShift([]T(a), elements...))
+	return UnShift(a, elements...)
 }

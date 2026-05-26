@@ -1,41 +1,56 @@
 package array
 
-import (
-	"fmt"
-)
+import "fmt"
 
-// The Fill() function returns fills of specified elements in an slice with a value and a possible error due to indexes out of range.
-func Fill[T comparable](slice []T, value T, start int, end int) ([]T, error) {
+// Fill returns a new slice with the selected range replaced by value.
+//
+// Behavior:
+//   - The original slice is not modified.
+//   - Negative indexes are normalized from the end of the slice.
+//   - Invalid bounds return an error.
+//
+// Performance Note:
+//   - The function copies the slice once and mutates the output buffer in place.
+//
+// Example:
+//
+//	numbers := []int{1, 2, 3, 4}
+//	result, err := Fill(numbers, 9, 1, 3)
+//	// result == []int{1, 9, 9, 4}
+//	// err == nil
+func Fill[T any](slice []T, value T, start int, end int) ([]T, error) {
 	sliceLength := len(slice)
-	newSlice := make([]T, sliceLength)
-	copy(newSlice, slice)
 
-	newStartIndex, err := ConvertIndex(slice, start, "start index")
-
-	if err != nil {
-		return nil, err
+	newStartIndex := convertIndex(sliceLength, start)
+	if newStartIndex == -1 {
+		return nil, fmt.Errorf("start index: %d out of range", start)
 	}
 
-	newEndIndex, err := ConvertIndex(slice, end, "end index")
+	newEndIndex := convertEndIndex(sliceLength, end)
 
-	if err != nil {
-		// newEndIndex = sliceLength
-		return nil, err
+	if newEndIndex == -1 {
+		return nil, fmt.Errorf("end index: %d out of range", end)
 	}
 
 	if newStartIndex > newEndIndex {
 		return nil, fmt.Errorf("start index: %d cannot be greater than end index: %d", start, end)
 	}
 
-	for i := newStartIndex; i < newEndIndex; i++ {
-		newSlice[i] = value
+	newSlice := make([]T, sliceLength)
+	copy(newSlice, slice)
+
+	targetZone := newSlice[newStartIndex:newEndIndex]
+	for i := range targetZone {
+		targetZone[i] = value
 	}
 
 	return newSlice, nil
 }
 
-// The Fill() method fills array elements from a start index to an end index with a static value.
+// Fill returns a new array with the selected range replaced by value.
+// It is the receiver-based form of Fill.
 func (a Array[T]) Fill(value T, start, end int) (Array[T], error) {
-	result, err := Fill([]T(a), value, start, end)
+	result, err := Fill(a, value, start, end)
+
 	return Array[T](result), err
 }

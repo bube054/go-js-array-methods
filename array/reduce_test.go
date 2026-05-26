@@ -30,7 +30,7 @@ func TestReduce(t *testing.T) {
 			name:         "reduce empty array without initial errors",
 			slice:        []int{},
 			initialValue: nil,
-			expected:     nil,
+			expected:     0,
 			expectError:  true,
 		},
 		{
@@ -45,8 +45,7 @@ func TestReduce(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			myFunc := func(acc any, el int, _ int, _ []int) any {
-				accNum := acc.(int)
-				return accNum - el
+				return acc.(int) - el
 			}
 
 			result, err := Reduce(tt.slice, myFunc, tt.initialValue)
@@ -55,10 +54,22 @@ func TestReduce(t *testing.T) {
 				t.Errorf("Reduce() expected error but got none")
 			} else if !tt.expectError && err != nil {
 				t.Errorf("Reduce() got unexpected error: %v", err)
-			} else if !tt.expectError && result.(int) != tt.expected.(int) {
-				t.Errorf("Reduce() = %v, expected %v", result, tt.expected)
+			} else if !tt.expectError && result != tt.expected {
+				t.Errorf("Reduce() = %d, expected %d", result, tt.expected)
 			}
 		})
+	}
+}
+
+func TestReduceIncompatibleTypesErrors(t *testing.T) {
+	slice := []int{1, 2, 3}
+	myFunc := func(acc any, el int, _ int, _ []int) any {
+		return acc.(string) + " " + string(rune(el))
+	}
+
+	_, err := Reduce(slice, myFunc, nil)
+	if err == nil {
+		t.Fatal("expected Reduce() with incompatible types and no initial value to error")
 	}
 }
 
@@ -91,6 +102,13 @@ func TestReduceStrict(t *testing.T) {
 			expected:    0,
 			expectError: true,
 		},
+		{
+			name:        "reduceStrict empty array with initial returns initial",
+			slice:       []int{},
+			initialPtr:  func() *int { v := 99; return &v }(),
+			expected:    99,
+			expectError: false,
+		},
 	}
 
 	for _, tt := range tests {
@@ -112,6 +130,23 @@ func TestReduceStrict(t *testing.T) {
 	}
 }
 
+func TestReduceRightNoInitialValue(t *testing.T) {
+	slice := []int{1, 2, 3}
+
+	result, err := ReduceRight(slice, func(acc any, el int, _ int, _ []int) any {
+		return acc.(int) - el
+	}, nil)
+
+	if err != nil {
+		t.Errorf("ReduceRight() got unexpected error: %v", err)
+	}
+
+	expected := 0
+	if result != expected {
+		t.Errorf("ReduceRight() = %v, expected %v", result, expected)
+	}
+}
+
 // TestArrayReduce tests the Array.Reduce receiver method
 func TestArrayReduce(t *testing.T) {
 	arr := Array[int]{1, 2, 3, 4}
@@ -126,8 +161,8 @@ func TestArrayReduce(t *testing.T) {
 	}
 
 	expected := 10
-	if result.(int) != expected {
-		t.Errorf("Array.Reduce() = %v, expected %d", result, expected)
+	if result != expected {
+		t.Errorf("Array.Reduce() = %d, expected %d", result, expected)
 	}
 }
 

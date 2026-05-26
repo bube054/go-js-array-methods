@@ -178,6 +178,14 @@ func TestFlatErrors(t *testing.T) {
 			depths:    []int{1},
 			expectErr: true,
 		},
+		{
+			name: "Flat with reflect fallback slice type",
+			input: []any{
+				[]string{"1", "2"},
+			},
+			depths:    []int{1},
+			expectErr: true,
+		},
 	}
 
 	for _, tt := range tests {
@@ -269,6 +277,18 @@ func TestFlatWithTypedSlices(t *testing.T) {
 				t.Errorf("Flat() = %v, expected %v", result, tt.expected)
 			}
 		})
+	}
+}
+
+func TestFlatWithNilElement(t *testing.T) {
+	input := []any{1, nil, []any{2, 3}, nil}
+	result, err := Flat[int](input, 1)
+	if err != nil {
+		t.Fatalf("Flat() unexpected error: %v", err)
+	}
+	expected := []int{1, 2, 3}
+	if !reflect.DeepEqual(result, expected) {
+		t.Fatalf("Flat() = %v, expected %v", result, expected)
 	}
 }
 

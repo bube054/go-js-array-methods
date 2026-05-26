@@ -40,6 +40,20 @@ func TestIndexOf(t *testing.T) {
 			start:    nil,
 			expected: -1,
 		},
+		{
+			name:     "indexOf with start beyond end returns -1",
+			slice:    []string{"Orange", "Banana", "Orange", "Apple", "Mango"},
+			element:  "Mango",
+			start:    func() *int { v := 100; return &v }(),
+			expected: -1,
+		},
+		{
+			name:     "indexOf with extreme negative start returns -1",
+			slice:    []string{"Orange", "Banana", "Orange", "Apple", "Mango"},
+			element:  "Orange",
+			start:    func() *int { v := -9999; return &v }(),
+			expected: -1,
+		},
 	}
 
 	for _, tt := range tests {
@@ -76,5 +90,42 @@ func TestArrayIndexOf(t *testing.T) {
 	result = arr.IndexOf("grape", nil)
 	if result != -1 {
 		t.Errorf("Array.IndexOf() = %d, expected -1", result)
+	}
+}
+
+func TestArrayIndexOfEmptySlice(t *testing.T) {
+	arr := Array[string]{}
+	if arr.IndexOf("apple", nil) != -1 {
+		t.Fatal("Array.IndexOf() on empty array should return -1")
+	}
+}
+
+func TestArrayIndexOfInvalidStart(t *testing.T) {
+	tests := []struct {
+		name     string
+		start    int
+		expected int
+	}{
+		{name: "negative start out of bounds", start: -9999, expected: -1},
+		{name: "positive start out of bounds", start: 9999, expected: -1},
+	}
+
+	arr := Array[string]{"apple", "banana", "cherry"}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := arr.IndexOf("banana", &tt.start); got != tt.expected {
+				t.Fatalf("Array.IndexOf() = %d, expected %d", got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestArrayIndexOfNonComparable(t *testing.T) {
+	arr := Array[[]int]{{1, 2}, {3, 4}, {5, 6}}
+	if arr.IndexOf([]int{3, 4}, nil) != 1 {
+		t.Fatalf("Array.IndexOf() = %d, expected %d", arr.IndexOf([]int{3, 4}, nil), 1)
+	}
+	if arr.IndexOf([]int{7, 8}, nil) != -1 {
+		t.Fatalf("Array.IndexOf() = %d, expected -1", arr.IndexOf([]int{7, 8}, nil))
 	}
 }

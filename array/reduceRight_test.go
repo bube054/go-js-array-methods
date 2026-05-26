@@ -8,8 +8,8 @@ func TestReduceRight(t *testing.T) {
 	tests := []struct {
 		name         string
 		slice        []int
-		initialValue any
-		expected     any
+		initialValue int
+		expected     int
 		expectError  bool
 	}{
 		{
@@ -29,17 +29,16 @@ func TestReduceRight(t *testing.T) {
 		{
 			name:         "reduceRight empty array without initial errors",
 			slice:        []int{},
-			initialValue: nil,
-			expected:     nil,
-			expectError:  true,
+			initialValue: 0,
+			expected:     0,
+			expectError:  false,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			myFunc := func(acc any, el int, _ int, _ []int) any {
-				accNum := acc.(int)
-				return accNum - el
+				return acc.(int) - el
 			}
 
 			result, err := ReduceRight(tt.slice, myFunc, tt.initialValue)
@@ -48,7 +47,7 @@ func TestReduceRight(t *testing.T) {
 				t.Errorf("ReduceRight() expected error but got none")
 			} else if !tt.expectError && err != nil {
 				t.Errorf("ReduceRight() got unexpected error: %v", err)
-			} else if !tt.expectError && result.(int) != tt.expected.(int) {
+			} else if !tt.expectError && result != tt.expected {
 				t.Errorf("ReduceRight() = %v, expected %v", result, tt.expected)
 			}
 		})
@@ -77,6 +76,20 @@ func TestReduceRightStrict(t *testing.T) {
 			expected:    94, // 100 - 3 - 2 - 1 (right to left)
 			expectError: false,
 		},
+		{
+			name:        "reduceRightStrict empty array with initial returns initial",
+			slice:       []int{},
+			initialPtr:  func() *int { v := 50; return &v }(),
+			expected:    50,
+			expectError: false,
+		},
+		{
+			name:        "reduceRightStrict empty array without initial errors",
+			slice:       []int{},
+			initialPtr:  nil,
+			expected:    0,
+			expectError: true,
+		},
 	}
 
 	for _, tt := range tests {
@@ -95,5 +108,54 @@ func TestReduceRightStrict(t *testing.T) {
 				t.Errorf("ReduceRightStrict() = %d, expected %d", result, tt.expected)
 			}
 		})
+	}
+}
+
+func TestReduceRightNilInitialValue(t *testing.T) {
+	result, err := ReduceRight([]int{1, 2, 3}, func(acc any, value int, _ int, _ []int) any {
+		return acc.(int) + value
+	}, nil)
+	if err != nil {
+		t.Fatalf("ReduceRight() unexpected error: %v", err)
+	}
+	if result != 6 {
+		t.Fatalf("ReduceRight() = %v, expected %v", result, 6)
+	}
+}
+
+func TestReduceRightRecoverPanic(t *testing.T) {
+	_, err := ReduceRight([]int{1, 2, 3}, func(acc any, value int, _ int, _ []int) any {
+		panic("boom")
+	}, 0)
+	if err == nil {
+		t.Fatal("ReduceRight() expected error but got nil")
+	}
+	if err.Error() != "boom" {
+		t.Fatalf("ReduceRight() error = %q, want %q", err.Error(), "boom")
+	}
+}
+
+func TestArrayReduceRightReceiverMethods(t *testing.T) {
+	arr := Array[int]{1, 2, 3, 4}
+
+	reduceRightResult, err := arr.ReduceRight(func(acc any, el int, _ int, _ []int) any {
+		return acc.(int) - el
+	}, 100)
+	if err != nil {
+		t.Fatalf("Array.ReduceRight() unexpected error: %v", err)
+	}
+	if reduceRightResult != 90 {
+		t.Fatalf("Array.ReduceRight() = %v, expected %v", reduceRightResult, 90)
+	}
+
+	initial := 100
+	reduceRightStrictResult, err := arr.ReduceRightStrict(func(acc int, el int, _ int, _ []int) int {
+		return acc - el
+	}, &initial)
+	if err != nil {
+		t.Fatalf("Array.ReduceRightStrict() unexpected error: %v", err)
+	}
+	if reduceRightStrictResult != 90 {
+		t.Fatalf("Array.ReduceRightStrict() = %d, expected %d", reduceRightStrictResult, 90)
 	}
 }

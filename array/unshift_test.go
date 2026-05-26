@@ -36,6 +36,12 @@ func TestUnShift(t *testing.T) {
 			elements: []int{},
 			expected: []int{1, 2},
 		},
+		{
+			name:     "unshift nil slice with no elements returns nil",
+			input:    nil,
+			elements: []int{},
+			expected: nil,
+		},
 	}
 
 	for _, tt := range tests {

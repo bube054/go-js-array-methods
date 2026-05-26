@@ -1,17 +1,38 @@
 package array
 
-// The Find() function returns a pointer value of the first element that passes a test. The Find() function executes a function for each slice element. The Find() function returns undefined if no elements are found. The Find() function does not execute the function for empty elements. The Find() function does not change the original slice
-func Find[T comparable](slice []T, fn Predicate[T]) *T {
-	for index, val := range slice {
-		if fn(val, index, slice) {
-			return &val
+// Find returns a pointer to the first element that satisfies the predicate.
+//
+// Behavior:
+//   - The original slice is not modified.
+//   - The predicate is not called for empty slices.
+//   - A nil result means no element matched.
+//
+// Performance Note:
+//   - This is a bare-metal O(n) search with no heap allocations.
+//
+// Warning:
+//   - The returned pointer aliases the input slice. Do not mutate or re-slice the source while retaining the pointer.
+//
+// Example:
+//
+//	numbers := []int{1, 4, 7}
+//	match := Find(numbers, func(value int, _ int, _ []int) bool {
+//		return value > 5
+//	})
+//	// match != nil
+//	// *match == 7
+func Find[T any](slice []T, fn Predicate[T]) *T {
+	for i := 0; i < len(slice); i++ {
+		if fn(slice[i], i, slice) {
+			return &slice[i]
 		}
 	}
 
 	return nil
 }
 
-// The Find() method returns the first element that passes the provided predicate function.
+// Find returns a pointer to the first element in the receiver that satisfies the predicate.
+// It is the receiver-based form of Find.
 func (a Array[T]) Find(fn Predicate[T]) *T {
-	return Find([]T(a), fn)
+	return Find(a, fn)
 }

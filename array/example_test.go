@@ -3,7 +3,7 @@ package array_test
 import (
 	"fmt"
 
-	array "github.com/bube054/go-js-array-methods/v2/array"
+	"github.com/bube054/go-js-array-methods/v2/array"
 )
 
 // ----- Package-level function examples -----
@@ -149,4 +149,89 @@ func ExampleArray_ToString() {
 	arr := array.Array[string]{"a", "b", "c"}
 	fmt.Println(arr.ToString())
 	// Output: a,b,c
+}
+
+func ExampleEntriesIterator() {
+	for index, value := range array.EntriesIterator([]int{10, 20, 30}) {
+		fmt.Println(index, value)
+	}
+	// Output:
+	// 0 10
+	// 1 20
+	// 2 30
+}
+
+func ExampleArray_EntriesIterator() {
+	arr := array.Array[string]{"alpha", "beta"}
+	for index, value := range arr.EntriesIterator() {
+		fmt.Println(index, value)
+	}
+	// Output:
+	// 0 alpha
+	// 1 beta
+}
+
+func ExampleReduceAs() {
+	values := []int{1, 2, 3}
+	joined := array.ReduceAs(values, func(acc string, value int, _ int, _ []int) string {
+		return acc + fmt.Sprintf("%d", value)
+	}, "")
+	fmt.Println(joined)
+	// Output: 123
+}
+
+func ExampleReduceRightAs() {
+	values := []int{1, 2, 3}
+	reversed := array.ReduceRightAs(values, func(acc string, value int, _ int, _ []int) string {
+		return acc + fmt.Sprintf("%d", value)
+	}, "")
+	fmt.Println(reversed)
+	// Output: 321
+}
+
+func ExampleKeys() {
+	arr := []string{"a", "b", "c"}
+
+	for i := range array.Keys(arr) {
+		fmt.Println(i)
+	}
+	// Output:
+	// 0
+	// 1
+	// 2
+}
+func ExampleArray_Keys() {
+	arr := array.Array[string]{"a", "b", "c"}
+
+	for i := range arr.Keys() {
+		fmt.Println(i)
+	}
+	// Output:
+	// 0
+	// 1
+	// 2
+}
+
+func ExampleValues() {
+	arr := []string{"a", "b", "c"}
+
+	for v := range array.Values(arr) {
+		fmt.Println(v)
+	}
+	// Output:
+	// a
+	// b
+	// c
+}
+
+func ExampleArray_Values() {
+	arr := array.Array[string]{"a", "b", "c"}
+
+	for v := range arr.Values() {
+		fmt.Println(v)
+	}
+	// Output:
+	// a
+	// b
+	// c
 }

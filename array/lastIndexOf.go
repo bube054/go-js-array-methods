@@ -1,31 +1,39 @@
 package array
 
-import (
-	"reflect"
-)
+import "reflect"
 
-// The IndexOf() function returns the first index (position) of a specified value and a possible error due to indexes out of range. The IndexOf() function returns -1 if the value is not found. The IndexOf() function starts at a specified index and searches from left to right (from the given start postion to the end of the array). By default the search starts at the first element and ends at the last. Negative start values counts from the last element (but still searches from left to right).
+// LastIndexOf returns the last index of the target value, or -1 when not found.
+//
+// Behavior:
+//   - The search is right-to-left.
+//   - Negative start offsets are normalized from the end of the slice.
+//   - Non-comparable values fall back to reflect.DeepEqual.
+//
+// Performance Note:
+//   - The comparable fast path is allocation-free and performs a bare-metal loop.
+//
+// Example:
+//
+//	numbers := []int{1, 2, 3, 2}
+//	index := LastIndexOf(numbers, 2, nil)
+//	// index == 3
 func LastIndexOf[T comparable](slice []T, element T, start *int) int {
-	var (
-		startIndex int
-		err        error
-	)
-
 	sliceLength := len(slice)
+	if sliceLength == 0 {
+		return -1
+	}
 
-	if start == nil {
-		startIndex = sliceLength - 1
-	} else {
-		startIndex, err = ConvertIndex(slice, *start, "start index")
-		if err != nil {
+	startIndex := sliceLength - 1
+	if start != nil {
+		startIndex = convertIndex(sliceLength, *start)
+
+		if startIndex == -1 {
 			return -1
 		}
 	}
 
 	for i := startIndex; i >= 0; i-- {
-		value := slice[i]
-
-		if reflect.DeepEqual(element, value) {
+		if slice[i] == element {
 			return i
 		}
 	}
@@ -33,7 +41,34 @@ func LastIndexOf[T comparable](slice []T, element T, start *int) int {
 	return -1
 }
 
-// The LastIndexOf() method returns the last index at which a given element can be found in the array.
+// LastIndexOf returns the last index of the target value in the receiver, or -1 when not found.
+// It is the receiver-based form of LastIndexOf.
 func (a Array[T]) LastIndexOf(element T, start *int) int {
-	return LastIndexOf([]T(a), element, start)
+	sliceLength := len(a)
+
+	startIndex := sliceLength - 1
+
+	if start != nil {
+		startIndex = convertIndex(sliceLength, *start)
+		if startIndex == -1 {
+			return -1
+		}
+	}
+
+	if isComparable(element) {
+		for i := startIndex; i >= 0; i-- {
+			if any(element) == any(a[i]) {
+				return i
+			}
+		}
+	} else {
+		for i := startIndex; i >= 0; i-- {
+			value := a[i]
+
+			if reflect.DeepEqual(element, value) {
+				return i
+			}
+		}
+	}
+	return -1
 }

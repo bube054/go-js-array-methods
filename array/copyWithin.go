@@ -1,31 +1,40 @@
 package array
 
-import (
-	"fmt"
-	// "math"
-)
+import "fmt"
 
-// The CopyWithin() function returns a copy of slice elements to another position in an slice and a possible error relating to out of range indexes.. The CopyWithin() function overwrites the existing values in the new slice.
-func CopyWithin[T comparable](slice []T, target int, start int, end int) ([]T, error) {
+// CopyWithin returns a new slice with values copied into the target position.
+//
+// Behavior:
+//   - The original slice is not modified.
+//   - Negative indexes are normalized from the end of the slice.
+//   - Invalid bounds return an error.
+//
+// Performance Note:
+//   - The function allocates one output slice and performs a single copy of the affected region.
+//
+// Example:
+//
+//	numbers := []int{1, 2, 3, 4}
+//	result, err := CopyWithin(numbers, 1, 2, 4)
+//	// result == []int{1, 3, 4, 4}
+//	// err == nil
+func CopyWithin[T any](slice []T, target int, start int, end int) ([]T, error) {
 	sliceLength := len(slice)
-	newSlice := make([]T, sliceLength)
-	copy(newSlice, slice)
 
-	newTargetIndex, err := ConvertIndex(slice, target, "target index")
-
-	if err != nil {
-		return nil, err
+	newTargetIndex := convertIndex(sliceLength, target)
+	if newTargetIndex == -1 {
+		return nil, fmt.Errorf("target index: %d out of range", target)
 	}
 
-	newStartIndex, err := ConvertIndex(slice, start, "start index")
-
-	if err != nil {
-		return nil, err
+	newStartIndex := convertIndex(sliceLength, start)
+	if newStartIndex == -1 {
+		return nil, fmt.Errorf("start index: %d out of range", start)
 	}
 
-	newEndIndex, err := getLastIndex(end, sliceLength)
-	if err != nil {
-		return nil, err
+	newEndIndex := convertEndIndex(sliceLength, end)
+
+	if newEndIndex == -1 {
+		return nil, fmt.Errorf("end index: %d out of range", end)
 	}
 
 	if newStartIndex > newEndIndex {
@@ -33,38 +42,27 @@ func CopyWithin[T comparable](slice []T, target int, start int, end int) ([]T, e
 	}
 
 	rangeDifference := newEndIndex - newStartIndex
-
-	pointer := newStartIndex
-
-	for i := newTargetIndex; i < newTargetIndex+rangeDifference; i++ {
-		newSlice[i] = slice[pointer]
-		pointer++
+	if newTargetIndex+rangeDifference > sliceLength {
+		rangeDifference = sliceLength - newTargetIndex
 	}
+
+	newSlice := make([]T, sliceLength)
+	copy(newSlice, slice)
+
+	if rangeDifference <= 0 {
+		return newSlice, nil
+	}
+
+	srcSubSlice := slice[newStartIndex : newStartIndex+rangeDifference]
+	dstSubSlice := newSlice[newTargetIndex : newTargetIndex+rangeDifference]
+	copy(dstSubSlice, srcSubSlice)
 
 	return newSlice, nil
 }
 
-func getLastIndex(end, sliceLength int) (int, error) {
-	// Handle end index specially - it's exclusive, so it can be equal to length
-	var newEndIndex int
-	if end < 0 {
-		// Negative indices are converted relative to length
-		if end < -sliceLength {
-			return -1, fmt.Errorf("end index: %d out of range", end)
-		}
-		newEndIndex = sliceLength + end
-	} else {
-		// Positive indices can be up to length (inclusive of length for exclusive end)
-		if end > sliceLength {
-			return -1, fmt.Errorf("end index: %d out of range", end)
-		}
-		newEndIndex = end
-	}
-	return newEndIndex, nil
-}
-
-// The CopyWithin() method copies array elements to another position in the array and returns the modified array.
+// CopyWithin returns a new array with values copied into the target position.
+// It is the receiver-based form of CopyWithin.
 func (a Array[T]) CopyWithin(target, start, end int) (Array[T], error) {
-	result, err := CopyWithin([]T(a), target, start, end)
+	result, err := CopyWithin(a, target, start, end)
 	return Array[T](result), err
 }

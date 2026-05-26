@@ -1,7 +1,23 @@
 package array
 
-// The Pop() function removes (pops) the last element of an slice. The Pop() function does not change the original slice. The Pop() function returns the new slice without the last element and a pointer of removed element.
-func Pop[T comparable](slice []T) ([]T, *T) {
+// Pop returns a new slice without the last element and the removed value.
+//
+// Behavior:
+//   - The original slice is not modified.
+//   - Empty slices return the original slice and nil.
+//
+// Performance Note:
+//   - The current signature returns a pointer to the removed element, which can trigger escape analysis and heap allocation.
+//   - Roadmap Notice: a future major release should return the value directly to remove this escape path.
+//
+// Example:
+//
+//	numbers := []int{1, 2, 3}
+//	trimmed, removed := Pop(numbers)
+//	// trimmed == []int{1, 2}
+//	// removed != nil
+//	// *removed == 3
+func Pop[T any](slice []T) ([]T, *T) {
 	sliceLength := len(slice)
 
 	if sliceLength == 0 {
@@ -13,8 +29,9 @@ func Pop[T comparable](slice []T) ([]T, *T) {
 	return slice[:sliceLength-1], &lastElement
 }
 
-// The Pop() method removes the last element from the array and returns the modified array and the removed element.
+// Pop returns a new array without the last element and the removed value.
+// It is the receiver-based form of Pop.
 func (a Array[T]) Pop() (Array[T], *T) {
-	result, popped := Pop([]T(a))
-	return Array[T](result), popped
+
+	return Pop(a)
 }

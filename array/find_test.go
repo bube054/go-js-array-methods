@@ -58,6 +58,19 @@ func TestFind(t *testing.T) {
 }
 
 // TestArrayFind tests the Array.Find receiver method
+func TestFindReturnedPointerReflectsSourceMutation(t *testing.T) {
+	slice := []int{1, 2, 3}
+	ptr := Find(slice, func(el, _ int, _ []int) bool { return el == 2 })
+	if ptr == nil || *ptr != 2 {
+		t.Fatalf("expected pointer to value 2, got %v", ptr)
+	}
+
+	slice[1] = 42
+	if *ptr != 42 {
+		t.Fatalf("expected returned pointer to reflect updated backing slice value, got %d", *ptr)
+	}
+}
+
 func TestArrayFind(t *testing.T) {
 	arr := Array[int]{10, 20, 30, 40}
 	predicate := func(el, _ int, _ []int) bool { return el > 25 }

@@ -7,7 +7,7 @@ import (
 type EveryTest[T comparable] []struct {
 	name      string
 	slice     []T
-	predicate func(T, int, []T) bool
+	predicate Predicate[T]
 	expected  bool
 }
 
@@ -86,7 +86,6 @@ func TestEvery_String(t *testing.T) {
 		{
 			name:  "all elements in empty array",
 			slice: []string{},
-
 			predicate: func(el string, _ int, _ []string) bool {
 				return el != ""
 			},
@@ -109,7 +108,7 @@ func TestArrayEvery(t *testing.T) {
 	tests := []struct {
 		name      string
 		arr       Array[int]
-		predicate func(int, int, []int) bool
+		predicate Predicate[int]
 		expected  bool
 	}{
 		{
