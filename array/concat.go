@@ -21,13 +21,12 @@ func Concat[T any](slice1 []T, slices ...[]T) []T {
 		totalLen += len(slices[i])
 	}
 
-	if len(slices) == 0 {
-		return slice1
-	}
-
 	result := make([]T, totalLen)
-	if len(slice1) > 0 {
-		copy(result, slice1)
+
+	copy(result, slice1)
+
+	if len(slices) == 0 {
+		return result
 	}
 
 	pos := len(slice1)

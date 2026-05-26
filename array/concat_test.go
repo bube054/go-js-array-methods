@@ -3,7 +3,6 @@ package array
 import (
 	"reflect"
 	"testing"
-	"unsafe"
 )
 
 type ConcatTestCase[T comparable] struct {
@@ -174,20 +173,5 @@ func TestArrayConcat(t *testing.T) {
 
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("Array.Concat() = %v, expected %v", result, expected)
-	}
-}
-
-func TestConcatPreservesOriginalEmptyHeaderIdentity(t *testing.T) {
-	input := make([]int, 0, 1)
-	result := Concat(input)
-
-	if result == nil {
-		t.Fatal("expected non-nil result for allocated empty slice")
-	}
-	if len(result) != 0 {
-		t.Fatalf("expected empty result, got length %d", len(result))
-	}
-	if unsafe.SliceData(result) != unsafe.SliceData(input) {
-		t.Fatalf("expected Concat to preserve original empty slice header identity")
 	}
 }
