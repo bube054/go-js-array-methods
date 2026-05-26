@@ -188,3 +188,27 @@ func ExampleReduceRightAs() {
 	fmt.Println(reversed)
 	// Output: 321
 }
+
+func ExampleKeys() {
+	arr := []string{"a", "b", "c"}
+
+	for i := range array.Keys(arr) {
+		fmt.Println(i)
+	}
+	// Output:
+	// 0
+	// 1
+	// 2
+}
+
+func ExampleValues() {
+	arr := []string{"a", "b", "c"}
+
+	for v := range array.Values(arr) {
+		fmt.Println(v)
+	}
+	// Output:
+	// a
+	// b
+	// c
+}

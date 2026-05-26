@@ -219,3 +219,28 @@ func BenchmarkReduceRightAs(b *testing.B) {
 		}, initial)
 	}
 }
+
+func BenchmarkKeysZeroAllocs(b *testing.B) {
+	data := make([]int, 1000)
+	b.ResetTimer()
+	b.ReportAllocs()
+
+	for i := 0; i < b.N; i++ {
+		// The loop itself should consume 0 heap allocations
+		for range Keys(data) {
+			// tight loop
+		}
+	}
+}
+
+func BenchmarkValuesZeroAllocs(b *testing.B) {
+	data := make([]int, 1000)
+	b.ResetTimer()
+	b.ReportAllocs()
+
+	for i := 0; i < b.N; i++ {
+		for range Values(data) {
+			// tight loop
+		}
+	}
+}

@@ -21,7 +21,8 @@ import "iter"
 //	}
 func EntriesIterator[T any](slice []T) iter.Seq2[int, T] {
 	return func(yield func(int, T) bool) {
-		for i := 0; i < len(slice); i++ {
+		sliceLen := len(slice)
+		for i := 0; i < sliceLen; i++ {
 			if !yield(i, slice[i]) {
 				return
 			}
