@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🚀 Added
 
-- **Go 1.23 Native Iterators:** Introduced `Entries()`, `Keys()`, and `Values()` methods returning `iter.Seq2` and `iter.Seq`. This enables zero-allocation, lazy iteration over massive datasets (bypassing eager matrix construction).
+- **Go 1.23 Native Iterators:** Introduced `EntriesIterator()`, `Keys()`, and `Values()` methods returning `iter.Seq2` and `iter.Seq`. This enables zero-allocation, lazy iteration over massive datasets (bypassing eager matrix construction).
 - **Zero-Allocation Reducers:** Added `ReduceAs` and `ReduceRightAs` primitives. These provide explicitly typed fast-paths that bypass Go's `any` interface boxing entirely, enabling 0-alloc transformations.
 - **Executable Examples:** Added comprehensive `ExampleFunc_name` test wrappers for all new methods to ensure `pkg.go.dev` documentation provides dynamically verified usage patterns.
 
