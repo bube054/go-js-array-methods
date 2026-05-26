@@ -200,11 +200,34 @@ func ExampleKeys() {
 	// 1
 	// 2
 }
+func ExampleArray_Keys() {
+	arr := array.Array[string]{"a", "b", "c"}
+
+	for i := range arr.Keys() {
+		fmt.Println(i)
+	}
+	// Output:
+	// 0
+	// 1
+	// 2
+}
 
 func ExampleValues() {
 	arr := []string{"a", "b", "c"}
 
 	for v := range array.Values(arr) {
+		fmt.Println(v)
+	}
+	// Output:
+	// a
+	// b
+	// c
+}
+
+func ExampleArray_Values() {
+	arr := array.Array[string]{"a", "b", "c"}
+
+	for v := range arr.Values() {
 		fmt.Println(v)
 	}
 	// Output:

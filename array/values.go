@@ -9,7 +9,7 @@ import "iter"
 //   - The iterator yields each element in order.
 //
 // Performance Note:
-//   - Current benchmark on this machine: 0 allocs/op and 0.01 µs/op.
+//   - Current benchmark on this machine: 0 allocs/op.
 //   - The comparable fast path is a bare-metal loop with no heap allocations.
 //
 // Example usage:

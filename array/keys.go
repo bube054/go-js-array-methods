@@ -10,7 +10,7 @@ import "iter"
 //   - The iterator yields indexes from 0 to len(slice)-1.
 //
 // Performance Note:
-//   - Current benchmark on this machine: 0 allocs/op and 0.01 µs/op.
+//   - Current benchmark on this machine: 0 allocs/op.
 //   - The comparable fast path is a bare-metal loop with no heap allocations.
 //
 // Example usage:
