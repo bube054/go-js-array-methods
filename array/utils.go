@@ -69,17 +69,31 @@ func convertEndIndex(sliceLen, index int) int {
 	return index
 }
 
+// isComparable reports whether element can be compared with == without
+// panicking. It checks the value, not just its type: an array of slices, or a
+// struct whose interface field holds a slice, has a comparable-looking kind but
+// makes == panic.
+//
+// If element passes, == against any other value of type T is safe too: at each
+// interface inside it, either the other value holds a different dynamic type
+// (== is false) or the same comparable one.
 func isComparable[T any](element T) bool {
 	var val any = element
 	if val == nil {
 		return true
 	}
 
-	switch reflect.TypeOf(element).Kind() {
-	case reflect.Slice, reflect.Map, reflect.Func:
-		return false
-	case reflect.Struct:
-		return reflect.TypeOf(element).Comparable()
+	t := reflect.TypeOf(val)
+	if !t.Comparable() {
+		return false // slices, maps, funcs, and arrays or structs containing them
+	}
+
+	switch t.Kind() {
+	case reflect.Struct, reflect.Array:
+		// The type allows ==, but an interface field or element inside it may
+		// hold a slice at run time, so check the value. This costs one
+		// allocation, which plain types like int and string skip.
+		return reflect.ValueOf(val).Comparable()
 	default:
 		return true
 	}

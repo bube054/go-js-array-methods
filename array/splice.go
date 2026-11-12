@@ -7,7 +7,8 @@ import "fmt"
 // Behavior:
 //   - The original slice is not modified.
 //   - The optional howMany pointer controls how many elements are removed; nil removes to the end.
-//   - Invalid indexes return an error.
+//   - index may be len(slice) to insert at the end. Indexes outside
+//     -len(slice)..len(slice) return an error.
 //
 // Performance Note:
 //   - The implementation builds the result in a single allocation and copies each segment once.
@@ -23,9 +24,11 @@ import "fmt"
 func Splice[T any](slice []T, index int, howMany *int, elements ...T) ([]T, error) {
 	sliceLen := len(slice)
 
-	newIndex := convertIndex(sliceLen, index)
+	// index may equal len(slice), which means "insert at the end", as in
+	// JavaScript. That is also the only valid index for an empty slice.
+	newIndex := convertEndIndex(sliceLen, index)
 	if newIndex == -1 {
-		return slice, fmt.Errorf("Invalid index %d", index)
+		return slice, fmt.Errorf("index: %d out of range", index)
 	}
 
 	count := 0

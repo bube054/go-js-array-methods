@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-11-12
+
+### 🐛 Fixed
+
+- **Inputs are never changed:** `Push` could write into spare capacity of the slice you passed in, so two `Push` calls on the same slice could overwrite each other, and pushing onto a result of `Pop`, `Shift`, or `Slice` could change the original. `Push` now always builds a new slice, and `Pop`, `Shift`, and `Slice` cap their result's capacity so appending to it allocates instead.
+- **`Splice` and `Fill` accept JavaScript's valid edge cases:** inserting at the end (`index == len(slice)`), working on empty or `nil` slices, and empty ranges used to return an error.
+- **`Array.Includes`, `Array.IndexOf`, and `Array.LastIndexOf` no longer panic** on values that `==` cannot compare, such as arrays of slices or structs holding a slice in an interface field. They fall back to `reflect.DeepEqual`, and plain types like `int` still make no allocations.
+- **README `ReduceAs` example** now compiles (`ReduceAs` returns one value).
+
+### 🚀 Added
+
+- **`Entry` fields are readable:** `Entry` now has exported `Index` and `Value` fields, so code outside the package can read what `Entries` returns.
+- **`Unshift`**, matching JavaScript's spelling, as a function and an `Array` method.
+
+### 🔄 Changed
+
+- **Error and panic messages follow Go style:** `Splice` and `With` say `index: N out of range` (like `At`), and `ReduceAs`/`ReduceRightAs` panics start with `array:` instead of `TypeError:`.
+- **Docs match the benchmarks:** removed the "sub-nanosecond" and blanket "zero-allocation" claims, corrected `Join` (one allocation, for the result string), and documented which results share memory with the input (`Slice`, `Pop`, `Shift`, and the pointer from `Find`/`FindLast`). See [#6](https://github.com/bube054/go-js-array-methods/issues/6) for why `Find` keeps returning a pointer into the slice.
+
+### ⚠️ Deprecated
+
+- **`UnShift`** (function and method). Use `Unshift`; the old name keeps working.
+
+### 🛡️ Chore & Testing
+
+- **CI** now runs on Go 1.23, oldstable, and stable, with a `gofmt` check, `go vet`, and the race detector.
+- **Tests from outside the package** check that inputs are never changed and that JavaScript edge cases work. Coverage stays at 100%.
+- Removed the retired Go Report Card badge.
+
 ## [2.1.0] - 2026-05-26
 
 ### 🚀 Added
@@ -116,5 +145,7 @@ Initial functional API: `At`, `Concat`, `CopyWithin`, `Entries`, `Every`,
 `Reverse`, `Shift`, `Slice`, `Some`, `Splice`, `ToString`, `UnShift`,
 `ValueOf`, `With`.
 
-[Unreleased]: https://github.com/bube054/go-js-array-methods/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/bube054/go-js-array-methods/compare/v2.2.0...HEAD
+[2.2.0]: https://github.com/bube054/go-js-array-methods/compare/v2.1.0...v2.2.0
+[2.1.0]: https://github.com/bube054/go-js-array-methods/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/bube054/go-js-array-methods/releases/tag/v2.0.0

@@ -10,8 +10,11 @@ import "fmt"
 //   - Invalid bounds return an error.
 //
 // Performance Note:
-//   - Current benchmark on this machine: 0 allocs/op and 5.95 ns/op.
-//   - The function returns a subslice backed by the original array without copying.
+//   - 0 allocs/op: the function returns a subslice backed by the original array
+//     without copying.
+//   - The result's capacity ends at its last element, so appending to it
+//     (including with Push) never overwrites the rest of the original. Use
+//     slices.Clone if you will assign to its elements.
 //
 // Example:
 //
@@ -37,7 +40,9 @@ func Slice[T any](slice []T, start, end int) ([]T, error) {
 		return nil, fmt.Errorf("start index: %d cannot be greater than end index: %d", start, end)
 	}
 
-	return slice[newStartIndex:newEndIndex], nil
+	// The third index caps the capacity, so an append must allocate new memory
+	// instead of writing over the elements after the range.
+	return slice[newStartIndex:newEndIndex:newEndIndex], nil
 }
 
 // Slice returns a new array containing the selected range.

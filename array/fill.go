@@ -7,7 +7,8 @@ import "fmt"
 // Behavior:
 //   - The original slice is not modified.
 //   - Negative indexes are normalized from the end of the slice.
-//   - Invalid bounds return an error.
+//   - start and end may be len(slice), so an empty range is not an error.
+//     Bounds outside -len(slice)..len(slice) return an error.
 //
 // Performance Note:
 //   - The function copies the slice once and mutates the output buffer in place.
@@ -21,7 +22,9 @@ import "fmt"
 func Fill[T any](slice []T, value T, start int, end int) ([]T, error) {
 	sliceLength := len(slice)
 
-	newStartIndex := convertIndex(sliceLength, start)
+	// start may equal len(slice), which fills nothing, as in JavaScript. That
+	// also makes Fill work on an empty slice.
+	newStartIndex := convertEndIndex(sliceLength, start)
 	if newStartIndex == -1 {
 		return nil, fmt.Errorf("start index: %d out of range", start)
 	}

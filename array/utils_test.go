@@ -175,6 +175,15 @@ func TestIsComparable(t *testing.T) {
 	if isComparable(struct{ Items []int }{Items: []int{1}}) {
 		t.Fatal("expected struct containing slice to be non-comparable")
 	}
+	if isComparable([1][]int{{1}}) {
+		t.Fatal("expected array of slices to be non-comparable")
+	}
+	if isComparable(struct{ X any }{X: []int{1}}) {
+		t.Fatal("expected struct holding a slice in an interface field to be non-comparable")
+	}
+	if !isComparable(struct{ X any }{X: 1}) {
+		t.Fatal("expected struct holding an int in an interface field to be comparable")
+	}
 }
 
 func TestFlatProcessor_BasicFlattening(t *testing.T) {

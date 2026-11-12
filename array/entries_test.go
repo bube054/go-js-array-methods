@@ -18,35 +18,35 @@ func TestEntries(t *testing.T) {
 			name:  "entries of regular array",
 			slice: []int{10, 20, 30},
 			expected: []Entry[int]{
-				{index: 0, element: 10},
-				{index: 1, element: 20},
-				{index: 2, element: 30},
+				{Index: 0, Value: 10},
+				{Index: 1, Value: 20},
+				{Index: 2, Value: 30},
 			},
 		},
 		{
 			name:  "entries with single element",
 			slice: []int{42},
 			expected: []Entry[int]{
-				{index: 0, element: 42},
+				{Index: 0, Value: 42},
 			},
 		},
 		{
 			name:  "entries with duplicates",
 			slice: []int{5, 5, 5},
 			expected: []Entry[int]{
-				{index: 0, element: 5},
-				{index: 1, element: 5},
-				{index: 2, element: 5},
+				{Index: 0, Value: 5},
+				{Index: 1, Value: 5},
+				{Index: 2, Value: 5},
 			},
 		},
 		{
 			name:  "entries with negative numbers",
 			slice: []int{-1, -2, -3, -4},
 			expected: []Entry[int]{
-				{index: 0, element: -1},
-				{index: 1, element: -2},
-				{index: 2, element: -3},
-				{index: 3, element: -4},
+				{Index: 0, Value: -1},
+				{Index: 1, Value: -2},
+				{Index: 2, Value: -3},
+				{Index: 3, Value: -4},
 			},
 		},
 		// Edge case - empty array
@@ -60,16 +60,16 @@ func TestEntries(t *testing.T) {
 			name:  "entries of larger array",
 			slice: []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
 			expected: []Entry[int]{
-				{index: 0, element: 1},
-				{index: 1, element: 2},
-				{index: 2, element: 3},
-				{index: 3, element: 4},
-				{index: 4, element: 5},
-				{index: 5, element: 6},
-				{index: 6, element: 7},
-				{index: 7, element: 8},
-				{index: 8, element: 9},
-				{index: 9, element: 10},
+				{Index: 0, Value: 1},
+				{Index: 1, Value: 2},
+				{Index: 2, Value: 3},
+				{Index: 3, Value: 4},
+				{Index: 4, Value: 5},
+				{Index: 5, Value: 6},
+				{Index: 6, Value: 7},
+				{Index: 7, Value: 8},
+				{Index: 8, Value: 9},
+				{Index: 9, Value: 10},
 			},
 		},
 		// Mixed values
@@ -77,11 +77,11 @@ func TestEntries(t *testing.T) {
 			name:  "entries with mixed positive and negative",
 			slice: []int{100, -50, 0, 25, -100},
 			expected: []Entry[int]{
-				{index: 0, element: 100},
-				{index: 1, element: -50},
-				{index: 2, element: 0},
-				{index: 3, element: 25},
-				{index: 4, element: -100},
+				{Index: 0, Value: 100},
+				{Index: 1, Value: -50},
+				{Index: 2, Value: 0},
+				{Index: 3, Value: 25},
+				{Index: 4, Value: -100},
 			},
 		},
 	}
@@ -102,11 +102,11 @@ func TestEntries(t *testing.T) {
 
 			// Verify each entry
 			for i, entry := range result {
-				if entry.index != tt.expected[i].index {
-					t.Errorf("At entry %d: expected index %d but got %d", i, tt.expected[i].index, entry.index)
+				if entry.Index != tt.expected[i].Index {
+					t.Errorf("At entry %d: expected index %d but got %d", i, tt.expected[i].Index, entry.Index)
 				}
-				if entry.element != tt.expected[i].element {
-					t.Errorf("At entry %d: expected element %d but got %d", i, tt.expected[i].element, entry.element)
+				if entry.Value != tt.expected[i].Value {
+					t.Errorf("At entry %d: expected element %d but got %d", i, tt.expected[i].Value, entry.Value)
 				}
 			}
 		})
@@ -119,35 +119,35 @@ func TestEntriesWithStrings(t *testing.T) {
 			name:  "entries of string array",
 			slice: []string{"apple", "banana", "cherry"},
 			expected: []Entry[string]{
-				{index: 0, element: "apple"},
-				{index: 1, element: "banana"},
-				{index: 2, element: "cherry"},
+				{Index: 0, Value: "apple"},
+				{Index: 1, Value: "banana"},
+				{Index: 2, Value: "cherry"},
 			},
 		},
 		{
 			name:  "entries with single string",
 			slice: []string{"hello"},
 			expected: []Entry[string]{
-				{index: 0, element: "hello"},
+				{Index: 0, Value: "hello"},
 			},
 		},
 		{
 			name:  "entries with empty strings",
 			slice: []string{"a", "", "b", ""},
 			expected: []Entry[string]{
-				{index: 0, element: "a"},
-				{index: 1, element: ""},
-				{index: 2, element: "b"},
-				{index: 3, element: ""},
+				{Index: 0, Value: "a"},
+				{Index: 1, Value: ""},
+				{Index: 2, Value: "b"},
+				{Index: 3, Value: ""},
 			},
 		},
 		{
 			name:  "entries with duplicate strings",
 			slice: []string{"x", "x", "x"},
 			expected: []Entry[string]{
-				{index: 0, element: "x"},
-				{index: 1, element: "x"},
-				{index: 2, element: "x"},
+				{Index: 0, Value: "x"},
+				{Index: 1, Value: "x"},
+				{Index: 2, Value: "x"},
 			},
 		},
 	}
@@ -162,11 +162,11 @@ func TestEntriesWithStrings(t *testing.T) {
 
 			// Verify each entry
 			for i, entry := range result {
-				if entry.index != i {
-					t.Errorf("At entry %d: expected index %d but got %d", i, i, entry.index)
+				if entry.Index != i {
+					t.Errorf("At entry %d: expected index %d but got %d", i, i, entry.Index)
 				}
-				if entry.element != tt.expected[i].element {
-					t.Errorf("At entry %d: expected element %q but got %q", i, tt.expected[i].element, entry.element)
+				if entry.Value != tt.expected[i].Value {
+					t.Errorf("At entry %d: expected element %q but got %q", i, tt.expected[i].Value, entry.Value)
 				}
 			}
 		})
@@ -193,9 +193,9 @@ func TestEntriesPreservesOriginal(t *testing.T) {
 
 		// Verify entries are correct
 		for i, entry := range result {
-			if entry.index != i || entry.element != original[i] {
-				t.Errorf("Entry %d incorrect: expected {index: %d, element: %d}, got {index: %d, element: %d}",
-					i, i, original[i], entry.index, entry.element)
+			if entry.Index != i || entry.Value != original[i] {
+				t.Errorf("Entry %d incorrect: expected {Index: %d, Value: %d}, got {Index: %d, Value: %d}",
+					i, i, original[i], entry.Index, entry.Value)
 			}
 		}
 	})
@@ -208,8 +208,8 @@ func TestEntriesIndexConsistency(t *testing.T) {
 
 		// Verify indices are sequential starting from 0
 		for i := 0; i < len(result); i++ {
-			if result[i].index != i {
-				t.Errorf("Expected index %d at position %d, but got %d", i, i, result[i].index)
+			if result[i].Index != i {
+				t.Errorf("Expected index %d at position %d, but got %d", i, i, result[i].Index)
 			}
 		}
 	})
@@ -243,11 +243,11 @@ func TestArrayEntries(t *testing.T) {
 		t.Errorf("Array.Entries() length = %d, expected 3", len(result))
 	}
 
-	if result[0].index != 0 || result[0].element != "a" {
-		t.Errorf("Array.Entries()[0] = {%d, %s}, expected {0, a}", result[0].index, result[0].element)
+	if result[0].Index != 0 || result[0].Value != "a" {
+		t.Errorf("Array.Entries()[0] = {%d, %s}, expected {0, a}", result[0].Index, result[0].Value)
 	}
 
-	if result[2].index != 2 || result[2].element != "c" {
-		t.Errorf("Array.Entries()[2] = {%d, %s}, expected {2, c}", result[2].index, result[2].element)
+	if result[2].Index != 2 || result[2].Value != "c" {
+		t.Errorf("Array.Entries()[2] = {%d, %s}, expected {2, c}", result[2].Index, result[2].Value)
 	}
 }

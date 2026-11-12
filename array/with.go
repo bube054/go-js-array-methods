@@ -23,7 +23,7 @@ func With[T any](slice []T, index int, value T) ([]T, error) {
 	newIndex := convertIndex(sliceLength, index)
 
 	if newIndex == -1 {
-		return slice, fmt.Errorf("Invalid index %d", index)
+		return slice, fmt.Errorf("index: %d out of range", index)
 	}
 
 	newSlice := make([]T, sliceLength)

@@ -14,16 +14,16 @@ package array
 //
 //	numbers := []int{10, 20}
 //	entries := Entries(numbers)
-//	// entries[0].index == 0
-//	// entries[0].element == 10
+//	// entries[0].Index == 0
+//	// entries[0].Value == 10
 func Entries[T any](slice []T) []Entry[T] {
 	newSlice := make([]Entry[T], len(slice))
 	sliceLen := len(slice)
 
 	for i := 0; i < sliceLen; i++ {
 		newSlice[i] = Entry[T]{
-			index:   i,
-			element: slice[i],
+			Index: i,
+			Value: slice[i],
 		}
 	}
 
