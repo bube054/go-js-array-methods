@@ -47,6 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### ⚡ Performance
 
 - **Sub-Nanosecond Fast Paths:** Validated and locked in core operations (like `ConvertIndex` and primitive `Join`) running at hardware instruction speeds (< 2 ns/op).
+  _Correction, 2026-11-12: this holds for `ConvertIndex` (about 0.4 ns/op), but not for `Join`, which makes one allocation for the result string and takes about 30 µs for 1,000 ints. See [2.2.0]._
 - **Iterator Memory Scaling:** Replaced eager matrix generation on massive loops, dropping memory footprints from ~1.6MB to exactly `0 B/op` at $N=100,000$ scales.
 
 ### 🔄 Changed
@@ -136,16 +137,23 @@ import "github.com/bube054/go-js-array-methods/v2/array"
 If you only use `Filter`, `Reduce`, `Push`, `Pop`, etc., the migration is
 import-path-only. `Map` callers need the type-parameter update above.
 
-## [1.x] - prior to 2026-04-15
+## [1.0.0] - 2024-04-08
 
-Initial functional API: `At`, `Concat`, `CopyWithin`, `Entries`, `Every`,
+First stable release. Module path `github.com/bube054/go-js-array-methods`,
+requires Go 1.22.
+
+Initial functional API: `At`, `Concat`, `ConvertIndex`, `CopyWithin`, `Entries`, `Every`,
 `Fill`, `Filter`, `Find`, `FindIndex`, `FindLast`, `FindLastIndex`,
 `ForEach`, `Includes`, `IndexOf`, `Join`, `LastIndexOf`, `Map`, `MapStrict`,
 `Pop`, `Push`, `Reduce`, `ReduceRight`, `ReduceStrict`, `ReduceRightStrict`,
 `Reverse`, `Shift`, `Slice`, `Some`, `Splice`, `ToString`, `UnShift`,
 `ValueOf`, `With`.
 
+Tags `v0.0.0` to `v0.0.5` (2024-02-10 to 2024-04-04) were early pre-releases
+leading up to 1.0.0.
+
 [Unreleased]: https://github.com/bube054/go-js-array-methods/compare/v2.2.0...HEAD
 [2.2.0]: https://github.com/bube054/go-js-array-methods/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/bube054/go-js-array-methods/compare/v2.0.0...v2.1.0
-[2.0.0]: https://github.com/bube054/go-js-array-methods/releases/tag/v2.0.0
+[2.0.0]: https://github.com/bube054/go-js-array-methods/compare/v1.0.0...v2.0.0
+[1.0.0]: https://github.com/bube054/go-js-array-methods/releases/tag/v1.0.0

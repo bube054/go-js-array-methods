@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="gjam-logo-title">
+  <title id="gjam-logo-title">go-js-array-methods</title>
+  <defs>
+    <linearGradient id="gjam-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#00ADD8"/>
+      <stop offset="1" stop-color="#0369A1"/>
+    </linearGradient>
+    <radialGradient id="gjam-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="256" height="256" rx="56" fill="url(#gjam-bg)"/>
+  <circle cx="128" cy="128" r="104" fill="url(#gjam-glow)"/>
+
+  <!-- [ and ] -->
+  <g fill="none" stroke="#FFFFFF" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M78 64 L54 64 L54 192 L78 192"/>
+    <path d="M178 64 L202 64 L202 192 L178 192"/>
+  </g>
+
+  <!-- three elements; the last one in JavaScript yellow -->
+  <rect x="74" y="110" width="30" height="36" rx="8" fill="#FFFFFF"/>
+  <rect x="113" y="110" width="30" height="36" rx="8" fill="#FFFFFF" fill-opacity="0.75"/>
+  <rect x="152" y="110" width="30" height="36" rx="8" fill="#F7DF1E"/>
+
+  <!-- a curved arrow over the elements: "transform each one" -->
+  <path d="M89 96 Q128 66 167 96" fill="none" stroke="#FFFFFF" stroke-opacity="0.9" stroke-width="7" stroke-linecap="round"/>
+  <path d="M157 82 L169 98 L150 101" fill="none" stroke="#FFFFFF" stroke-opacity="0.9" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- sparkles, as in the other bube054 logos -->
+  <path d="M206 30 Q208.5 41.5 220 44 Q208.5 46.5 206 58 Q203.5 46.5 192 44 Q203.5 41.5 206 30 Z" fill="#FBBF24"/>
+  <path d="M44 204 Q45.3 210.7 52 212 Q45.3 213.3 44 220 Q42.7 213.3 36 212 Q42.7 210.7 44 204 Z" fill="#FBBF24" fill-opacity="0.85"/>
+</svg>

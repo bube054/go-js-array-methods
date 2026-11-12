@@ -1,19 +1,71 @@
-# go-js-array-methods
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-wordmark-dark.svg">
+    <img src="assets/logo-wordmark.svg" alt="go-js-array-methods logo" width="640">
+  </picture>
+</p>
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/bube054/go-js-array-methods/v2.svg)](https://pkg.go.dev/github.com/bube054/go-js-array-methods/v2)
-[![CI](https://github.com/bube054/go-js-array-methods/actions/workflows/tests.yml/badge.svg)](https://github.com/bube054/go-js-array-methods/actions/workflows/tests.yml)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](license.md)
+<p align="center">
+  <b>JavaScript's array methods for Go slices.</b><br>
+  Map, Filter, Reduce, Splice, Find and 30+ more, with generics, a chainable <code>Array[T]</code> type and no dependencies.
+</p>
 
-A comprehensive toolkit for slice manipulation in Go, inspired by JavaScript's `Array.prototype` methods and built to stay close to hand-written Go loops in speed.
+<p align="center">
+  <a href="https://github.com/bube054/go-js-array-methods/actions/workflows/tests.yml"><img src="https://github.com/bube054/go-js-array-methods/actions/workflows/tests.yml/badge.svg" alt="CI"></a>
+  <a href="https://pkg.go.dev/github.com/bube054/go-js-array-methods/v2/array"><img src="https://pkg.go.dev/badge/github.com/bube054/go-js-array-methods/v2.svg" alt="Go Reference"></a>
+  <a href="https://github.com/bube054/go-js-array-methods/releases"><img src="https://img.shields.io/github/v/release/bube054/go-js-array-methods?label=version" alt="Latest version"></a>
+  <a href="https://go.dev/"><img src="https://img.shields.io/github/go-mod/go-version/bube054/go-js-array-methods" alt="Go version"></a>
+  <a href="license.md"><img src="https://img.shields.io/github/license/bube054/go-js-array-methods" alt="License"></a>
+</p>
+
+If you know JavaScript's arrays, you already know this API:
+
+```go
+nums := array.Array[int]{1, 2, 3, 4, 5, 6}
+
+// JS: nums.filter(n => n % 2 === 0).map(n => n * 10)
+tens := nums.
+	Filter(func(n, _ int, _ []int) bool { return n%2 == 0 }).
+	MapStrict(func(n, _ int, _ []int) int { return n * 10 })
+fmt.Println(tens) // [20 40 60]
+
+// JS: nums.at(-1)
+last, _ := nums.At(-1) // 6
+
+// JS: nums.includes(4)
+found := nums.Includes(4, nil) // true
+```
+
+```sh
+go get github.com/bube054/go-js-array-methods/v2
+```
+
+## Features
 
 - ✅ **Familiar API** — `Filter`, `Map`, `Reduce`, `Push`, `Pop`, `Includes`, and 30+ more, named to match their JS counterparts.
-- ✅ **Allocation-free where it counts** — typed operations such as `ReduceAs`, `ReduceStrict`, `Includes`, and `Slice` make no heap allocations of their own, and `Join` makes exactly one (the result string). [Run the benchmarks](#benchmarks) to see the numbers on your machine.
-- ✅ **Go 1.23 Iterators** — Native support for lazy iteration (`iter.Seq`, `iter.Seq2`), allowing massive datasets to be processed with exactly `0 B/op` overhead.
-- ✅ **100% test coverage** — plus tests that use the package from outside, the way your code does, to check that inputs are never changed.
 - ✅ **Two styles** — use plain functions (`array.Filter(slice, fn)`) or the fluent `Array[T]` type with chainable methods.
+- ✅ **Type-safe generics** — including a fully generic `Map[T, V]` that returns `[]V`, not `[]any`.
 - ✅ **Non-mutating** — no function changes the slice you pass in. A few results share memory with it for speed (`Slice`, `Pop`, `Shift`, and the pointer from `Find`/`FindLast`), and their docs say so.
 - ✅ **Negative indexes** — `At`, `Slice`, `IndexOf`, etc. accept negative indexes and return clear errors instead of panicking.
-- ✅ **Type-safe generics** — including a fully generic `Map[T, V]` that returns `[]V`, not `[]any`.
+- ✅ **Go 1.23 Iterators** — Native support for lazy iteration (`iter.Seq`, `iter.Seq2`), allowing massive datasets to be processed with exactly `0 B/op` overhead.
+- ✅ **Allocation-free where it counts** — typed operations such as `ReduceAs`, `ReduceStrict`, `Includes`, and `Slice` make no heap allocations of their own, and `Join` makes exactly one (the result string). [Run the benchmarks](#benchmarks) to see the numbers on your machine.
+- ✅ **100% test coverage** — plus tests that use the package from outside, the way your code does, to check that inputs are never changed.
+
+## Why go-js-array-methods?
+
+How it compares with Go's standard library and the most popular helper library:
+
+| | **go-js-array-methods** | [slices](https://pkg.go.dev/slices) (standard library) | [samber/lo](https://github.com/samber/lo) |
+| --- | --- | --- | --- |
+| **Map, Filter, Reduce** | yes | no | yes |
+| **Names** | JavaScript's: `Splice`, `At`, `Unshift`, `FindLast`, `With`… | Go's own: `Index`, `Insert`, `Delete` | lodash-style, 400+ helpers |
+| **Callbacks receive** | element, index and slice, like JavaScript | the element (`IndexFunc`, `ContainsFunc`) | element and index |
+| **Chaining** | yes, with `Array[T]` | no | no |
+| **Changes your slice** | never | `Sort`, `Reverse` and `Delete` work in place | most helpers return a new slice; in-place ones are in `lo/mutable` |
+| **Negative indexes** | `At`, `Slice`, `Splice`, `Fill`, `IndexOf`… | no | some: `Nth`, `Splice`, `Subset` |
+| **Dependencies** | none | none, it's built in | `golang.org/x/text` |
+
+**Choose `slices`** for searching, sorting and inserting with no extra module at all; it's maintained by the Go team. **Choose lo** for the biggest toolbox, with helpers for maps, channels and concurrency too, and a large community. **Choose go-js-array-methods** if you think in JavaScript's array API, want to chain calls, or want every function to leave your input slice alone.
 
 ## Install
 
