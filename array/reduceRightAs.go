@@ -5,7 +5,11 @@ package array
 // Behavior:
 //   - If initialValue is provided, the callback starts at the last element.
 //   - If initialValue is omitted, the last element is used as the initial accumulator.
-//   - Empty input with no initial value panics with a TypeError.
+//   - Without an initial value, it panics if the slice is empty or its
+//     elements are not of type R, because there is no first accumulator to
+//     start from. This is a programming mistake, like indexing past the end of
+//     a slice: pass an initial value whenever the slice may be empty or the
+//     types differ.
 //
 // Performance Note:
 //   - Current benchmark on this machine: 0 allocs/op and 27.6 µs/op.
@@ -30,12 +34,12 @@ func ReduceRightAs[T any, R any](slice []T, fn ReduceAsFunc[T, R], initialValue 
 	}
 
 	if sliceLen == 0 {
-		panic("TypeError: ReduceRight of empty slice with no initial value")
+		panic("array: ReduceRightAs of empty slice with no initial value")
 	}
 
 	initial, ok := any(slice[sliceLen-1]).(R)
 	if !ok {
-		panic("TypeError: slice element type does not match accumulator type and no initial value provided")
+		panic("array: ReduceRightAs needs an initial value when the element type is not the accumulator type")
 	}
 
 	accumulator := initial

@@ -8,9 +8,11 @@ type numeric interface {
 		~float32 | ~float64
 }
 
+// Entry is one index and value pair returned by Entries, like a JavaScript
+// [index, value] entry.
 type Entry[T any] struct {
-	index   int
-	element T
+	Index int
+	Value T
 }
 
 type Predicate[T any] func(element T, index int, slice []T) bool

@@ -11,7 +11,7 @@ import (
 //   - When separator is nil, a comma is used.
 //
 // Performance Note:
-//   - Current benchmark on this machine: 1645 allocs/op and 66.0 µs/op.
+//   - Current benchmark on this machine: 1 allocs/op (the result string) and 27.8 µs/op for 1,000 ints.
 //   - Common primitive types are formatted through direct string conversions; complex values fall back to fmt.Sprint.
 //
 // Example:

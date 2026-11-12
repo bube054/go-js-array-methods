@@ -32,8 +32,8 @@ func TestReduceRightAs_Panics(t *testing.T) {
 			if r == nil {
 				t.Fatal("ReduceRightAs() did not panic on empty slice without initial value")
 			}
-			if got, ok := r.(string); !ok || got != "TypeError: ReduceRight of empty slice with no initial value" {
-				t.Fatalf("ReduceRightAs() panic = %v, want %q", r, "TypeError: ReduceRight of empty slice with no initial value")
+			if got, ok := r.(string); !ok || got != "array: ReduceRightAs of empty slice with no initial value" {
+				t.Fatalf("ReduceRightAs() panic = %v, want %q", r, "array: ReduceRightAs of empty slice with no initial value")
 			}
 		}()
 
@@ -48,8 +48,8 @@ func TestReduceRightAs_Panics(t *testing.T) {
 			if r == nil {
 				t.Fatal("ReduceRightAs() did not panic on type mismatch without initial value")
 			}
-			if got, ok := r.(string); !ok || got != "TypeError: slice element type does not match accumulator type and no initial value provided" {
-				t.Fatalf("ReduceRightAs() panic = %v, want %q", r, "TypeError: slice element type does not match accumulator type and no initial value provided")
+			if got, ok := r.(string); !ok || got != "array: ReduceRightAs needs an initial value when the element type is not the accumulator type" {
+				t.Fatalf("ReduceRightAs() panic = %v, want %q", r, "array: ReduceRightAs needs an initial value when the element type is not the accumulator type")
 			}
 		}()
 

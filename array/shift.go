@@ -4,6 +4,9 @@ package array
 //
 // Behavior:
 //   - The original slice is not modified.
+//   - The result shares memory with the original but has no spare capacity, so
+//     appending to it (including with Push) never overwrites the original. Use
+//     slices.Clone if you will assign to its elements.
 //   - Empty slices return the original slice and nil.
 //
 // Performance Note:
@@ -26,7 +29,9 @@ func Shift[T any](slice []T) ([]T, *T) {
 
 	firstElement := slice[0]
 
-	return slice[1:], &firstElement
+	// The third index caps the capacity, so an append must allocate new memory
+	// instead of writing into the original's spare capacity.
+	return slice[1:sliceLength:sliceLength], &firstElement
 }
 
 // Shift returns a new array without the first element and the removed value.

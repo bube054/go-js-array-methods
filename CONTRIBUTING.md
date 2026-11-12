@@ -50,8 +50,12 @@ When you add a new JS-style method, add a `<method>.go` and a matching
 - **Format with `gofmt`** — `go fmt ./...` before committing.
 - **Names mirror JavaScript.** `Filter`, `Map`, `ForEach`, etc. Keep the
   Go-idiomatic capitalization (no `forEach`).
-- **Original slice is never mutated.** Every method returns a new slice.
-  This is the core design promise of the package.
+- **Original slice is never mutated.** No method changes the slice it is
+  given. This is the core design promise of the package. A result that shares
+  memory with the input (like `Slice`) must cap its capacity with a three-index
+  slice (`s[a:b:b]`), so appending to it cannot write into the original, and
+  its doc comment must say that it shares memory. Add a test in
+  `never_mutate_test.go`.
 - **Errors over panics.** Out-of-range indexes return `(zero, error)`; they
   do not panic. See `ConvertIndex` in `utils.go` for the standard pattern.
 - **Doc comments on every exported symbol.** Start with the symbol's name

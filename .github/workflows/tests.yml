@@ -1,25 +1,29 @@
-name: Go Test
+name: CI
 
 on:
-    push:
-        branches: ["main"] # Triggers on push to main branch
-    pull_request:
-        branches: ["main"] # Triggers on pull requests to main
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
-    test:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4 # Clones your repository
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # The oldest Go version go.mod allows, plus the two current releases
+        go-version: ["1.23", "oldstable", "stable"]
 
-            - name: Set up Go
-              uses: actions/setup-go@v5 # Installs the Go toolchain
-              with:
-                  go-version: "1.25" # Specify your Go version or use a file
+    steps:
+      - uses: actions/checkout@v4
 
-            - name: Install dependencies
-              run: go mod download # Downloads modules defined in go.mod
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go-version }}
 
-            - name: Run tests
-              run: go test -v ./... # Runs all tests in the project with verbose output
+      - name: Check formatting
+        run: test -z "$(gofmt -l .)" || (gofmt -l . && exit 1)
+
+      - run: go vet ./...
+
+      - run: go test -count=1 -race ./...

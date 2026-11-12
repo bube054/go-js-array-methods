@@ -3,15 +3,19 @@ package array
 // FindLast returns a pointer to the last element that satisfies the predicate.
 //
 // Behavior:
-//   - The original slice is not modified.
+//   - The function itself never modifies the slice.
 //   - The predicate is not called for empty slices.
 //   - A nil result means no element matched.
 //
 // Performance Note:
 //   - This is a bare-metal O(n) reverse search with no heap allocations.
 //
-// Warning:
-//   - The returned pointer aliases the input slice. Do not mutate or re-slice the source while retaining the pointer.
+// Pointer semantics:
+//   - The result points at the element inside your slice, not at a copy.
+//     Writing through it updates that element: use this to change a match in
+//     place. For a copy, dereference it: value := *match.
+//   - If the slice is later reallocated (for example by append), the pointer
+//     keeps referring to the old backing array.
 //
 // Example:
 //

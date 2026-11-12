@@ -4,6 +4,9 @@ package array
 //
 // Behavior:
 //   - The original slice is not modified.
+//   - The result shares memory with the original but has no spare capacity, so
+//     appending to it (including with Push) never overwrites the original. Use
+//     slices.Clone if you will assign to its elements.
 //   - Empty slices return the original slice and nil.
 //
 // Performance Note:
@@ -26,7 +29,9 @@ func Pop[T any](slice []T) ([]T, *T) {
 
 	lastElement := slice[sliceLength-1]
 
-	return slice[:sliceLength-1], &lastElement
+	// The third index caps the capacity, so an append must allocate new memory
+	// instead of writing over the removed last element of the original.
+	return slice[: sliceLength-1 : sliceLength-1], &lastElement
 }
 
 // Pop returns a new array without the last element and the removed value.

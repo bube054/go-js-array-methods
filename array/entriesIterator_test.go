@@ -199,7 +199,7 @@ func BenchmarkEntriesIterator(b *testing.B) {
 				// eager Entries allocates a slice of Entry structs
 				entries := Entries(src)
 				for _, e := range entries {
-					sum += e.index
+					sum += e.Index
 				}
 			}
 			Result = sum
